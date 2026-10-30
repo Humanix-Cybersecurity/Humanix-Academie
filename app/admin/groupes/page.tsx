@@ -16,7 +16,7 @@ export default async function AdminGroupesPage() {
     where: { tenantId },
     orderBy: [{ isActive: "desc" }, { name: "asc" }],
     include: {
-      _count: { select: { members: true } },
+      _count: { select: { members: true, saisons: true } },
     },
   });
 
@@ -30,6 +30,7 @@ export default async function AdminGroupesPage() {
     isSystem: g.isSystem,
     isActive: g.isActive,
     memberCount: g._count.members,
+    saisonCount: g._count.saisons,
   }));
 
   return (

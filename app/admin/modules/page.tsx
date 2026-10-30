@@ -12,6 +12,7 @@ import ModulesTable from "@/components/ModulesTable";
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
 import AdminSection from "@/components/admin/AdminSection";
 import { tagsForSaison } from "@/prisma/catalog-tags";
+import { groupesParSaison } from "@/lib/catalogue/prescription";
 
 export const dynamic = "force-dynamic";
 
@@ -21,7 +22,7 @@ export default async function AdminModulesPage() {
   const tenantId = session!.user.tenantId as string;
 
   // Multi-tenant : saisons globales + custom du tenant courant
-  const [saisons, configs] = await Promise.all([
+  const [saisons, configs, affectations, groupesActifs] = await Promise.all([
     db.saison.findMany({
       where: {
         isPublished: true,
@@ -44,7 +45,18 @@ export default async function AdminModulesPage() {
       },
     }),
     db.tenantSaisonConfig.findMany({ where: { tenantId } }),
+    // Prescription par groupes (cf. lib/catalogue/prescription.ts).
+    db.tenantSaisonGroupe.findMany({
+      where: { tenantId },
+      select: { saisonId: true, groupId: true },
+    }),
+    db.group.findMany({
+      where: { tenantId, isActive: true },
+      orderBy: { name: "asc" },
+      select: { id: true, name: true, emoji: true },
+    }),
   ]);
+  const groupesParSaisonId = groupesParSaison(affectations);
 
   // Stats de completion par saison (limite a tenant courant) :
   // pour chaque saison, on compte combien d'apprenants l'ont entamee/finie.
@@ -124,6 +136,7 @@ export default async function AdminModulesPage() {
         isActive: cfg?.isActive ?? true,
         isMandatory: cfg?.isMandatory ?? false,
         customOrder: cfg?.customOrder ?? null,
+        groupIds: groupesParSaisonId.get(s.id) ?? [],
         episodes: s.episodes.map((e) => ({
           slug: e.slug,
           title: e.title,
@@ -172,7 +185,7 @@ export default async function AdminModulesPage() {
           title="Catalogue des modules"
           description="Active uniquement ce qui est pertinent pour ta PME. L'ordre détermine la séquence d'apprentissage proposée à tes équipes."
         >
-          <ModulesTable saisons={enriched} />
+          <ModulesTable saisons={enriched} groupes={groupesActifs} />
         </AdminSection>
 
         {/* Bonnes pratiques */}
@@ -197,6 +210,12 @@ export default async function AdminModulesPage() {
             <li>
               Tu peux désactiver un module à tout moment sans perdre la
               progression des collaborateurs (elle est conservée).
+            </li>
+            <li>
+              <strong>Pour qui</strong> : prescris un module à un ou plusieurs
+              groupes. Il est mis en avant pour eux et, s'il est obligatoire, il
+              ne l'est que pour eux ; les autres peuvent toujours le consulter.
+              Sans groupe, le module s'adresse à tout l'espace.
             </li>
           </ul>
         </article>
