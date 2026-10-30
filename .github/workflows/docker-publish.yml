@@ -246,10 +246,15 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          # Cache build buildx via GitHub Actions cache.
-          # Reduit le temps des builds suivants de ~30 min a ~5 min.
-          cache-from: type=gha,scope=docker-${{ github.workflow }}
-          cache-to: type=gha,mode=max,scope=docker-${{ github.workflow }}
+          # Cache buildx LOCAL, sur le disque persistant de l'executeur, et
+          # plus via le cache GitHub Actions : chaque build en restaurait et
+          # en renvoyait ~1,3 Go, et le 2026-10-30 GitHub a coupe la sortie
+          # du cache du compte (« Egress is over the account limit »).
+          # `runner.tool_cache` survit d'un job a l'autre sur nos executeurs.
+          # Le repertoire `-new` puis la rotation (etape suivante) evitent
+          # que le cache local grossisse sans fin, piege connu de type=local.
+          cache-from: type=local,src=${{ runner.tool_cache }}/humanix-buildx
+          cache-to: type=local,dest=${{ runner.tool_cache }}/humanix-buildx-new,mode=max
           # Supply chain : provenance SLSA + SBOM SPDX inclus dans le manifest.
           provenance: mode=max
           sbom: true
@@ -268,6 +273,14 @@ jobs:
             NEXT_PUBLIC_PLAUSIBLE_CLOUD_SCRIPT=
             NEXT_PUBLIC_MATOMO_URL=
             NEXT_PUBLIC_MATOMO_SITE_ID=
+
+      - name: Rotation du cache buildx local
+        if: always()
+        run: |
+          rm -rf "${{ runner.tool_cache }}/humanix-buildx"
+          if [ -d "${{ runner.tool_cache }}/humanix-buildx-new" ]; then
+            mv "${{ runner.tool_cache }}/humanix-buildx-new" "${{ runner.tool_cache }}/humanix-buildx"
+          fi
 
       - name: Image summary
         run: |
