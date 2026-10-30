@@ -18,6 +18,10 @@ import {
 import { getCurrentTenantId } from "@/lib/current-tenant";
 import { canActAsAdminInTenant } from "@/lib/tenant-membership";
 import { premierGrapheme } from "@/lib/emoji";
+import {
+  decouperGroupes,
+  rapprocherGroupes,
+} from "@/lib/groupes/rapprochement";
 
 /**
  * Garde commun a toutes les server actions admin. Resout le tenant ACTIF
@@ -124,6 +128,22 @@ export async function setSaisonGroupes(saisonId: string, groupIds: string[]) {
   revalidatePath("/admin/groupes");
   revalidatePath("/apprendre");
   return { ok: true, groupIds: validIds };
+}
+
+/** Meme chose pour une selection de saisons : « prescrire ces dix modules a la compta ». */
+export async function bulkSetSaisonGroupes(
+  saisonIds: string[],
+  groupIds: string[],
+) {
+  if (!Array.isArray(saisonIds) || saisonIds.length === 0) {
+    return { ok: false, count: 0 };
+  }
+  let count = 0;
+  for (const saisonId of saisonIds) {
+    await setSaisonGroupes(saisonId, groupIds);
+    count++;
+  }
+  return { ok: true, count };
 }
 
 export async function moveSaison(saisonId: string, direction: "up" | "down") {
@@ -807,14 +827,46 @@ export async function adminResetUserMfa(userId: string) {
 // =====================================================
 // IMPORT CSV
 // =====================================================
-type CsvRow = { email: string; name?: string; service?: string; role?: string };
+type CsvRow = {
+  email: string;
+  name?: string;
+  service?: string;
+  role?: string;
+  /** Groupes de la personne, slugs ou noms separes par « ; », « | » ou « , ». */
+  groupes?: string;
+};
 
 export async function bulkImportUsers(rows: CsvRow[]) {
   const ctx = await requireAdmin();
   const tenantId = ctx.tenantId;
   const validRoles = ["LEARNER", "MANAGER", "RSSI", "ADMIN"];
 
-  const result = { created: 0, skipped: 0, errors: [] as string[] };
+  const result = {
+    created: 0,
+    skipped: 0,
+    groupesAffectes: 0,
+    errors: [] as string[],
+  };
+  // Groupes de l'espace, pour rapprocher la colonne `groupes` (ou, a defaut,
+  // le `service`) sans jamais creer de groupe depuis un texte libre.
+  const groupesEspace = await db.group.findMany({
+    where: { tenantId, isActive: true },
+    select: { id: true, slug: true, name: true },
+  });
+  const groupesDeLaLigne = (row: CsvRow, email: string): string[] => {
+    const libelles = decouperGroupes(row.groupes);
+    const depuisService = libelles.length === 0 && !!row.service?.trim();
+    const { trouves, inconnus } = rapprocherGroupes(
+      depuisService ? [row.service!.trim()] : libelles,
+      groupesEspace,
+    );
+    if (inconnus.length > 0 && !depuisService) {
+      result.errors.push(
+        `Groupe(s) inconnu(s) pour ${email}, ignore(s) : ${inconnus.join(", ")}`,
+      );
+    }
+    return trouves.map((g) => g.id);
+  };
 
   for (const row of rows) {
     const email = (row.email || "").trim().toLowerCase();
@@ -824,6 +876,20 @@ export async function bulkImportUsers(rows: CsvRow[]) {
     }
     const existing = await db.user.findUnique({ where: { email } });
     if (existing) {
+      // Deja present : on ne touche ni au nom, ni au role, ni au service.
+      // Mais si la ligne porte des groupes et que la personne est de cet
+      // espace, on l'y AJOUTE (re-import apres creation des groupes). On ne
+      // retire jamais un groupe depuis un fichier : cela se fait dans
+      // l'interface, en connaissance de cause.
+      const groupIds =
+        existing.tenantId === tenantId ? groupesDeLaLigne(row, email) : [];
+      if (groupIds.length > 0) {
+        await db.userGroup.createMany({
+          data: groupIds.map((groupId) => ({ userId: existing.id, groupId })),
+          skipDuplicates: true,
+        });
+        result.groupesAffectes++;
+      }
       result.skipped++;
       continue;
     }
@@ -850,6 +916,17 @@ export async function bulkImportUsers(rows: CsvRow[]) {
         },
       });
       result.created++;
+      // Groupes AVANT le parcours d'arrivee : l'auto-assignation ne retient
+      // que les saisons obligatoires prescrites aux groupes de la personne
+      // (cf. lib/catalogue/prescription.ts).
+      const groupIds = groupesDeLaLigne(row, email);
+      if (groupIds.length > 0) {
+        await db.userGroup.createMany({
+          data: groupIds.map((groupId) => ({ userId: newUser.id, groupId })),
+          skipDuplicates: true,
+        });
+        result.groupesAffectes++;
+      }
       // Auto-assignation parcours obligatoire (fire-and-forget pour ne
       // pas bloquer l'import de 200 lignes si une assign rate)
       void fireAndForgetAutoAssign(newUser.id, tenantId);

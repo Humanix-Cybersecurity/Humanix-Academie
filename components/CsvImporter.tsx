@@ -5,7 +5,13 @@ import { useState, useTransition } from "react";
 import Papa from "papaparse";
 import { bulkImportUsers } from "@/app/admin/actions";
 
-type Row = { email: string; name?: string; service?: string; role?: string };
+type Row = {
+  email: string;
+  name?: string;
+  service?: string;
+  role?: string;
+  groupes?: string;
+};
 
 export default function CsvImporter() {
   const [pending, startTransition] = useTransition();
@@ -14,6 +20,7 @@ export default function CsvImporter() {
   const [result, setResult] = useState<{
     created: number;
     skipped: number;
+    groupesAffectes: number;
     errors: string[];
   } | null>(null);
 
@@ -80,7 +87,8 @@ export default function CsvImporter() {
                 Choisir un fichier CSV
               </p>
               <p className="text-xs text-gray-500 mt-1">
-                Colonnes attendues : email (requis), name, service, role
+                Colonnes attendues : email (requis), name, service, role,
+                groupes
               </p>
             </label>
           </div>
@@ -88,11 +96,19 @@ export default function CsvImporter() {
           <div className="bg-gray-50 rounded-xl p-4 text-xs text-gray-600">
             <p className="font-bold mb-1">Format type :</p>
             <pre className="text-[11px] overflow-x-auto">
-              {`email,name,service,role
-sophie@masociete.fr,Sophie Martin,Direction,ADMIN
-yanis@masociete.fr,Yanis Bernard,Commercial,LEARNER
-christine@masociete.fr,Christine Dubois,Compta,LEARNER`}
+              {`email,name,service,role,groupes
+sophie@masociete.fr,Sophie Martin,Direction,ADMIN,direction
+yanis@masociete.fr,Yanis Bernard,Commercial,LEARNER,commercial
+christine@masociete.fr,Christine Dubois,Compta,LEARNER,compta;direction`}
             </pre>
+            <p className="mt-2">
+              <strong>groupes</strong> : slugs ou noms des groupes de l'espace,
+              séparés par « ; ». Sans groupe indiqué, le service est rapproché
+              d'un groupe du même nom quand il existe. Aucun groupe n'est créé
+              depuis le fichier, et une personne déjà présente est ajoutée aux
+              groupes indiqués sans être retirée des autres. Les groupes
+              décident des modules prescrits.
+            </p>
           </div>
         </>
       )}
@@ -126,6 +142,7 @@ christine@masociete.fr,Christine Dubois,Compta,LEARNER`}
                   <th className="px-3 py-2 text-left">Nom</th>
                   <th className="px-3 py-2 text-left">Service</th>
                   <th className="px-3 py-2 text-left">Rôle</th>
+                  <th className="px-3 py-2 text-left">Groupes</th>
                 </tr>
               </thead>
               <tbody>
@@ -135,12 +152,13 @@ christine@masociete.fr,Christine Dubois,Compta,LEARNER`}
                     <td className="px-3 py-2">{r.name ?? "-"}</td>
                     <td className="px-3 py-2">{r.service ?? "-"}</td>
                     <td className="px-3 py-2">{r.role ?? "LEARNER"}</td>
+                    <td className="px-3 py-2">{r.groupes ?? "-"}</td>
                   </tr>
                 ))}
                 {rows.length > 5 && (
                   <tr>
                     <td
-                      colSpan={4}
+                      colSpan={5}
                       className="px-3 py-2 text-gray-500 text-center italic"
                     >
                       … et {rows.length - 5} de plus
@@ -192,6 +210,8 @@ christine@masociete.fr,Christine Dubois,Compta,LEARNER`}
               <strong>{result.skipped}</strong> ignoré
               {result.skipped > 1 ? "s" : ""} (déjà présent
               {result.skipped > 1 ? "s" : ""}) ·{" "}
+              <strong>{result.groupesAffectes}</strong> affectation
+              {result.groupesAffectes > 1 ? "s" : ""} de groupes ·{" "}
               <strong>{result.errors.length}</strong> erreur
               {result.errors.length > 1 ? "s" : ""}
             </p>

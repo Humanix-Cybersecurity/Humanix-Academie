@@ -38,7 +38,10 @@ import {
   moveSaison,
   resetSaisonsOrder,
   bulkSaisonAction,
+  setSaisonGroupes,
+  bulkSetSaisonGroupes,
 } from "@/app/admin/actions";
+import PublicVise, { type GroupeOption } from "@/components/admin/PublicVise";
 
 type Episode = {
   slug: string;
@@ -61,6 +64,8 @@ type Saison = {
   isActive: boolean;
   isMandatory: boolean;
   customOrder: number | null;
+  /** Groupes auxquels la saison est prescrite (vide = tout l'espace). */
+  groupIds: string[];
   episodes: Episode[];
   completionsCount: number;
   avgScore: number | null;
@@ -113,9 +118,16 @@ function norm(s: string): string {
   return s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
 }
 
-type StatusFilter = "all" | "active" | "inactive" | "mandatory";
+type StatusFilter = "all" | "active" | "inactive" | "mandatory" | "prescribed";
 
-export default function ModulesTable({ saisons }: { saisons: Saison[] }) {
+export default function ModulesTable({
+  saisons,
+  groupes,
+}: {
+  saisons: Saison[];
+  /** Groupes actifs de l'espace, pour le selecteur « Pour qui ». */
+  groupes: GroupeOption[];
+}) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -167,6 +179,7 @@ export default function ModulesTable({ saisons }: { saisons: Saison[] }) {
       if (status === "active" && !s.isActive) return false;
       if (status === "inactive" && s.isActive) return false;
       if (status === "mandatory" && !s.isMandatory) return false;
+      if (status === "prescribed" && s.groupIds.length === 0) return false;
       // Tags (OR : au moins un tag actif doit matcher)
       if (activeTags.size > 0) {
         const hasMatch = s.tags.some((t) => activeTags.has(t));
@@ -225,6 +238,19 @@ export default function ModulesTable({ saisons }: { saisons: Saison[] }) {
     startTransition(async () => {
       await toggleSaisonMandatory(id, isMandatory);
       setBusy(null);
+    });
+  };
+  const onSetGroupes = (id: string, groupIds: string[]) => {
+    setBusy(id);
+    startTransition(async () => {
+      await setSaisonGroupes(id, groupIds);
+      setBusy(null);
+    });
+  };
+  const onBulkGroupes = (groupIds: string[]) => {
+    if (selected.size === 0) return;
+    startTransition(async () => {
+      await bulkSetSaisonGroupes(Array.from(selected), groupIds);
     });
   };
   const onMove = (id: string, dir: "up" | "down") => {
@@ -315,6 +341,12 @@ export default function ModulesTable({ saisons }: { saisons: Saison[] }) {
               onClick={() => setStatus("mandatory")}
             >
               Obligatoires
+            </FilterButton>
+            <FilterButton
+              active={status === "prescribed"}
+              onClick={() => setStatus("prescribed")}
+            >
+              Prescrites à des groupes
             </FilterButton>
           </div>
         </div>
@@ -418,6 +450,13 @@ export default function ModulesTable({ saisons }: { saisons: Saison[] }) {
             >
               Retirer obligatoire
             </BulkButton>
+            <PublicVise
+              groupes={groupes}
+              selection={[]}
+              onChange={onBulkGroupes}
+              disabled={pending}
+              libelleBouton="🎯 Prescrire à…"
+            />
             <BulkButton onClick={clearSelection} variant="ghost">
               Annuler
             </BulkButton>
@@ -541,6 +580,12 @@ export default function ModulesTable({ saisons }: { saisons: Saison[] }) {
                                 INACTIF
                               </span>
                             )}
+                            {s.groupIds.length > 0 && (
+                              <span className="text-xs bg-accent-100 text-accent-700 dark:bg-accent-900/30 dark:text-accent-200 px-2 py-0.5 rounded-full font-bold">
+                                PRESCRITE · {s.groupIds.length} groupe
+                                {s.groupIds.length > 1 ? "s" : ""}
+                              </span>
+                            )}
                             <span
                               className={`ml-auto text-xs text-gray-500 transition-transform shrink-0 ${
                                 isExpanded ? "rotate-180" : ""
@@ -607,6 +652,13 @@ export default function ModulesTable({ saisons }: { saisons: Saison[] }) {
                             label="Obligatoire"
                             disabled={pending || !s.isActive}
                             color="red"
+                          />
+                          <PublicVise
+                            groupes={groupes}
+                            selection={s.groupIds}
+                            onChange={(ids) => onSetGroupes(s.id, ids)}
+                            disabled={pending}
+                            compact
                           />
                         </div>
                       </div>

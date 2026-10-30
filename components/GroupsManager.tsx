@@ -17,6 +17,8 @@ type G = {
   isSystem: boolean;
   isActive: boolean;
   memberCount: number;
+  /** Saisons prescrites a ce groupe (cf. /admin/modules, « Pour qui »). */
+  saisonCount: number;
 };
 
 const EMOJI_PRESETS = [
@@ -159,6 +161,7 @@ export default function GroupsManager({ groups }: { groups: G[] }) {
               <th className="pb-2 font-medium text-xs">Groupe</th>
               <th className="pb-2 font-medium text-xs">Slug</th>
               <th className="pb-2 font-medium text-xs">Membres</th>
+              <th className="pb-2 font-medium text-xs">Modules prescrits</th>
               <th className="pb-2 font-medium text-xs">Statut</th>
               <th className="pb-2 font-medium text-xs text-right pr-2">
                 Actions
@@ -181,7 +184,7 @@ export default function GroupsManager({ groups }: { groups: G[] }) {
             {groups.length === 0 && (
               <tr>
                 <td
-                  colSpan={5}
+                  colSpan={6}
                   className="text-center py-8 text-gray-500 italic"
                 >
                   Aucun groupe pour le moment.
@@ -215,7 +218,7 @@ function ExistingRow({
   if (editing) {
     return (
       <tr>
-        <td colSpan={5} className="py-3">
+        <td colSpan={6} className="py-3">
           <form
             onSubmit={onUpdate}
             className="border-2 border-accent-300 dark:border-accent-700 bg-accent-50/40 dark:bg-accent-950/30 rounded-xl p-4 space-y-3"
@@ -276,6 +279,9 @@ function ExistingRow({
       <td className="py-3 pr-3 text-xs text-gray-500 font-mono">{g.slug}</td>
       <td className="py-3 pr-3 tabular-nums text-gray-700 dark:text-gray-300">
         {g.memberCount}
+      </td>
+      <td className="py-3 pr-3 tabular-nums text-gray-700 dark:text-gray-300">
+        {g.saisonCount}
       </td>
       <td className="py-3 pr-3">
         {g.isActive ? (
