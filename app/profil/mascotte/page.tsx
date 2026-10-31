@@ -96,7 +96,7 @@ export default async function MascotChoosePage() {
           3. Emoji custom (optionnel)
         </h2>
         <p className="text-sm text-gray-500 mb-4">
-          Pas convaincu·e par les 16 animaux ? Mets l'emoji que tu veux : 🚀,
+          Aucun des 16 animaux ne te convainc ? Mets l'emoji que tu veux : 🚀,
           🌈, ☕, 🌵, ce que tu veux. Laisse vide pour revenir à l'animal choisi
           ci-dessus.
         </p>

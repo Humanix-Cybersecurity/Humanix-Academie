@@ -102,7 +102,7 @@ export function renderAnecdoteEmailHTML(
       </td></tr>
 
       <tr><td class="footer">
-        <p style="margin:0 0 6px;">Vous recevez cet email parce que vous êtes abonné·e à la Cyber-Anecdote du Lundi de Humanix Académie.</p>
+        <p style="margin:0 0 6px;">Vous recevez cet email parce que votre adresse est abonnée à la Cyber-Anecdote du Lundi de Humanix Académie.</p>
         <p style="margin:0;">
           <a href="${escapeAttr(ctx.unsubscribeUrl)}">Se désinscrire en un clic</a>
           &nbsp;·&nbsp;
@@ -154,7 +154,7 @@ ${anecdote.sourceUrl}
 Lire sur le web : ${ctx.webViewUrl}
 
 ----------------------------------------
-Vous recevez cet email parce que vous êtes abonné·e à la Cyber-Anecdote du Lundi.
+Vous recevez cet email parce que votre adresse est abonnée à la Cyber-Anecdote du Lundi.
 Se désinscrire en un clic : ${ctx.unsubscribeUrl}
 
 Humanix Académie · humanix-cybersecurity.fr · 🇫🇷 Hébergement France

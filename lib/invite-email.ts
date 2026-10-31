@@ -165,13 +165,13 @@ function buildInviteHtml(params: {
 
 <tr><td style="padding:32px 32px 16px">
 <p style="margin:0;font-size:12px;text-transform:uppercase;letter-spacing:1px;color:${params.brand.accentColor};font-weight:bold">Invitation ${escapeHtml(params.brand.brandName)}</p>
-<h1 style="margin:8px 0 0;color:${params.brand.primaryColor};font-size:24px;line-height:1.3">Tu es invite·e a rejoindre<br/>${escapeHtml(params.tenantName)}</h1>
+<h1 style="margin:8px 0 0;color:${params.brand.primaryColor};font-size:24px;line-height:1.3">On t'invite a rejoindre<br/>${escapeHtml(params.tenantName)}</h1>
 </td></tr>
 
 <tr><td style="padding:0 32px 16px">
 <p style="margin:0 0 16px;color:#333;font-size:15px">${greeting}</p>
 <p style="margin:0 0 16px;color:#333;font-size:15px">
-<strong>${escapeHtml(params.inviterName)}</strong> t'a invite·e a rejoindre l'espace
+<strong>${escapeHtml(params.inviterName)}</strong> t'invite a rejoindre l'espace
 <strong>${escapeHtml(params.tenantName)}</strong> sur ${escapeHtml(params.brand.brandName)}, la plateforme
 de sensibilisation a la cybersecurite.
 </p>
@@ -189,7 +189,7 @@ securise qui te connecte directement.
 <tr><td style="padding:0 32px 24px">
 <p style="margin:0 0 12px;color:#666;font-size:13px">
 Ce lien expire le <strong>${expiresStr}</strong>. Si tu ne fais rien, ton
-compte restera en attente d'activation - ton ${escapeHtml(params.inviterName.toLowerCase().includes("admin") ? "administrateur" : "inviteur·euse")} peut te renvoyer une invitation a tout moment.
+compte restera en attente d'activation - ${params.inviterName.toLowerCase().includes("admin") ? "la personne qui administre ton espace" : "la personne a l'origine de cette invitation"} peut te renvoyer une invitation a tout moment.
 </p>
 <p style="margin:0;color:#666;font-size:13px">
 Si tu n'es pas a l'origine de cette invitation ou que tu ne souhaites pas

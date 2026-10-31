@@ -37,7 +37,7 @@ const CATEGORIE_PROFILS: Record<
 > = {
   // ==== Phishing & ingenierie sociale ====
   phishing: {
-    persona: "Vous êtes collaborateur d'une organisation française",
+    persona: "Vous travaillez dans une organisation française",
     objective: "Apprendre à repérer un message suspect avant de cliquer",
     scenarioTemplate: (t) =>
       `Vous êtes au bureau, votre boîte mail vous notifie. Un message arrive - son contenu est lié au sujet : "${t}". Le message vous demande une action rapide. Vous regardez l'expéditeur, l'URL et le ton. Que faites-vous ?`,
@@ -82,7 +82,7 @@ const CATEGORIE_PROFILS: Record<
 
   // ==== Mots de passe ====
   "mots-de-passe": {
-    persona: "Vous êtes collaborateur",
+    persona: "Vous êtes membre du personnel",
     objective: "Adopter une hygiène de mot de passe robuste",
     scenarioTemplate: (t) =>
       `Vous gérez plusieurs comptes professionnels. Le sujet du jour : "${t}". Une décision concrète à prendre dans la gestion de vos accès. Que faites-vous ?`,
@@ -126,7 +126,7 @@ const CATEGORIE_PROFILS: Record<
 
   // ==== Ransomware & extorsion ====
   ransomware: {
-    persona: "Vous êtes collaborateur",
+    persona: "Vous êtes membre du personnel",
     objective: "Réagir correctement face à un ransomware",
     scenarioTemplate: (t) =>
       `Votre poste affiche soudain un message d'extorsion. Le contexte : "${t}". Que faites-vous dans les 60 premières secondes ?`,
@@ -171,7 +171,7 @@ const CATEGORIE_PROFILS: Record<
 
   // ==== IA generative ====
   "ia-generative": {
-    persona: "Vous êtes collaborateur utilisant ChatGPT/Mistral au quotidien",
+    persona: "Vous utilisez ChatGPT/Mistral au quotidien dans votre travail",
     objective: "Utiliser l'IA générative sans fuiter de données sensibles",
     scenarioTemplate: (t) =>
       `Vous utilisez une IA pour gagner du temps. Sujet : "${t}". Vous êtes sur le point de coller du contenu pro dans le prompt. Que faites-vous ?`,
@@ -218,7 +218,8 @@ const CATEGORIE_PROFILS: Record<
 
   // ==== NIS2 ====
   "nis2-pme": {
-    persona: "Vous êtes dirigeant·e ou RSSI d'une organisation française",
+    persona:
+      "Vous êtes membre de la direction ou RSSI d'une organisation française",
     objective: "Comprendre l'impact NIS2 sur votre organisation",
     scenarioTemplate: (t) =>
       `Votre entreprise est potentiellement concernée par la directive NIS2. Sujet du jour : "${t}". Vous devez prendre une décision de gouvernance.`,
@@ -245,7 +246,7 @@ const CATEGORIE_PROFILS: Record<
         label: "Je délègue à mon prestataire IT habituel sans suivre.",
         outcome: "neutral",
         feedback:
-          "Délégation possible mais la responsabilité reste au dirigeant. Toujours vérifier ce qui est fait en votre nom.",
+          "Délégation possible mais la responsabilité reste à la direction. Toujours vérifier ce qui est fait en votre nom.",
         points: 15,
       },
     ],
@@ -255,7 +256,7 @@ const CATEGORIE_PROFILS: Record<
     quizCorrect:
       "Vérifier le statut NIS2 et documenter les mesures de sécurité",
     quizDistractors: [
-      "Attendre d'être contrôlé pour agir",
+      "Attendre un contrôle pour agir",
       "Acheter une assurance et oublier",
     ],
     quizExplanation:
@@ -264,10 +265,10 @@ const CATEGORIE_PROFILS: Record<
 
   // ==== Default fallback (catégorie inconnue) ====
   default: {
-    persona: "Vous êtes collaborateur d'une organisation",
+    persona: "Vous travaillez dans une organisation",
     objective: "Adopter le bon réflexe cyber",
     scenarioTemplate: (t) =>
-      `Vous êtes confronté à une situation cyber concrète sur le sujet : "${t}". Vous devez réagir vite, mais bien. Quelle posture adopter ?`,
+      `Vous faites face à une situation cyber concrète sur le sujet : "${t}". Vous devez réagir vite, mais bien. Quelle posture adopter ?`,
     choices: [
       {
         id: "rush",

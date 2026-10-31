@@ -73,15 +73,15 @@ export default function OpsecPhishingPage() {
           </p>
           <ul className="text-sm text-amber-900 dark:text-amber-100 space-y-1 list-disc list-inside leading-relaxed">
             <li>
-              <strong>Setup initial</strong> : 4 à 8 jours·homme (DSI + RSSI +
-              DPO + RH)
+              <strong>Setup initial</strong> : 4 à 8 jours-personne (DSI + RSSI
+              + DPO + RH)
             </li>
             <li>
-              <strong>Par campagne récurrente</strong> : 1 à 2 jours·homme
+              <strong>Par campagne récurrente</strong> : 1 à 2 jours-personne
               (préparation + envoi + débrief)
             </li>
             <li>
-              <strong>Surveillance continue</strong> : ~½ jour·semaine
+              <strong>Surveillance continue</strong> : ~½ jour par semaine
               (réputation IP, blacklists, taux de plainte)
             </li>
           </ul>

@@ -51,7 +51,7 @@ export default function LearnerHeroCompact({
             id="learner-hello"
             className="font-display text-2xl sm:text-3xl font-extrabold text-primary-500 dark:text-accent-300 leading-tight mt-1"
           >
-            {firstName}, prêt·e pour 5 minutes ?
+            {firstName}, on se lance pour 5 minutes ?
           </h1>
         </div>
 

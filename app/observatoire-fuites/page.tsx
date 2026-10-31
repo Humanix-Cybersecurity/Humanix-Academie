@@ -173,8 +173,8 @@ export default async function ObservatoireFuitesPage({
             style={{ animationDelay: "220ms" }}
           >
             Recensement des incidents publiés par les 3 sources francophones de
-            référence. Pour rester informé·e - <strong>sans dramatiser</strong>,
-            sans publicité, sans tracker.
+            référence. Pour se tenir au courant -{" "}
+            <strong>sans dramatiser</strong>, sans publicité, sans tracker.
           </p>
         </section>
       </HexBackdrop>

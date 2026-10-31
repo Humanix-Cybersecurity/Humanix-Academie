@@ -565,7 +565,7 @@ export default async function ProfilPage({
               </h3>
               <p className="text-gray-600 dark:text-gray-300 mb-6 max-w-md mx-auto">
                 Aucun épisode terminé pour le moment. Pas de pression - quand tu
-                te sens prêt·e, c'est par ici.
+                le sens, c'est par ici.
               </p>
               <Link href="/apprendre" className="btn-primary">
                 Commencer ma première saison <span aria-hidden="true">→</span>

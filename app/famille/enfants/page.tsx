@@ -118,7 +118,7 @@ export default function EcoleDeHexPage() {
           </p>
           <p>
             « L&apos;école de Hex » est <strong>gratuite</strong> et conçue pour
-            être jouée seul·e ou avec vous. <strong>Aucun compte</strong>{" "}
+            être jouée en solo ou avec vous. <strong>Aucun compte</strong>{" "}
             n&apos;est demandé et{" "}
             <strong>aucune donnée n&apos;est enregistrée</strong> : la
             progression reste sur l&apos;appareil. Pas de publicité, pas de lien

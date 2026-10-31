@@ -378,7 +378,7 @@ export default async function DemandeAbonnementPage({
             </form>
 
             <p className="text-xs text-center text-gray-500 mt-6">
-              Préfère-tu apprendre seul·e gratuitement ?{" "}
+              Préfères-tu apprendre en solo gratuitement ?{" "}
               <Link
                 href="/inscription"
                 className="text-accent-700 hover:underline font-medium"
