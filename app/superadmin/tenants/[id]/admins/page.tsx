@@ -60,6 +60,7 @@ export default async function TenantAdminsPage({
   const admins = await listTenantAdmins(id);
   const natives = admins.filter((a) => a.source === "native");
   const externals = admins.filter((a) => a.source === "external");
+  const delegues = admins.filter((a) => a.source === "parent");
 
   return (
     <div className="space-y-6">
@@ -191,6 +192,43 @@ export default async function TenantAdminsPage({
           <AddExternalAdminForm tenantId={id} />
         </div>
       </section>
+
+      {/* === Section admins DELEGUES (gestion deleguee par le parent) === */}
+      {delegues.length > 0 && (
+        <section className="rounded-2xl border border-sky-200 dark:border-sky-900/40 bg-sky-50/40 dark:bg-sky-950/20 p-5">
+          <h2 className="text-lg font-bold text-sky-900 dark:text-sky-200">
+            Admins délégués du parent ({delegues.length})
+          </h2>
+          <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">
+            ADMIN et RSSI de <strong>{delegues[0].homeTenantName}</strong>, qui
+            administrent ce tenant par gestion déléguée (Tenant.parentManaged).
+            Pas de ligne par personne : la délégation se retire sur la fiche du
+            tenant, pas ici.
+          </p>
+          <ul className="divide-y divide-sky-100 dark:divide-sky-900/30 text-sm">
+            {delegues.map((a) => (
+              <li
+                key={a.userId}
+                className="py-2 flex flex-wrap items-center justify-between gap-2"
+              >
+                <span>
+                  <span className="font-medium">{a.email}</span>
+                  {a.name && (
+                    <span className="text-gray-500 dark:text-gray-400">
+                      {" "}
+                      · {a.name}
+                    </span>
+                  )}
+                </span>
+                <span className="text-xs uppercase tracking-wider font-bold text-sky-800 dark:text-sky-200">
+                  {ROLE_LABEL[a.effectiveRole]?.label ?? a.effectiveRole}
+                  {!a.isActive && " · inactif"}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       {/* === Section invitation NOUVEAU admin natif === */}
       <section className="rounded-2xl border border-emerald-200 dark:border-emerald-900/40 bg-emerald-50/40 dark:bg-emerald-950/20 p-5">

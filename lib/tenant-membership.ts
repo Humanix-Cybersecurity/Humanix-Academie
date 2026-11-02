@@ -69,7 +69,23 @@ export async function getEffectiveRole(
     where: { userId_tenantId: { userId, tenantId } },
     select: { role: true },
   });
-  return membership?.role ?? null;
+  if (membership) return membership.role;
+
+  // Gestion deleguee (Tenant.parentManaged) : les ADMIN et RSSI de l'espace
+  // parent administrent l'enfant qui porte l'indicateur, avec leur role
+  // d'origine. MANAGER exclu : la delegation est une responsabilite
+  // d'administration, pas un droit de lecture. Aucune ligne a synchroniser :
+  // l'indicateur de l'enfant est la seule source, revocable d'un geste.
+  if (user.role === "ADMIN" || user.role === "RSSI") {
+    const cible = await db.tenant.findUnique({
+      where: { id: tenantId },
+      select: { parentTenantId: true, parentManaged: true },
+    });
+    if (cible?.parentManaged && cible.parentTenantId === user.tenantId) {
+      return user.role;
+    }
+  }
+  return null;
 }
 
 /**
@@ -100,13 +116,15 @@ export async function hasTenantAccess(
  * Type d'admin renvoye par listTenantAdmins :
  *   - "native"   : User.tenantId === tenantId
  *   - "external" : via TenantMembership
+ *   - "parent"   : ADMIN ou RSSI de l'espace parent, par gestion deleguee
+ *                  (Tenant.parentManaged) ; se revoque sur l'enfant, pas ici
  */
 export type TenantAdminEntry = {
   userId: string;
   email: string;
   name: string | null;
   effectiveRole: Role;
-  source: "native" | "external";
+  source: "native" | "external" | "parent";
   /** Pour les externes : son tenant home. Null pour les natifs. */
   homeTenantId: string | null;
   homeTenantName: string | null;
@@ -175,6 +193,33 @@ export async function listTenantAdmins(
     : [];
   const homeTenantByid = new Map(homeTenants.map((t) => [t.id, t]));
 
+  // Gestion deleguee : les ADMIN et RSSI du parent administrent cet espace
+  // de fait. Sans eux, la liste mentirait sur qui peut agir ici.
+  const cible = await db.tenant.findUnique({
+    where: { id: tenantId },
+    select: {
+      parentManaged: true,
+      parentManagedAt: true,
+      parent: { select: { id: true, name: true } },
+    },
+  });
+  const parentAdmins =
+    cible?.parentManaged && cible.parent
+      ? await db.user.findMany({
+          where: {
+            tenantId: cible.parent.id,
+            role: { in: ["ADMIN", "RSSI"] },
+          },
+          select: {
+            id: true,
+            email: true,
+            name: true,
+            role: true,
+            isActive: true,
+          },
+        })
+      : [];
+
   const result: TenantAdminEntry[] = [];
 
   for (const u of natives) {
@@ -210,8 +255,26 @@ export async function listTenantAdmins(
 
   // Tri : natifs avant, puis par role descendant (SUPERADMIN -> MANAGER),
   // puis par email pour stabilite.
+  for (const u of parentAdmins) {
+    result.push({
+      userId: u.id,
+      email: u.email,
+      name: u.name,
+      effectiveRole: u.role,
+      source: "parent",
+      homeTenantId: cible?.parent?.id ?? null,
+      homeTenantName: cible?.parent?.name ?? null,
+      grantedBy: null,
+      grantedAt: cible?.parentManagedAt ?? null,
+      isActive: u.isActive,
+    });
+  }
+
+  const ORDRE_SOURCE = { native: 0, external: 1, parent: 2 } as const;
   return result.sort((a, b) => {
-    if (a.source !== b.source) return a.source === "native" ? -1 : 1;
+    if (a.source !== b.source) {
+      return ORDRE_SOURCE[a.source] - ORDRE_SOURCE[b.source];
+    }
     const rankDiff = ROLE_RANK[b.effectiveRole] - ROLE_RANK[a.effectiveRole];
     if (rankDiff !== 0) return rankDiff;
     return a.email.localeCompare(b.email);

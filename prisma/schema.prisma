@@ -138,7 +138,7 @@ model Tenant {
   // Branding effectif resolu avec CASCADE : tenant enfant -> tenant parent
   // (revendeur) -> defaut Humanix (cf. lib/branding/tenant-branding.ts).
   // Tout est ignore si le plan n'a pas la feature white_label (gate plateforme).
-  brandingEnabled    Boolean @default(false)
+  brandingEnabled    Boolean   @default(false)
   brandName          String?
   // Logo + favicon stockes en BDD (petits PNG/SVG, valides cote serveur) et
   // servis via /api/branding/[tenantId]/logo (URL utilisable web/email/certif).
@@ -152,16 +152,24 @@ model Tenant {
   // Nom d'expediteur des emails (ex : "Academie ACME").
   brandEmailFromName String?
   // Masque toute mention "Humanix" (footer "powered by", etc.).
-  brandHidePoweredBy Boolean @default(false)
+  brandHidePoweredBy Boolean   @default(false)
   // Sous-domaine public <brandSubdomain>.humanix-academie.fr (resolution
   // tenant par host, cf. middleware). brandCustomDomain = phase ulterieure.
-  brandSubdomain     String? @unique
-  brandCustomDomain  String? @unique
+  brandSubdomain     String?   @unique
+  brandCustomDomain  String?   @unique
   // REVENDEUR (WL8) : tenant partenaire autorise a creer/gerer des tenants
   // clients enfants (parentTenantId) en marque blanche. Active par le
   // SUPERADMIN (relation commerciale). Son entitlement white_label couvre
   // ses clients (cf. lib/branding/tenant-branding.ts isEligible).
-  isReseller         Boolean @default(false)
+  isReseller         Boolean   @default(false)
+  // GESTION DELEGUEE : les ADMIN et RSSI de l'espace PARENT (revendeur ou
+  // siege) administrent cet espace enfant (personnes, groupes, modules) par
+  // son sous-domaine, avec leur role d'origine. Un indicateur par enfant,
+  // pose par le parent a la creation ou plus tard, revocable par le parent
+  // et par Humanix. Porte par lib/tenant-membership.ts (getEffectiveRole) :
+  // aucune ligne TenantMembership a synchroniser. Sans effet sans parent.
+  parentManaged      Boolean   @default(false)
+  parentManagedAt    DateTime?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

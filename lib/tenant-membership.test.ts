@@ -11,6 +11,7 @@ const mockMembershipFindUnique = vi.fn();
 const mockMembershipFindMany = vi.fn();
 const mockUserFindMany = vi.fn();
 const mockTenantFindMany = vi.fn();
+const mockTenantFindUnique = vi.fn();
 
 vi.mock("@/lib/db", () => ({
   db: {
@@ -24,6 +25,7 @@ vi.mock("@/lib/db", () => ({
     },
     tenant: {
       findMany: (...args: unknown[]) => mockTenantFindMany(...args),
+      findUnique: (...args: unknown[]) => mockTenantFindUnique(...args),
     },
   },
 }));
@@ -295,5 +297,174 @@ describe("listTenantAdmins", () => {
     const result = await listTenantAdmins("t1");
     expect(result[0].effectiveRole).toBe("ADMIN");
     expect(result[1].effectiveRole).toBe("MANAGER");
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Gestion deleguee (Tenant.parentManaged, 2026-11-02) : les ADMIN et RSSI de
+// l'espace parent administrent l'enfant qui porte l'indicateur, avec leur
+// role d'origine. Aucune ligne TenantMembership : l'indicateur est la seule
+// source, ce qui le rend revocable d'un geste.
+// ---------------------------------------------------------------------------
+describe("getEffectiveRole : gestion deleguee par le parent", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mockMembershipFindUnique.mockResolvedValue(null);
+  });
+
+  it("un ADMIN du parent a son role dans l'enfant qui porte l'indicateur", async () => {
+    mockUser.mockResolvedValueOnce({
+      role: "ADMIN",
+      tenantId: "parent",
+      isActive: true,
+    });
+    mockTenantFindUnique.mockResolvedValueOnce({
+      parentTenantId: "parent",
+      parentManaged: true,
+    });
+    expect(await getEffectiveRole("u1", "enfant")).toBe("ADMIN");
+    expect(mockTenantFindUnique).toHaveBeenCalledWith(
+      expect.objectContaining({ where: { id: "enfant" } }),
+    );
+  });
+
+  it("un RSSI du parent aussi, avec son role", async () => {
+    mockUser.mockResolvedValueOnce({
+      role: "RSSI",
+      tenantId: "parent",
+      isActive: true,
+    });
+    mockTenantFindUnique.mockResolvedValueOnce({
+      parentTenantId: "parent",
+      parentManaged: true,
+    });
+    expect(await getEffectiveRole("u1", "enfant")).toBe("RSSI");
+  });
+
+  it("pas un MANAGER du parent : la delegation est une responsabilite d'administration", async () => {
+    mockUser.mockResolvedValueOnce({
+      role: "MANAGER",
+      tenantId: "parent",
+      isActive: true,
+    });
+    expect(await getEffectiveRole("u1", "enfant")).toBeNull();
+    expect(mockTenantFindUnique).not.toHaveBeenCalled();
+  });
+
+  it("rien sans l'indicateur sur l'enfant", async () => {
+    mockUser.mockResolvedValueOnce({
+      role: "ADMIN",
+      tenantId: "parent",
+      isActive: true,
+    });
+    mockTenantFindUnique.mockResolvedValueOnce({
+      parentTenantId: "parent",
+      parentManaged: false,
+    });
+    expect(await getEffectiveRole("u1", "enfant")).toBeNull();
+  });
+
+  it("rien pour l'ADMIN d'un autre espace que le parent", async () => {
+    mockUser.mockResolvedValueOnce({
+      role: "ADMIN",
+      tenantId: "autre",
+      isActive: true,
+    });
+    mockTenantFindUnique.mockResolvedValueOnce({
+      parentTenantId: "parent",
+      parentManaged: true,
+    });
+    expect(await getEffectiveRole("u1", "enfant")).toBeNull();
+  });
+
+  it("un acces externe explicite garde la main sur la delegation", async () => {
+    mockUser.mockResolvedValueOnce({
+      role: "ADMIN",
+      tenantId: "parent",
+      isActive: true,
+    });
+    mockMembershipFindUnique.mockResolvedValueOnce({ role: "MANAGER" });
+    expect(await getEffectiveRole("u1", "enfant")).toBe("MANAGER");
+    expect(mockTenantFindUnique).not.toHaveBeenCalled();
+  });
+
+  it("canActAsAdminInTenant et hasTenantAccess suivent la regle", async () => {
+    mockUser.mockResolvedValue({
+      role: "ADMIN",
+      tenantId: "parent",
+      isActive: true,
+    });
+    mockTenantFindUnique.mockResolvedValue({
+      parentTenantId: "parent",
+      parentManaged: true,
+    });
+    expect(await canActAsAdminInTenant("u1", "enfant")).toBe(true);
+    expect(await hasTenantAccess("u1", "enfant")).toBe(true);
+  });
+});
+
+describe("listTenantAdmins : admins delegues du parent", () => {
+  beforeEach(() => vi.clearAllMocks());
+
+  it("ajoute les ADMIN et RSSI du parent, source « parent », apres natifs et externes", async () => {
+    const quand = new Date("2026-11-02T10:00:00Z");
+    mockUserFindMany
+      .mockResolvedValueOnce([
+        {
+          id: "n1",
+          email: "natif@enfant.test",
+          name: null,
+          role: "MANAGER",
+          isActive: true,
+        },
+      ])
+      .mockResolvedValueOnce([
+        {
+          id: "p1",
+          email: "admin@parent.test",
+          name: "Nicolas",
+          role: "ADMIN",
+          isActive: true,
+        },
+      ]);
+    mockMembershipFindMany.mockResolvedValueOnce([]);
+    mockTenantFindMany.mockResolvedValueOnce([]);
+    mockTenantFindUnique.mockResolvedValueOnce({
+      parentManaged: true,
+      parentManagedAt: quand,
+      parent: { id: "parent", name: "Alsace Micro Services" },
+    });
+
+    const admins = await listTenantAdmins("enfant");
+    expect(admins.map((a) => [a.source, a.email])).toEqual([
+      ["native", "natif@enfant.test"],
+      ["parent", "admin@parent.test"],
+    ]);
+    const delegue = admins[1];
+    expect(delegue).toMatchObject({
+      effectiveRole: "ADMIN",
+      homeTenantId: "parent",
+      homeTenantName: "Alsace Micro Services",
+      grantedAt: quand,
+      grantedBy: null,
+    });
+    expect(mockUserFindMany).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        where: { tenantId: "parent", role: { in: ["ADMIN", "RSSI"] } },
+      }),
+    );
+  });
+
+  it("n'ajoute personne sans gestion deleguee", async () => {
+    mockUserFindMany.mockResolvedValueOnce([]);
+    mockMembershipFindMany.mockResolvedValueOnce([]);
+    mockTenantFindMany.mockResolvedValueOnce([]);
+    mockTenantFindUnique.mockResolvedValueOnce({
+      parentManaged: false,
+      parentManagedAt: null,
+      parent: { id: "parent", name: "X" },
+    });
+    expect(await listTenantAdmins("enfant")).toEqual([]);
+    expect(mockUserFindMany).toHaveBeenCalledTimes(1);
   });
 });

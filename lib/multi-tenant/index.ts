@@ -21,6 +21,10 @@ export type TenantNode = {
   plan: string;
   establishmentType: string | null;
   parentTenantId: string | null;
+  /** Sous-domaine de marque, s'il existe : c'est lui qui designe l'espace dans les liens. */
+  brandSubdomain: string | null;
+  /** Gestion deleguee : les ADMIN et RSSI du parent administrent cet enfant. */
+  parentManaged: boolean;
   childrenCount: number;
   userCount: number;
 };
@@ -103,6 +107,8 @@ function tenantToNode(t: any): TenantNode {
     plan: t.plan,
     establishmentType: t.establishmentType ?? null,
     parentTenantId: t.parentTenantId ?? null,
+    brandSubdomain: t.brandSubdomain ?? null,
+    parentManaged: Boolean(t.parentManaged),
     childrenCount: t._count?.children ?? 0,
     userCount: t._count?.users ?? 0,
   };
@@ -145,6 +151,10 @@ export async function createChildTenant(args: {
       plan: parent.plan, // herite du plan parent
       establishmentType: args.establishmentType,
       parentTenantId: args.parentTenantId,
+      // Un etablissement est administre depuis le siege : c'est la meme
+      // organisation. Le siege peut le retirer sur /admin/etablissements.
+      parentManaged: true,
+      parentManagedAt: new Date(),
     },
     select: { id: true, slug: true },
   });

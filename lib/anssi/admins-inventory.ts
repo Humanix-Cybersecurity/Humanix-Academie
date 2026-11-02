@@ -32,7 +32,9 @@ export type PrivilegedAccount = {
   // Type d'attribution :
   //   - "native"     : le tenantId === User.tenantId (role natif)
   //   - "membership" : le tenantId est externe, attribue via TenantMembership
-  source: "native" | "membership";
+  //   - "delegated"  : ADMIN ou RSSI de l'espace PARENT, par gestion deleguee
+  //                    (Tenant.parentManaged) ; pas de ligne dediee en base
+  source: "native" | "membership" | "delegated";
   // Date d'attribution (createdAt User si native, grantedAt si membership).
   grantedAt: Date;
   // Qui a accorde ce role (uniquement pour membership).
@@ -130,6 +132,57 @@ export async function listPrivilegedAccounts(): Promise<PrivilegedAccount[]> {
       lastLoginAt: m.user.lastLoginAt,
       isActive: m.user.isActive,
     });
+  }
+
+  // Gestion deleguee (Tenant.parentManaged) : les ADMIN et RSSI de l'espace
+  // parent administrent l'enfant de fait. Sans eux, l'inventaire ne serait
+  // plus exhaustif, ce qui est tout son objet.
+  const delegues = await db.tenant.findMany({
+    where: { parentManaged: true, parentTenantId: { not: null } },
+    select: {
+      id: true,
+      name: true,
+      slug: true,
+      parentTenantId: true,
+      parentManagedAt: true,
+      createdAt: true,
+    },
+  });
+  if (delegues.length > 0) {
+    const parentIds = Array.from(
+      new Set(delegues.map((t) => t.parentTenantId as string)),
+    );
+    const adminsDesParents = await db.user.findMany({
+      where: {
+        tenantId: { in: parentIds },
+        role: { in: ["ADMIN", "RSSI"] },
+        isActive: true,
+      },
+      include: { webauthnCredentials: { select: { id: true }, take: 1 } },
+    });
+    for (const t of delegues) {
+      for (const u of adminsDesParents) {
+        if (u.tenantId !== t.parentTenantId) continue;
+        accounts.push({
+          tenantId: t.id,
+          tenantName: t.name,
+          tenantSlug: t.slug,
+          userId: u.id,
+          email: u.email,
+          name: u.name,
+          effectiveRole: u.role,
+          source: "delegated",
+          grantedAt: t.parentManagedAt ?? t.createdAt,
+          grantedByEmail: null,
+          grantedByName: null,
+          mfaEnabled: u.mfaEnabled,
+          hasWebAuthn: u.webauthnCredentials.length > 0,
+          emailVerified: u.emailVerified !== null,
+          lastLoginAt: u.lastLoginAt,
+          isActive: u.isActive,
+        });
+      }
+    }
   }
 
   // Tri final : tenantName asc, role rank desc (SUPERADMIN > ADMIN > RSSI),
