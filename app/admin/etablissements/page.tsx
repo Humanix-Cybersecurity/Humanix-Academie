@@ -10,7 +10,10 @@ import { loadTenantTree, buildConsolidatedStats } from "@/lib/multi-tenant";
 import {
   createEstablishmentAction,
   deleteEstablishmentAction,
+  setEstablishmentManagedAction,
 } from "./actions";
+import { getRootDomain } from "@/lib/subdomain-tenant";
+import { urlAdministration } from "@/lib/reseller/administration";
 import PlanGateGeneric from "@/components/PlanGateGeneric";
 import DeleteWithConfirmButton from "@/components/DeleteWithConfirmButton";
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
@@ -40,6 +43,10 @@ export default async function EtablissementsPage() {
 
   const tree = await loadTenantTree(tenantId);
   const canAddChildren = !tree.root.parentTenantId;
+  // Gestion deleguee : un etablissement administre depuis le siege s'ouvre
+  // sur son propre hote (slug ou sous-domaine de marque).
+  const rootDomain = getRootDomain();
+  const enfantsParId = new Map(tree.children.map((c) => [c.id, c]));
   const stats = await buildConsolidatedStats(tenantId);
 
   return (
@@ -113,6 +120,9 @@ export default async function EtablissementsPage() {
                     Modules
                   </th>
                   <th scope="col" className="p-3">
+                    Gestion
+                  </th>
+                  <th scope="col" className="p-3">
                     Actions
                   </th>
                 </tr>
@@ -154,6 +164,62 @@ export default async function EtablissementsPage() {
                       </td>
                       <td className="p-3 text-right tabular-nums">
                         {e.completedEpisodes}
+                      </td>
+                      <td className="p-3 text-sm">
+                        {!isRoot &&
+                          (() => {
+                            const enfant = enfantsParId.get(e.tenantId);
+                            if (!enfant) return null;
+                            return enfant.parentManaged ? (
+                              <div className="flex flex-col gap-1">
+                                <a
+                                  href={urlAdministration(enfant, rootDomain)}
+                                  target="_blank"
+                                  rel="noopener"
+                                  className="text-accent-600 dark:text-accent-300 hover:underline font-medium"
+                                >
+                                  Administrer ↗
+                                </a>
+                                <form action={setEstablishmentManagedAction}>
+                                  <input
+                                    type="hidden"
+                                    name="id"
+                                    value={e.tenantId}
+                                  />
+                                  <input
+                                    type="hidden"
+                                    name="enable"
+                                    value="false"
+                                  />
+                                  <button
+                                    type="submit"
+                                    className="text-xs text-gray-500 hover:underline"
+                                  >
+                                    Retirer la gestion depuis le siège
+                                  </button>
+                                </form>
+                              </div>
+                            ) : (
+                              <form action={setEstablishmentManagedAction}>
+                                <input
+                                  type="hidden"
+                                  name="id"
+                                  value={e.tenantId}
+                                />
+                                <input
+                                  type="hidden"
+                                  name="enable"
+                                  value="true"
+                                />
+                                <button
+                                  type="submit"
+                                  className="text-accent-600 dark:text-accent-300 hover:underline"
+                                >
+                                  Gérer depuis le siège
+                                </button>
+                              </form>
+                            );
+                          })()}
                       </td>
                       <td className="p-3">
                         {!isRoot && (

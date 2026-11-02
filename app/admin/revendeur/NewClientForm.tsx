@@ -101,6 +101,20 @@ export default function NewClientForm({
         </div>
       </div>
 
+      {/* Gestion deleguee */}
+      <div className="rounded-lg border border-gray-200 dark:border-slate-800 p-4">
+        <label className="flex items-start gap-2 text-sm font-medium cursor-pointer">
+          <input type="checkbox" name="parentManaged" className="mt-1" />
+          <span>
+            Gestion déléguée : vos administrateurs gèrent cet espace
+            <span className="block mt-1 text-xs font-normal text-gray-500">
+              Personnes, groupes et modules du client, depuis son adresse.
+              Chaque action est journalisée à votre nom, et le client voit que
+              vous administrez son espace. Modifiable ensuite sur sa fiche.
+            </span>
+          </span>
+        </label>
+      </div>
       {/* Marque blanche (repliée par défaut) */}
       <div className="rounded-lg border border-gray-200 dark:border-slate-800 p-4">
         <label className="flex items-center gap-2 text-sm font-medium cursor-pointer">

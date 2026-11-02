@@ -652,3 +652,65 @@ export async function facturerRevendeurAction(
         : `revendeur-refusee&motif=${encodeURIComponent(r.motif)}`;
   redirect(`/superadmin/tenants/${tenantId}?msg=${suffixe}`);
 }
+
+/**
+ * Gestion deleguee par le PARENT (Tenant.parentManaged) : les ADMIN et RSSI
+ * de l'espace parent (revendeur ou siege) administrent cet enfant par son
+ * sous-domaine. Le parent la pose et la retire lui-meme ; ici, Humanix peut
+ * la poser ou la retirer, par exemple a la demande du client. Sans parent,
+ * l'indicateur n'a aucun effet : on refuse de le poser.
+ */
+export async function setTenantParentManaged(
+  formData: FormData,
+): Promise<void> {
+  const session = await requireSuperadminSession();
+  const actorEmail = session.user.email ?? "unknown";
+  const tenantId = String(formData.get("tenantId") ?? "").trim();
+  const enable = String(formData.get("enable") ?? "") === "true";
+  if (!tenantId) throw new Error("tenantId requis");
+
+  const tenant = await db.tenant.findUnique({
+    where: { id: tenantId },
+    select: {
+      id: true,
+      name: true,
+      slug: true,
+      parentTenantId: true,
+      parentManaged: true,
+    },
+  });
+  if (!tenant) throw new Error("Tenant introuvable");
+  if (!tenant.parentTenantId) {
+    throw new Error("Ce tenant n'a pas d'espace parent");
+  }
+  if (tenant.parentManaged === enable) {
+    redirect(`/superadmin/tenants/${tenantId}?msg=delegated-noop`);
+  }
+
+  await db.tenant.update({
+    where: { id: tenantId },
+    data: {
+      parentManaged: enable,
+      parentManagedAt: enable ? new Date() : null,
+    },
+  });
+
+  await auditLog({
+    action: AuditActions.TENANT_UPDATED,
+    actor: { userId: session.user.id, email: actorEmail, role: "SUPERADMIN" },
+    tenantId,
+    target: { type: "tenant", id: tenantId, label: tenant.name },
+    message: enable
+      ? "Gestion deleguee ACTIVEE par Humanix : les admins du parent administrent ce tenant"
+      : "Gestion deleguee RETIREE par Humanix",
+    metadata: {
+      slug: tenant.slug,
+      parentTenantId: tenant.parentTenantId,
+      parentManaged: enable,
+    },
+  });
+
+  redirect(
+    `/superadmin/tenants/${tenantId}?msg=${enable ? "delegated-on" : "delegated-off"}`,
+  );
+}

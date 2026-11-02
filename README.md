@@ -43,7 +43,7 @@ souverain, intégrée nativement à CISO Assistant.
 - **MCP Server** premier mover SAT/HRM (Claude Desktop / Mistral / GPT)
 - **Phishing simulé** + **Vishing** + **Smishing** + **Quishing** souverains, IA Mistral, anti-PII automatique
 - **Add-in Outlook + add-on Gmail** « Signaler un phishing » en 1 clic (même endpoint, RGPD-minimisant) + **protection des récidivistes** : réassignation ciblée du module anti-phishing par le RSSI
-- **Marque blanche & portail revendeur** (Enterprise) : déploiement sous votre marque (logo, couleurs, sous-domaine, emails, certificats) avec cascade, + gestion d'espaces clients multi-tenant pour ESN/MSSP/cabinets
+- **Marque blanche & portail revendeur** (Enterprise) : déploiement sous votre marque (logo, couleurs, sous-domaine, emails, certificats) avec cascade, + gestion d'espaces clients multi-tenant pour ESN/MSSP/cabinets, avec gestion déléguée (le revendeur administre personnes, groupes et modules d'un client qui l'accepte, chaque action journalisée)
 - **Narration audio des modules** : cache MP3 pré-rendu Voxtral (`npm run tts:build`), streaming progressif natif `<audio>`, démarrage <100 ms en cache hit
 - **Connecteur natif CISO Assistant** : preuves de conformité exportées automatiquement
 - **Format OSCAL v1.1.2** (NIST) + CEF (Sentinel, Splunk, Sekoia, QRadar)

@@ -14,8 +14,14 @@
 //
 // ISOLATION : ce module ne donne au revendeur que la GESTION (créer, lister,
 // brander) de ses clients. Les données des clients (apprenants, scores) ne
-// sont PAS agrégées chez le revendeur ici — chaque client reste un tenant
+// sont PAS agrégées chez le revendeur ici : chaque client reste un tenant
 // isolé avec ses propres admins.
+//
+// GESTION DÉLÉGUÉE (2026-11-02) : un client peut porter Tenant.parentManaged.
+// Les ADMIN et RSSI du revendeur administrent alors cet espace, depuis son
+// propre hôte (lib/reseller/administration.ts), avec leur rôle d'origine :
+// personnes, groupes, modules. La règle vit dans lib/tenant-membership.ts
+// (getEffectiveRole) ; ici on ne fait que poser et retirer l'indicateur.
 
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
@@ -95,6 +101,8 @@ export type ClientSummary = {
   brandSubdomain: string | null;
   brandingEnabled: boolean;
   isActive: boolean;
+  /** Gestion deleguee : les administrateurs du revendeur administrent cet espace. */
+  parentManaged: boolean;
   createdAt: Date;
   userCount: number;
 };
@@ -114,6 +122,7 @@ export async function listClients(
       brandSubdomain: true,
       brandingEnabled: true,
       isActive: true,
+      parentManaged: true,
       createdAt: true,
       _count: { select: { users: true } },
     },
@@ -126,6 +135,7 @@ export async function listClients(
     brandSubdomain: r.brandSubdomain,
     brandingEnabled: r.brandingEnabled,
     isActive: r.isActive,
+    parentManaged: r.parentManaged,
     createdAt: r.createdAt,
     userCount: r._count.users,
   }));
@@ -153,6 +163,8 @@ export async function getClientForReseller(
       brandSubdomain: true,
       brandLogoMime: true,
       brandFaviconMime: true,
+      parentManaged: true,
+      parentManagedAt: true,
       createdAt: true,
     },
   });
@@ -168,6 +180,8 @@ export type ProvisionClientInput = {
   accentColor?: string | null;
   adminEmail?: string | null;
   adminName?: string | null;
+  /** Gestion deleguee des la creation : les admins du revendeur administrent le client. */
+  parentManaged?: boolean;
   actor: { userId: string; email: string; role: string };
 };
 
@@ -276,6 +290,8 @@ export async function provisionClientTenant(
           brandPrimaryColor: primaryColor,
           brandAccentColor: accentColor,
           brandSubdomain: subdomain,
+          parentManaged: Boolean(input.parentManaged),
+          parentManagedAt: input.parentManaged ? new Date() : null,
         },
         select: { id: true, slug: true },
       });
@@ -309,6 +325,7 @@ export async function provisionClientTenant(
         plan: input.plan,
         brandSubdomain: subdomain ?? "",
         adminEmail: adminEmail ?? "",
+        parentManaged: Boolean(input.parentManaged),
       },
     }).catch((e) => console.error("[reseller] audit log failed", e));
 

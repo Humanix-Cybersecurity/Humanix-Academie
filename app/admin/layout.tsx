@@ -30,6 +30,7 @@ import AdminSidebar from "@/components/AdminSidebar";
 import AdminTopBar from "@/components/AdminTopBar";
 import AdminSearchBox from "@/components/admin/AdminSearchBox";
 import CrossTenantBanner from "@/components/admin/CrossTenantBanner";
+import GestionDelegueeBandeau from "@/components/admin/GestionDelegueeBandeau";
 import { getCurrentTenantAccess } from "@/lib/current-tenant";
 import { db } from "@/lib/db";
 
@@ -87,6 +88,16 @@ export default async function AdminLayout({
     });
     activeTenantName = t?.name ?? null;
   }
+  // Espace administre par son parent (gestion deleguee) : on le dit a ses
+  // propres admins, pour qu'ils sachent qui d'autre peut agir chez eux.
+  let parentGestionnaire: string | null = null;
+  if (access.status === "home") {
+    const t = await db.tenant.findUnique({
+      where: { id: activeTenantId },
+      select: { parentManaged: true, parent: { select: { name: true } } },
+    });
+    if (t?.parentManaged && t.parent) parentGestionnaire = t.parent.name;
+  }
 
   // === SaaS multi-tenant : enforcement subscription status ===
   // Recupere l'etat du subscription du tenant ACTIF. Selon `restriction` :
@@ -139,6 +150,9 @@ export default async function AdminLayout({
             modifie par erreur le mauvais tenant. */}
         {isCrossTenant && activeTenantName && (
           <CrossTenantBanner activeTenantName={activeTenantName} />
+        )}
+        {parentGestionnaire && (
+          <GestionDelegueeBandeau parentName={parentGestionnaire} />
         )}
 
         {/* Bandeau de subscription si necessaire (warn/read_only/blocked) */}
