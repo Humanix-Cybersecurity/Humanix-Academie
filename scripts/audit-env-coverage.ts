@@ -38,6 +38,11 @@ const WHITELIST = new Set([
   // HUMANIX_PDF_OUT : lib/regles-organisation/pdf.test.tsx ecrit les PDF
   // d'exemple dans ce dossier quand elle est posee (controle visuel).
   "HUMANIX_PDF_OUT",
+  // TZ : lib/date-paris.test.ts et les tests d'hydratation (app/profil/
+  // securite, components/) changent le fuseau du processus a la volee pour
+  // prouver que les dates rendues n'en dependent pas. Le code de l'app ne le
+  // lit jamais : Node l'applique seul, et les conteneurs tournent en UTC.
+  "TZ",
   "ABSENT",
   "ASYNC_REQUIRED",
   "CACHED",
