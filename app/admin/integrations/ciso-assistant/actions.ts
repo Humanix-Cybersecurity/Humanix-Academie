@@ -17,6 +17,7 @@
 import { revalidatePath } from "next/cache";
 import { AuditAction, AuditOutcome, AuditSeverity } from "@prisma/client";
 import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { db } from "@/lib/db";
 import { auditLog } from "@/lib/audit";
 import {
@@ -35,7 +36,7 @@ async function requireAdmin() {
     throw new Error("forbidden");
   }
   return {
-    tenantId: session.user.tenantId as string,
+    tenantId: await getCurrentTenantId(),
     actor: {
       userId: session.user.id as string,
       email: session.user.email as string,

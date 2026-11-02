@@ -6,6 +6,7 @@
 // scenario est juste renvoye au client pour preview + edit avant lancement.
 
 import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { getTenantPlan, planHasFeature } from "@/lib/plans";
 import { checkRateLimit } from "@/lib/rate-limit";
 import {
@@ -35,7 +36,7 @@ export async function generateRedTeamAction(
   ) {
     return { ok: false, error: "forbidden" };
   }
-  const tenantId = session.user.tenantId as string;
+  const tenantId = await getCurrentTenantId();
   const plan = await getTenantPlan(tenantId);
   if (!planHasFeature(plan, "phishing_ia", session?.user?.role)) {
     return { ok: false, error: "plan_too_low" };

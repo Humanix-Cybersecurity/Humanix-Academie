@@ -4,6 +4,7 @@
 // du tenant (login, gestion users, billing, RGPD).
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { listAuditLogs } from "@/lib/audit-query";
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
 import AdminSection from "@/components/admin/AdminSection";
@@ -31,7 +32,7 @@ export default async function AdminAuditPage() {
   if (role !== "ADMIN" && role !== "RSSI" && role !== "SUPERADMIN") {
     redirect("/admin");
   }
-  const tenantId = session.user.tenantId as string;
+  const tenantId = await getCurrentTenantId();
 
   const { items } = await listAuditLogs({ tenantId, limit: 200 });
 

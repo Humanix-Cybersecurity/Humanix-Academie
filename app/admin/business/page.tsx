@@ -8,7 +8,7 @@
 // puis assemble les widgets.
 // =============================================================================
 
-import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { db } from "@/lib/db";
 import { computeBusinessImpact, VERDICT_LABEL } from "@/lib/business-impact";
 import {
@@ -40,8 +40,7 @@ const VERDICT_TO_CODIR_COLOR = {
 
 export default async function AdminBusinessPage() {
   // Auth garantie par app/admin/layout.tsx (defense-in-depth)
-  const session = await auth();
-  const tenantId = session!.user.tenantId as string;
+  const tenantId = await getCurrentTenantId();
 
   const [impact, tenant, meteo] = await Promise.all([
     computeBusinessImpact(tenantId),

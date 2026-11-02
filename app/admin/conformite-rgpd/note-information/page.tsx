@@ -18,6 +18,7 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { db } from "@/lib/db";
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
 import BoutonImprimer from "@/components/admin/conformite-rgpd/BoutonImprimer";
@@ -42,7 +43,7 @@ export default async function NoteInformationPage() {
     redirect("/admin");
   }
   const tenant = await db.tenant.findUnique({
-    where: { id: session.user.tenantId as string },
+    where: { id: await getCurrentTenantId() },
     select: { name: true },
   });
   const organisation = tenant?.name ?? "l'organisation";

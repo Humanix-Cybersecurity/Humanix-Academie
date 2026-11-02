@@ -22,6 +22,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { db } from "@/lib/db";
 import { sendEmail, isEmailConfigured } from "@/lib/email";
 
@@ -40,7 +41,7 @@ export async function POST(req: Request) {
   if (role !== "ADMIN" && role !== "RSSI" && role !== "SUPERADMIN") {
     return NextResponse.json({ error: "forbidden" }, { status: 403 });
   }
-  const tenantId = session.user.tenantId as string;
+  const tenantId = await getCurrentTenantId();
 
   const body = await req.json().catch(() => null);
   const parsed = Schema.safeParse(body);

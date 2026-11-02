@@ -105,10 +105,14 @@ export async function resolveTenantContext(): Promise<TenantContext> {
   }
 
   // Lookup le tenant par slug
-  const tenant = await db.tenant.findUnique({
-    where: { slug },
-    select: { id: true, slug: true, name: true, plan: true },
-  });
+  // Le sous-domaine est le `slug` du tenant, ou son `brandSubdomain` : un
+  // client cree par un revendeur a un slug technique derive de son nom et un
+  // sous-domaine choisi pour sa marque, et c'est ce dernier que ses liens
+  // portent. Le slug a priorite si les deux existent.
+  const select = { id: true, slug: true, name: true, plan: true } as const;
+  const tenant =
+    (await db.tenant.findUnique({ where: { slug }, select })) ??
+    (await db.tenant.findFirst({ where: { brandSubdomain: slug }, select }));
 
   if (!tenant) {
     return { kind: "tenant_unknown", slug, tenant: null, session };

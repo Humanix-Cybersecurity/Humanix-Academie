@@ -9,6 +9,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { renderToBuffer } from "@react-pdf/renderer";
 import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { db } from "@/lib/db";
 import { getTenantPlan } from "@/lib/plans";
 import { PackNis2Pdf, type PackNis2Variables } from "@/lib/pack-nis2/pdf";
@@ -24,7 +25,7 @@ export async function GET(req: NextRequest) {
   if (role !== "ADMIN" && role !== "MANAGER" && role !== "SUPERADMIN") {
     return NextResponse.json({ error: "forbidden" }, { status: 403 });
   }
-  const tenantId = session.user!.tenantId as string;
+  const tenantId = await getCurrentTenantId();
 
   const plan = await getTenantPlan(tenantId);
   if (!["pro", "enterprise"].includes(plan)) {

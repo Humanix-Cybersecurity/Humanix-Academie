@@ -38,6 +38,8 @@ import type { Session } from "next-auth";
 import { AuditAction, AuditOutcome } from "@prisma/client";
 import { auth } from "@/lib/auth";
 import { auditLog } from "@/lib/audit";
+import { getCurrentTenantAccess } from "@/lib/current-tenant";
+import { hasTenantAccess } from "@/lib/tenant-membership";
 
 export type HumanixRole =
   "LEARNER" | "MANAGER" | "RSSI" | "ADMIN" | "SUPERADMIN";
@@ -86,7 +88,17 @@ export async function requireRole(
   if ("response" in sessionGuard) return sessionGuard;
 
   const { session } = sessionGuard;
-  const role = session.user.role;
+  // Role EFFECTIF dans l'espace vise par la requete (sous-domaine + acces
+  // externe), pas le role d'origine : un acces externe MANAGER n'ouvre pas
+  // les routes ADMIN de cet espace. Hors sous-domaine, c'est le role
+  // d'origine. Sans acces a l'espace du sous-domaine (mismatch) ou avec un
+  // acces de rang inferieur (downgraded), aucun role : refus.
+  const access = await getCurrentTenantAccess();
+  const role = access
+    ? access.status === "home" || access.status === "cross"
+      ? access.role
+      : null
+    : session.user.role;
 
   if (!role || !allowedRoles.includes(role as HumanixRole)) {
     // Tentative d'acces a une route au-dessus du grade : on trace.
@@ -157,7 +169,12 @@ export async function requireTenantMember(
   // SUPERADMIN bypass cross-tenant (audit log trace l'acces)
   if (role === "SUPERADMIN") return { session };
 
-  if (userTenant !== tenantId) {
+  // Un acces externe (TenantMembership, gestion deleguee) vaut appartenance.
+  const externe =
+    userTenant !== tenantId && typeof session.user.id === "string"
+      ? await hasTenantAccess(session.user.id, tenantId)
+      : false;
+  if (userTenant !== tenantId && !externe) {
     void auditLog({
       action: AuditAction.USER_LOGIN_FAILED,
       outcome: AuditOutcome.DENIED,

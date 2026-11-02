@@ -21,6 +21,7 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { computeHeatmap } from "@/lib/admin/heatmap";
 import { PHISHING_TEMPLATES } from "@/lib/phishing";
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
@@ -41,7 +42,7 @@ export default async function AdminHeatmapPage() {
   ) {
     redirect("/admin");
   }
-  const tenantId = session.user.tenantId as string;
+  const tenantId = await getCurrentTenantId();
 
   const data = await computeHeatmap(tenantId);
 

@@ -6,6 +6,7 @@
 
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { db } from "@/lib/db";
 import { objectifsForProfil, type RecyfProfil } from "@/lib/nis2/recyf";
 import {
@@ -26,7 +27,7 @@ export async function saveRecyfAssessment(formData: FormData) {
   if (role !== "ADMIN" && role !== "RSSI" && role !== "SUPERADMIN") {
     redirect("/admin");
   }
-  const tenantId = session.user.tenantId;
+  const tenantId = await getCurrentTenantId();
 
   const profil: RecyfProfil =
     formData.get("profil")?.toString() === "EE" ? "EE" : "EI";

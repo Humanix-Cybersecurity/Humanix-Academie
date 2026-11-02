@@ -4,7 +4,7 @@
 // Auth garantie par app/admin/layout.tsx (defense-in-depth).
 
 import Link from "next/link";
-import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { db } from "@/lib/db";
 import { DRILL_SCENARIOS } from "@/lib/drill/scenarios";
 import CreateDrillPanel from "@/components/drill/CreateDrillPanel";
@@ -18,8 +18,7 @@ const STATUS_LABEL: Record<string, string> = {
 };
 
 export default async function AdminCrisisDrillPage() {
-  const session = await auth();
-  const tenantId = session!.user.tenantId as string;
+  const tenantId = await getCurrentTenantId();
 
   const recent = await db.crisisExercise.findMany({
     where: { tenantId },

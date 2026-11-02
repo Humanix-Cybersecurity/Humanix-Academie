@@ -5,6 +5,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { lireFormulaireRegles } from "@/lib/regles-organisation/formulaire";
 import {
   enregistrerRegles,
@@ -18,7 +19,7 @@ export async function enregistrerReglesAction(formData: FormData) {
   if (role !== "ADMIN" && role !== "RSSI" && role !== "SUPERADMIN") {
     redirect("/admin?error=forbidden");
   }
-  const tenantId = session.user.tenantId as string;
+  const tenantId = await getCurrentTenantId();
   const lu = lireFormulaireRegles(formData);
   if (!lu.ok) redirect(`/admin/regles?erreur=${lu.erreur}`);
 

@@ -4,7 +4,7 @@
 
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { db } from "@/lib/db";
 import { getScenario } from "@/lib/drill/scenarios";
 import DrillCockpit from "@/components/drill/DrillCockpit";
@@ -17,8 +17,7 @@ export default async function CrisisCockpitPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const session = await auth();
-  const tenantId = session!.user.tenantId as string;
+  const tenantId = await getCurrentTenantId();
 
   const ex = await db.crisisExercise.findFirst({
     where: { id, tenantId },

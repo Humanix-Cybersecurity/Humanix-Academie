@@ -17,6 +17,7 @@
 
 import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { db } from "@/lib/db";
 import { auditLog } from "@/lib/audit";
 import { getTenantPlan, planHasFeature } from "@/lib/plans";
@@ -48,7 +49,7 @@ async function requireExposureAdmin(): Promise<
   if (role !== "ADMIN" && role !== "RSSI" && role !== "SUPERADMIN") {
     return { ok: false, error: "forbidden" };
   }
-  const tenantId = session.user.tenantId as string | undefined;
+  const tenantId = await getCurrentTenantId();
   if (!tenantId) return { ok: false, error: "no_tenant" };
 
   const plan = await getTenantPlan(tenantId);

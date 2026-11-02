@@ -2,6 +2,7 @@
 // GET /admin/audit/export - telecharge le journal d'audit du tenant en CSV.
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { listAuditLogs, toCsv } from "@/lib/audit-query";
 import { auditLog, AuditActions } from "@/lib/audit";
 
@@ -17,7 +18,7 @@ export async function GET() {
       { status: 403 },
     );
   }
-  const tenantId = session.user.tenantId as string;
+  const tenantId = await getCurrentTenantId();
 
   const { items } = await listAuditLogs({ tenantId, limit: 500 });
   const csv = toCsv(

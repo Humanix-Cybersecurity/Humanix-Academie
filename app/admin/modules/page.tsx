@@ -6,7 +6,7 @@
 // REFONTE MAI 2026 : aligné design system Linear (PageHeader, Section).
 // =============================================================================
 
-import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { db } from "@/lib/db";
 import ModulesTable from "@/components/ModulesTable";
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
@@ -18,8 +18,7 @@ export const dynamic = "force-dynamic";
 
 export default async function AdminModulesPage() {
   // Auth garantie par app/admin/layout.tsx (defense-in-depth déjà appliquée).
-  const session = await auth();
-  const tenantId = session!.user.tenantId as string;
+  const tenantId = await getCurrentTenantId();
 
   // Multi-tenant : saisons globales + custom du tenant courant
   const [saisons, configs, affectations, groupesActifs] = await Promise.all([

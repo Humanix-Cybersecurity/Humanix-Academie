@@ -5,6 +5,7 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { auth, getSignInPath } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { listEmployeeTargets } from "./actions";
 import PersonalizeWizard from "./PersonalizeWizard";
 import PlanGate from "@/components/PlanGate";
@@ -19,7 +20,7 @@ export default async function PersonalizePhishingPage() {
   const role = session.user!.role;
   if (role !== "ADMIN" && role !== "RSSI" && role !== "SUPERADMIN")
     redirect("/apprendre");
-  const tenantId = session.user!.tenantId as string;
+  const tenantId = await getCurrentTenantId();
   const plan = await getTenantPlan(tenantId);
 
   if (!planHasFeature(plan, "phishing_ia", session?.user?.role)) {

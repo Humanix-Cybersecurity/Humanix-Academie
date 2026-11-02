@@ -15,6 +15,7 @@
 
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { db } from "@/lib/db";
 import { auditLog, AuditActions } from "@/lib/audit";
 import { recordExportAccess } from "@/lib/security/exfiltration-detection";
@@ -51,7 +52,7 @@ export async function GET(req: Request) {
   if (role !== "ADMIN" && role !== "RSSI" && role !== "SUPERADMIN") {
     return NextResponse.json({ error: "forbidden" }, { status: 403 });
   }
-  const tenantId = session.user!.tenantId as string;
+  const tenantId = await getCurrentTenantId();
   if (!tenantId) {
     return NextResponse.json({ error: "no_tenant" }, { status: 400 });
   }

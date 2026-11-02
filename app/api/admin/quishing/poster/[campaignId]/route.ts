@@ -23,6 +23,7 @@
 
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { db } from "@/lib/db";
 import { renderQuishingPosterBuffer } from "@/lib/quishing/poster-pdf";
 import {
@@ -58,7 +59,7 @@ async function authorizeAndLoad(campaignId: string) {
       error: NextResponse.json({ error: "forbidden" }, { status: 403 }),
     };
   }
-  const tenantId = session.user.tenantId as string;
+  const tenantId = await getCurrentTenantId();
 
   const campaign = await db.phishingCampaign.findUnique({
     where: { id: campaignId },

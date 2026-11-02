@@ -16,6 +16,7 @@
 //   future optim : cron pre-calc 1x/semaine + cache 7j.
 
 import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { db } from "@/lib/db";
 import Link from "next/link";
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
@@ -28,7 +29,7 @@ export const dynamic = "force-dynamic";
 
 export default async function VulnerableUsersPage() {
   const session = await auth();
-  const tenantId = session!.user.tenantId as string;
+  const tenantId = await getCurrentTenantId();
   const plan = await getTenantPlan(tenantId);
 
   if (!planHasFeature(plan, "phishing", session?.user?.role)) {

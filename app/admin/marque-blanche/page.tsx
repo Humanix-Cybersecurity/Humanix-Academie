@@ -8,6 +8,7 @@
 
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { db } from "@/lib/db";
 import { planHasFeature, normalizePlan } from "@/lib/plans";
 import PlanGate from "@/components/PlanGate";
@@ -23,7 +24,7 @@ export default async function MarqueBlanchePage() {
   if (role !== "ADMIN" && role !== "RSSI" && role !== "SUPERADMIN") {
     redirect("/admin");
   }
-  const tenantId = session.user.tenantId as string;
+  const tenantId = await getCurrentTenantId();
 
   const tenant = await db.tenant.findUnique({
     where: { id: tenantId },

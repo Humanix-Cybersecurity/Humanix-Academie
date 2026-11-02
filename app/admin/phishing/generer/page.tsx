@@ -6,6 +6,7 @@
 
 import { redirect } from "next/navigation";
 import { auth, getSignInPath } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { getTenantPlan } from "@/lib/plans";
 import PlanGateGeneric from "@/components/PlanGateGeneric";
 import PhishingGenerator from "@/components/PhishingGenerator";
@@ -19,7 +20,7 @@ export default async function PhishingGenererPage() {
   if (role !== "ADMIN" && role !== "MANAGER" && role !== "SUPERADMIN") {
     redirect("/apprendre");
   }
-  const tenantId = session.user!.tenantId as string;
+  const tenantId = await getCurrentTenantId();
   const plan = await getTenantPlan(tenantId);
   const isAllowed = ["pro", "enterprise"].includes(plan);
 

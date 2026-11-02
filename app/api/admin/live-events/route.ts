@@ -12,6 +12,7 @@
 
 import { NextRequest } from "next/server";
 import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { db } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
@@ -29,7 +30,7 @@ export async function GET(req: NextRequest) {
   if (role !== "ADMIN" && role !== "MANAGER" && role !== "SUPERADMIN") {
     return new Response("forbidden", { status: 403 });
   }
-  const tenantId = session.user!.tenantId as string;
+  const tenantId = await getCurrentTenantId();
 
   const encoder = new TextEncoder();
 

@@ -9,6 +9,7 @@ import crypto from "crypto";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { db } from "@/lib/db";
 import { ALL_WEBHOOK_EVENTS, isWebhookEventKey } from "@/lib/webhooks/events";
 import { testWebhook } from "@/lib/webhooks/dispatcher";
@@ -20,7 +21,7 @@ async function requireAdminTenant(): Promise<{ tenantId: string }> {
   if (role !== "ADMIN" && role !== "MANAGER" && role !== "SUPERADMIN") {
     throw new Error("forbidden");
   }
-  const tenantId = session?.user?.tenantId as string;
+  const tenantId = await getCurrentTenantId();
   if (!tenantId) throw new Error("forbidden");
   return { tenantId };
 }

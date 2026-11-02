@@ -20,6 +20,7 @@
 import Link from "next/link";
 import { CGV_VERSION } from "@/lib/legal/versions";
 import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { getSubscriptionState } from "@/lib/subscription-state";
 import { getSeatUsage, formatSeatUsage } from "@/lib/seats";
 import {
@@ -42,10 +43,10 @@ export const dynamic = "force-dynamic";
 
 export default async function BillingPage() {
   const session = await auth();
-  if (!session?.user || typeof session.user.tenantId !== "string") {
+  if (!session?.user) {
     throw new Error("Unauthorized: missing tenant context");
   }
-  const tenantId = session.user.tenantId;
+  const tenantId = await getCurrentTenantId();
 
   const [state, usage, identite, factures, aFacturer] = await Promise.all([
     getSubscriptionState(tenantId),

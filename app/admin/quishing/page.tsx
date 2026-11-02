@@ -12,6 +12,7 @@
 
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { db } from "@/lib/db";
 import { FEATURE_MIN_PLAN, getTenantPlan, planHasFeature } from "@/lib/plans";
 import PlanGate from "@/components/PlanGate";
@@ -37,7 +38,7 @@ export default async function AdminQuishingPage() {
   ) {
     redirect("/admin");
   }
-  const tenantId = session.user!.tenantId as string;
+  const tenantId = await getCurrentTenantId();
   const plan = await getTenantPlan(tenantId);
 
   if (!planHasFeature(plan, "quishing", session?.user?.role)) {

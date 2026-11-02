@@ -6,6 +6,7 @@
 import { NextResponse } from "next/server";
 import { timingSafeEqual } from "node:crypto";
 import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { sendReminders, findInactiveUsers } from "@/lib/notifications";
 import { db } from "@/lib/db";
 
@@ -45,7 +46,7 @@ export async function GET(req: Request) {
   if (role !== "ADMIN" && role !== "RSSI" && role !== "SUPERADMIN") {
     return NextResponse.json({ error: "forbidden" }, { status: 403 });
   }
-  tenantId = session.user!.tenantId;
+  tenantId = await getCurrentTenantId();
   if (!tenantId)
     return NextResponse.json({ error: "no_tenant" }, { status: 400 });
 
@@ -82,7 +83,7 @@ export async function POST(req: Request) {
   if (role !== "ADMIN" && role !== "RSSI" && role !== "SUPERADMIN") {
     return NextResponse.json({ error: "forbidden" }, { status: 403 });
   }
-  tenantId = session.user!.tenantId;
+  tenantId = await getCurrentTenantId();
   if (!tenantId)
     return NextResponse.json({ error: "no_tenant" }, { status: 400 });
 

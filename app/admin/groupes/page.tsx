@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // /admin/groupes - gestion des groupes metier (Compta, RH, Dev, etc.)
-import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { db } from "@/lib/db";
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
 import AdminSection from "@/components/admin/AdminSection";
@@ -9,8 +9,7 @@ import GroupsManager from "@/components/GroupsManager";
 export const dynamic = "force-dynamic";
 
 export default async function AdminGroupesPage() {
-  const session = await auth();
-  const tenantId = session!.user.tenantId as string;
+  const tenantId = await getCurrentTenantId();
 
   const groups = await db.group.findMany({
     where: { tenantId },

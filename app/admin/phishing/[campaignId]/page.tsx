@@ -18,7 +18,7 @@
 
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { db } from "@/lib/db";
 import { PHISHING_TEMPLATES } from "@/lib/phishing";
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
@@ -32,8 +32,7 @@ export default async function CampaignDetailPage({
   params: Promise<{ campaignId: string }>;
 }) {
   const { campaignId } = await params;
-  const session = await auth();
-  const tenantId = session!.user.tenantId as string;
+  const tenantId = await getCurrentTenantId();
 
   const campaign = await db.phishingCampaign.findFirst({
     where: { id: campaignId, tenantId },

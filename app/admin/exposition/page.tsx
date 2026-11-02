@@ -10,6 +10,7 @@
 // =============================================================================
 
 import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { db } from "@/lib/db";
 import PlanGate from "@/components/PlanGate";
 import { getTenantPlan, planHasFeature, FEATURE_MIN_PLAN } from "@/lib/plans";
@@ -31,7 +32,7 @@ export const dynamic = "force-dynamic";
 export default async function AdminExpositionPage() {
   // Auth garantie par app/admin/layout.tsx (defense-in-depth).
   const session = await auth();
-  const tenantId = session!.user.tenantId as string;
+  const tenantId = await getCurrentTenantId();
 
   const plan = await getTenantPlan(tenantId);
 

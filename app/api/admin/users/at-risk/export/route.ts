@@ -12,6 +12,7 @@
 
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { listAtRiskUsers } from "@/lib/admin/at-risk-users";
 import { recordExportAccess } from "@/lib/security/exfiltration-detection";
 // Echappement RFC 4180 + anti CSV-injection : implementation canonique
@@ -34,7 +35,7 @@ export async function GET(req: Request) {
   ) {
     return NextResponse.json({ error: "forbidden" }, { status: 403 });
   }
-  const tenantId = session.user.tenantId as string;
+  const tenantId = await getCurrentTenantId();
 
   const url = new URL(req.url);
   // Bornes robustes : NaN/hors plage -> defaut (evite de propager NaN dans

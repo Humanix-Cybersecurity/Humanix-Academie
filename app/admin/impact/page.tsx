@@ -17,6 +17,7 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { computeImpactKpis } from "@/lib/impact-kpis";
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
 import ImpactKpisView from "@/components/admin/ImpactKpisView";
@@ -37,7 +38,7 @@ export default async function AdminImpactPage() {
     redirect("/admin");
   }
 
-  const tenantId = session.user.tenantId as string;
+  const tenantId = await getCurrentTenantId();
   const kpis = await computeImpactKpis(tenantId);
 
   return (

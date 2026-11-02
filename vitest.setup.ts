@@ -21,3 +21,9 @@ vi.mock("@/lib/db", () => ({
     },
   ),
 }));
+
+// `server-only` est fourni par Next (alias interne du bundler), pas par
+// node_modules : hors de Next, l'import ne se resout pas. On le neutralise
+// pour pouvoir tester les modules serveur (lib/current-tenant.ts et ce qui
+// l'importe) sans que chaque test ait a le faire.
+vi.mock("server-only", () => ({}));

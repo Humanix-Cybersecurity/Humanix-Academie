@@ -15,6 +15,7 @@
 
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { listGroupSaisonMembers } from "@/lib/admin/heatmap";
 import { recordExportAccess } from "@/lib/security/exfiltration-detection";
 import { buildCsv } from "@/lib/csv";
@@ -35,7 +36,7 @@ export async function GET(req: Request) {
   ) {
     return NextResponse.json({ error: "forbidden" }, { status: 403 });
   }
-  const tenantId = session.user.tenantId as string;
+  const tenantId = await getCurrentTenantId();
 
   const url = new URL(req.url);
   const group = url.searchParams.get("group") ?? "";

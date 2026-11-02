@@ -8,6 +8,7 @@
 // n'importe qui.
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { db } from "@/lib/db";
 import { MODELES_PAR_ETAPE } from "@/lib/conformite-rgpd/modeles";
 
@@ -18,7 +19,7 @@ export async function GET(
   const { cle } = await params;
 
   const session = await auth();
-  if (!session?.user?.tenantId) {
+  if (!session?.user?.id) {
     return NextResponse.json({ error: "non_authentifie" }, { status: 401 });
   }
   const role = session.user.role;
@@ -32,7 +33,7 @@ export async function GET(
   }
 
   const tenant = await db.tenant.findUnique({
-    where: { id: session.user.tenantId },
+    where: { id: await getCurrentTenantId() },
     select: { name: true },
   });
 

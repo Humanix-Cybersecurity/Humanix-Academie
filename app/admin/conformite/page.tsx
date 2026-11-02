@@ -12,7 +12,7 @@
 // =============================================================================
 
 import Link from "next/link";
-import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { getTenantPlan } from "@/lib/plans";
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
 import { computeAllFrameworksCoverage } from "@/lib/conformite/coverage";
@@ -21,8 +21,7 @@ import ConformiteHub, { type FrameworkCoverageView } from "./ConformiteHub";
 export const dynamic = "force-dynamic";
 
 export default async function ConformitePage() {
-  const session = await auth();
-  const tenantId = session!.user.tenantId as string;
+  const tenantId = await getCurrentTenantId();
   const plan = await getTenantPlan(tenantId);
 
   // Conformité / export de preuve = fonctionnalité Pro+ (aligné sur

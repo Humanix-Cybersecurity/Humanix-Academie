@@ -6,6 +6,7 @@
 
 import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { db } from "@/lib/db";
 import { parseRecipientCsv } from "@/lib/phishing/recipient-csv";
 
@@ -27,8 +28,8 @@ export async function createListFromCsv(formData: FormData): Promise<{
   imported?: number;
   skipped?: number;
 }> {
-  const session = await requireAdmin();
-  const tenantId = session.user.tenantId as string;
+  await requireAdmin();
+  const tenantId = await getCurrentTenantId();
 
   const name = String(formData.get("name") ?? "")
     .trim()
@@ -102,8 +103,8 @@ export async function createListFromCsv(formData: FormData): Promise<{
 }
 
 export async function deleteList(formData: FormData): Promise<void> {
-  const session = await requireAdmin();
-  const tenantId = session.user.tenantId as string;
+  await requireAdmin();
+  const tenantId = await getCurrentTenantId();
   const listId = String(formData.get("listId") ?? "").trim();
 
   if (!listId) return;

@@ -14,6 +14,7 @@
 
 import Link from "next/link";
 import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { db } from "@/lib/db";
 import { getTenantPlan, planHasFeature, FEATURE_MIN_PLAN } from "@/lib/plans";
 import PlanGate from "@/components/PlanGate";
@@ -26,7 +27,7 @@ export const dynamic = "force-dynamic";
 
 export default async function PhishingTemplatesPage() {
   const session = await auth();
-  const tenantId = session!.user.tenantId as string;
+  const tenantId = await getCurrentTenantId();
   const plan = await getTenantPlan(tenantId);
 
   if (!planHasFeature(plan, "phishing", session?.user?.role)) {
