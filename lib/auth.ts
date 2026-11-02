@@ -34,6 +34,7 @@ import {
   checkPasswordRateLimit,
 } from "@/lib/auth-rate-limit";
 import { sendEmail, isEmailConfigured } from "@/lib/email";
+import { versPageDeConfirmation } from "@/lib/magic-link/confirmation";
 import {
   COMMUNITY_TENANT_SLUG,
   getCommunityTenant,
@@ -506,6 +507,13 @@ if (isEmailConfigured()) {
           }
         }
 
+        // Le mail pointe sur la page de confirmation, pas sur le callback :
+        // le jeton est à usage unique et les messageries d'entreprise
+        // (Microsoft 365, Safe Links) ouvrent les liens avant l'utilisateur,
+        // ce qui le consommait. Le bouton de la page envoie le jeton au
+        // callback en POST. Cf. lib/magic-link/confirmation.ts.
+        finalUrl = versPageDeConfirmation(finalUrl);
+
         const result = await sendEmail({
           to: identifier,
           subject: "🦊 Hex t'invite à entrer dans Humanix Académie",
@@ -927,7 +935,7 @@ function magicLinkEmailHTML(url: string): string {
   <div style="max-width: 480px; margin: 0 auto; background: white; border-radius: 16px; padding: 40px; text-align: center;">
     <div style="font-size: 48px;">🦊</div>
     <h1 style="color: #0B3D91; margin: 16px 0 8px;">Bienvenue !</h1>
-    <p style="color: #555; line-height: 1.6;">Salut, c'est Hex. Clique sur le bouton pour entrer dans ton univers Humanix Académie.</p>
+    <p style="color: #555; line-height: 1.6;">Salut, c'est Hex. Clique sur le bouton, puis confirme sur la page qui s'ouvre : c'est ta porte d'entrée dans Humanix Académie.</p>
     <a href="${url}" style="display: inline-block; margin: 24px 0; background: #00A3A1; color: white; text-decoration: none; padding: 16px 32px; border-radius: 12px; font-weight: bold;">Entrer maintenant →</a>
     <p style="color: #999; font-size: 13px;">Ce lien expire dans 24h.</p>
   </div>
