@@ -6,6 +6,98 @@ Toutes les évolutions notables du produit, classées par version. Conforme
 
 ---
 
+## [1.15.0] - 2026-11-02 🎯 Des saisons prescrites par groupe, et des textes pour tout le monde
+
+Dix jours après la 1.14.0 : l'administration choisit enfin quelles saisons
+s'adressent à quels groupes, l'interface et les courriels ne présupposent plus
+le genre de la personne qui lit, le rapport mensuel au comité de direction part
+pour la première fois depuis sa création, et la CI ne dépend plus du cache de
+GitHub.
+
+### Added
+
+#### 🎯 Prescrire une saison à des groupes
+
+Jusqu'ici « obligatoire » valait pour tout l'espace, et le ciblage d'un
+épisode ne faisait que surligner. Une saison peut désormais être **prescrite**
+à un ou plusieurs groupes : en tête des recommandées pour eux (« prescrite à
+ton groupe »), obligatoire pour eux seulement quand elle l'est dans l'espace,
+et toujours consultable par tout le monde. Prescrite, pas dédiée : rien n'est
+retiré du catalogue de personne. La règle est écrite une seule fois dans
+`lib/catalogue/prescription.ts`, et tous les lecteurs passent par elle :
+`/apprendre`, le parcours d'arrivée, les relances d'obligatoire, le score de
+risque, l'API v1 qui expose les groupes visés par saison. Nouvelle table
+`TenantSaisonGroupe`, à clé étrangère vers le groupe plutôt qu'un CSV de
+slugs ; sans affectation, rien ne change pour personne. (#988)
+
+Côté administration : sur `/admin/modules`, un bouton « Pour qui » par saison
+(« Tout l'espace » ou la liste des groupes cochés), un badge dans la ligne, un
+filtre « Prescrites à des groupes » et une action en lot « Prescrire à… » ;
+sur `/admin/groupes`, la colonne « Modules prescrits ». L'import CSV accepte
+une colonne `groupes` (slugs ou noms, rapprochés sans accents ni casse ; sans
+cette colonne, le `service` est rapproché d'un groupe du même nom). **Aucun
+groupe n'est créé depuis le fichier** : un libellé inconnu sort en erreur, et
+une personne déjà présente est ajoutée aux groupes indiqués, jamais retirée
+des autres. Chaque changement est audité (`SAISON_GROUPS_CHANGED`). (#989)
+
+### Changed
+
+#### ✍️ Des textes qui ne présupposent pas le genre
+
+Plus aucun point médian dans l'interface ni dans les courriels. Les vingt-six
+« prêt·e », « seul·e », « invité·e », « abonné·e », « employé·es »,
+« Dirigeant·e » sont remplacés par des formulations épicènes de même sens :
+« on se lance pour 5 minutes ? », « apprendre en solo », « votre adresse est
+abonnée », « les salariés et les particuliers », « Direction ». Les rôles sont
+nommés par leur fonction, et les personas du repli d'épisode ne parlent plus
+au masculin générique (« Vous êtes membre du personnel », « Vous travaillez
+dans une organisation française »). Dix-huit fichiers ; les tests et le
+contenu des saisons ne sont pas touchés. (#990)
+
+### Fixed
+
+- **Le rapport mensuel au comité de direction n'était jamais parti.** La
+  crontab appelle chaque job en POST ; la route, créée le 14 août, n'exposait
+  que GET et répondait 405 avant même de lire le secret, le 1er septembre, le
+  1er octobre et le 1er novembre. POST ajouté, et un test parcourt désormais
+  toutes les routes de `app/api/cron` pour exiger le verbe que l'ordonnanceur
+  utilise. (#993)
+- **La CI ne dépend plus du cache GitHub Actions.** Le quota de sortie du
+  compte était dépassé (« Egress is over the account limit ») : chaque run
+  restaurait 10 à 15 Go et les jobs restaient bloqués dix minutes sur Setup
+  Node.js, cause réelle des délais relevés dans la 1.14.0. Les exécuteurs
+  sont des machines persistantes : `npm ci` à chaque job sur leur cache npm
+  local, cache buildx local avec rotation, et les 12 Go de caches GitHub
+  supprimés. Un run complet tient en sept minutes. (#987)
+
+### Security
+
+- **Connecteur MCP** : zod 4.6.7 (GHSA-mrhx-c7xc-m3w5, HIGH, épuisement
+  mémoire), body-parser 2.4.0 (GHSA-27r3-jxmh-p828, HIGH, déni de service),
+  fast-uri 3.1.9 (quatre avis), @hono/node-server 2.1.5
+  (GHSA-rmxm-3fg6-px4f, `serveStatic`), @vitest/mocker 4.1.12 (deux avis),
+  ip-address 10.7.4. L'acceptation datée posée le 25 octobre sur body-parser,
+  le temps que la 2.4.0 ait ses sept jours, est levée : `.trivyignore.yaml`
+  est de nouveau vide. (#978, #980, #985, #986)
+- **nodemailer 10.2.1** : trois avis MEDIUM sur `addressparser`
+  (GHSA-85x2-q946-cp5h, GHSA-8c8m-p3m8-cjg8, GHSA-m943-m63m-w62w), un
+  destinataire pouvait sortir d'une adresse mal fermée. (#979, #984)
+
+### Exploitation
+
+Une table nouvelle, `TenantSaisonGroupe`, créée par le `db push` de la
+livraison, sans migration de données. Rien à faire côté hôte. Le rapport
+d'octobre au comité de direction a été rejoué à la main le 1er novembre ; le
+rejeu envoie le rapport du mois précédent, ne pas le relancer deux fois. Toutes
+les montées de dépendances ont respecté la garde des sept jours.
+
+### Dépendances
+
+- Next et eslint-config-next 16.4.3, isomorphic-dompurify 4.6.0, undici
+  8.12.3, postcss 8.5.31, vite 8.3.5 ; connecteur : vitest 4.1.12. Images de
+  base node 24-alpine et postgres 16-alpine ré-épinglées sur leurs digests du
+  1er novembre. (#981, #983, #984, #991, #992)
+
 ## [1.14.0] - 2026-10-23 🧠 L'IA au quotidien, et une démo qui se remet à zéro
 
 Deux semaines de petites choses qui comptent : une saison entière sur l'IA
