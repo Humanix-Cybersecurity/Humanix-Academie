@@ -11,6 +11,7 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { db } from "@/lib/db";
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
 import AdminSection from "@/components/admin/AdminSection";
@@ -25,7 +26,7 @@ export default async function AdminSamlPage() {
   if (role !== "ADMIN" && role !== "RSSI" && role !== "SUPERADMIN") {
     redirect("/admin");
   }
-  const tenantId = session.user.tenantId as string;
+  const tenantId = await getCurrentTenantId();
 
   const [tenant, config] = await Promise.all([
     db.tenant.findUnique({

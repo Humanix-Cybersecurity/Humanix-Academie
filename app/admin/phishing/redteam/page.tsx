@@ -18,6 +18,7 @@
 //   - Plan-gate : Pro+ uniquement (cf. /admin/phishing/page.tsx)
 
 import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { getTenantPlan, planHasFeature, FEATURE_MIN_PLAN } from "@/lib/plans";
 import PlanGate from "@/components/PlanGate";
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
@@ -29,7 +30,7 @@ export const dynamic = "force-dynamic";
 
 export default async function RedTeamPage() {
   const session = await auth();
-  const tenantId = session!.user.tenantId as string;
+  const tenantId = await getCurrentTenantId();
   const plan = await getTenantPlan(tenantId);
 
   if (!planHasFeature(plan, "phishing", session?.user?.role)) {

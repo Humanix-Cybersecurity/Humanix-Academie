@@ -12,6 +12,7 @@
 
 import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { db } from "@/lib/db";
 import { auditLog, AuditActions } from "@/lib/audit";
 
@@ -23,7 +24,7 @@ async function requireAdmin() {
     throw new Error("forbidden");
   }
   return {
-    tenantId: session.user.tenantId as string,
+    tenantId: await getCurrentTenantId(),
     userId: session.user.id ?? null,
     email: session.user.email ?? null,
     role,

@@ -5,7 +5,7 @@
 // REFONTE MAI 2026 : aligné design system Linear (PageHeader, Section).
 // =============================================================================
 
-import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { db } from "@/lib/db";
 import { getTenantPlan } from "@/lib/plans";
 import PackNis2Form from "@/components/PackNis2Form";
@@ -19,8 +19,7 @@ export const dynamic = "force-dynamic";
 
 export default async function AdminConformiteNis2Page() {
   // Auth garantie par app/admin/layout.tsx (defense-in-depth déjà appliquée).
-  const session = await auth();
-  const tenantId = session!.user.tenantId as string;
+  const tenantId = await getCurrentTenantId();
 
   const plan = await getTenantPlan(tenantId);
   const isAllowed = ["pro", "enterprise"].includes(plan);

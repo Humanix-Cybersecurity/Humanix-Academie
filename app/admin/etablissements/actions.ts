@@ -7,6 +7,7 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { db } from "@/lib/db";
 import { createChildTenant } from "@/lib/multi-tenant";
 
@@ -15,7 +16,7 @@ async function requireAdminOnRoot(): Promise<{ tenantId: string }> {
   const role = session?.user?.role;
   if (role !== "ADMIN" && role !== "RSSI" && role !== "SUPERADMIN")
     throw new Error("forbidden");
-  const tenantId = session?.user?.tenantId as string;
+  const tenantId = await getCurrentTenantId();
   if (!tenantId) throw new Error("forbidden");
   return { tenantId };
 }

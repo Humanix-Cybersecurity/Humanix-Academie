@@ -4,6 +4,7 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { createIncidentAction } from "../actions";
 import { INCIDENT_TYPE_LABELS } from "@/lib/incident-response/playbooks";
 import { getTenantPlan, planHasFeature } from "@/lib/plans";
@@ -21,7 +22,7 @@ const SEVERITIES = [
 
 export default async function NewIncidentPage() {
   const session = await auth();
-  const tenantId = session!.user.tenantId as string;
+  const tenantId = await getCurrentTenantId();
   const plan = await getTenantPlan(tenantId);
   if (!planHasFeature(plan, "incidents", session?.user?.role))
     redirect("/admin/incidents");

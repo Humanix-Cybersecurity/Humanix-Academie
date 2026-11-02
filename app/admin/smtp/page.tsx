@@ -20,6 +20,7 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { db } from "@/lib/db";
 import SmtpConfigForm from "./SmtpConfigForm";
 import DeliverabilityCheck from "./DeliverabilityCheck";
@@ -41,7 +42,7 @@ export default async function SmtpConfigPage() {
   if (role !== "ADMIN" && role !== "RSSI" && role !== "SUPERADMIN") {
     redirect("/admin");
   }
-  const tenantId = session.user!.tenantId as string;
+  const tenantId = await getCurrentTenantId();
 
   const cfg = await db.tenantSmtpConfig.findUnique({
     where: { tenantId },

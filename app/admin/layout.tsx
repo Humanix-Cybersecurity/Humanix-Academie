@@ -30,8 +30,7 @@ import AdminSidebar from "@/components/AdminSidebar";
 import AdminTopBar from "@/components/AdminTopBar";
 import AdminSearchBox from "@/components/admin/AdminSearchBox";
 import CrossTenantBanner from "@/components/admin/CrossTenantBanner";
-import { getTenantContextSummary } from "@/lib/current-tenant";
-import { canActAsAdminInTenant } from "@/lib/tenant-membership";
+import { getCurrentTenantAccess } from "@/lib/current-tenant";
 import { db } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
@@ -55,34 +54,33 @@ export default async function AdminLayout({
     redirect("/apprendre");
   }
 
-  // === Sprint 2 multi-tenant membership ===
-  // Resout le tenant ACTIF (sous-domaine + membership) au lieu de toujours
-  // utiliser session.user.tenantId. Permet a un SUPERADMIN navigant sur
-  // acme.humanix-academie.fr/admin d'agir dans Acme plutot que dans son
-  // tenant home Humanix.
-  const ctxSummary = await getTenantContextSummary();
-  const activeTenantId =
-    ctxSummary?.activeTenantId ?? (session.user.tenantId as string | undefined);
-  const isCrossTenant = ctxSummary ? !ctxSummary.isHome : false;
-
-  // Defense en profondeur : si on est en mode cross-tenant (membership),
-  // on revalide que le user a effectivement le droit d'agir comme admin
-  // dans ce tenant. SUPERADMIN bypass automatiquement.
-  if (isCrossTenant && activeTenantId) {
-    const userId = session.user!.id as string;
-    const allowed = await canActAsAdminInTenant(userId, activeTenantId);
-    if (!allowed) {
-      // Pas d'acces : redirect vers /apprendre (interface user) plutot que
-      // /admin pour eviter une boucle. L'utilisateur ne devrait jamais
-      // arriver ici (resolveTenantContext bloque deja), mais defense en
-      // profondeur.
-      redirect("/apprendre");
-    }
+  // === Espace actif et acces croise ===
+  // L'espace vise est celui du sous-domaine (acces externe, gestion deleguee
+  // ou SUPERADMIN), sinon l'espace d'origine. Sans acces a l'espace du
+  // sous-domaine, on renvoie vers l'hote de l'espace d'origine plutot que
+  // d'afficher l'administration de l'origine sous le nom d'un autre : c'est
+  // ce que faisait le repli silencieux avant le 2026-11-02.
+  const access = await getCurrentTenantAccess();
+  if (!access) redirect("/connexion");
+  if (access.status === "mismatch") {
+    redirect(access.redirectTo ?? "/apprendre");
   }
-
-  // Nom du tenant actif (pour le banner cross-tenant si different du home)
+  // Un acces externe de rang inferieur au role d'origine n'ouvre pas
+  // l'administration : les pages verifient encore le role d'origine, et lui
+  // accorderaient dans l'espace vise un pouvoir que l'acces ne donne pas.
+  if (access.status === "downgraded") redirect("/apprendre");
+  const activeTenantId = access.tenantId;
+  const isCrossTenant = access.status === "cross";
+  if (
+    isCrossTenant &&
+    (access.role === null ||
+      !["MANAGER", "RSSI", "ADMIN", "SUPERADMIN"].includes(access.role))
+  ) {
+    redirect("/apprendre");
+  }
+  // Nom de l'espace actif, pour le bandeau cross-tenant.
   let activeTenantName: string | null = null;
-  if (isCrossTenant && activeTenantId) {
+  if (isCrossTenant) {
     const t = await db.tenant.findUnique({
       where: { id: activeTenantId },
       select: { name: true },

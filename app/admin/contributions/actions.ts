@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { db } from "@/lib/db";
 import { ModuleSubmissionSchema } from "@/lib/marketplace/schema";
 import { computeContentHash } from "@/lib/marketplace/integrity";
@@ -28,7 +29,7 @@ async function requireContributor() {
     throw new Error("forbidden");
   return {
     userId: session.user!.id as string,
-    tenantId: session.user!.tenantId as string,
+    tenantId: await getCurrentTenantId(),
     role,
   };
 }
@@ -196,7 +197,7 @@ async function requireModerator() {
   if (role !== "SUPERADMIN") throw new Error("forbidden_moderator_only");
   return {
     userId: session.user!.id as string,
-    tenantId: session.user!.tenantId as string,
+    tenantId: await getCurrentTenantId(),
   };
 }
 

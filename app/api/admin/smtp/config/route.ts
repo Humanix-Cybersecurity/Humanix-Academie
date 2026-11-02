@@ -16,6 +16,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { db } from "@/lib/db";
 import { auditLog, AuditActions } from "@/lib/audit";
 import { encryptSmtpPassword } from "@/lib/smtp/encryption";
@@ -47,7 +48,7 @@ async function checkAdmin(): Promise<
   if (role !== "ADMIN" && role !== "RSSI" && role !== "SUPERADMIN") {
     return { ok: false, status: 403, error: "forbidden" };
   }
-  const tenantId = session.user!.tenantId as string;
+  const tenantId = await getCurrentTenantId();
   if (!tenantId) {
     return { ok: false, status: 400, error: "no_tenant" };
   }

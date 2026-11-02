@@ -5,6 +5,7 @@
 // Appel a la demande (clic admin), pas en batch automatique.
 
 import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { db } from "@/lib/db";
 import {
   generateVulnerabilityProfile,
@@ -19,7 +20,7 @@ export async function analyzeUserVulnerability(
     return { ok: false, error: "unauthorized" };
   }
 
-  const tenantId = session.user.tenantId as string;
+  const tenantId = await getCurrentTenantId();
 
   // Verifie que le userId appartient bien au meme tenant (defense en
   // profondeur contre URL guess cross-tenant).

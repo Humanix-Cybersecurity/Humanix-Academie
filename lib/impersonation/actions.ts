@@ -18,6 +18,7 @@
 import { revalidatePath } from "next/cache";
 import { randomBytes } from "node:crypto";
 import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { db } from "@/lib/db";
 import { auditLog, AuditActions } from "@/lib/audit";
 import { sendImpersonationRequestEmail } from "./email";
@@ -35,7 +36,7 @@ async function requireAdmin() {
   return {
     userId: session.user.id as string,
     email: session.user.email as string | undefined,
-    tenantId: session.user.tenantId as string,
+    tenantId: await getCurrentTenantId(),
     role,
     name: session.user.name as string | undefined,
   };

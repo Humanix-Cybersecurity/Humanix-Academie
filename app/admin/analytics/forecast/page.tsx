@@ -20,6 +20,7 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
 import AdminSection from "@/components/admin/AdminSection";
 import {
@@ -40,7 +41,7 @@ export default async function ForecastPage() {
   if (role !== "ADMIN" && role !== "RSSI" && role !== "SUPERADMIN") {
     redirect("/admin");
   }
-  const tenantId = session.user.tenantId as string;
+  const tenantId = await getCurrentTenantId();
 
   const [forecast, movers, correlation] = await Promise.all([
     computeTenantForecast(tenantId),

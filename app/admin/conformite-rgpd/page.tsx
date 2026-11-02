@@ -26,6 +26,7 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
 import AdminSection from "@/components/admin/AdminSection";
 import {
@@ -51,7 +52,7 @@ export default async function ParcoursPage() {
 
   const etat = await chargerEtatParcours(
     session.user.id,
-    session.user.tenantId as string,
+    await getCurrentTenantId(),
   );
   const statuts = statutsSeuls(etat);
   const { traitees, total } = avancement(statuts);

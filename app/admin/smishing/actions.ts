@@ -10,6 +10,7 @@
 
 import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { launchManualCampaign } from "@/lib/phishing/manual-launch";
 import { resolveManualTargets } from "@/lib/phishing/manual-targets";
 import { auditLog, AuditActions, AuditOutcomes } from "@/lib/audit";
@@ -22,7 +23,7 @@ async function requireAdmin() {
     throw new Error("forbidden");
   }
   return {
-    tenantId: session.user!.tenantId as string,
+    tenantId: await getCurrentTenantId(),
     userId: session.user!.id as string,
     email: session.user!.email as string | undefined,
     role,

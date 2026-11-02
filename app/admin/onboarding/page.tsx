@@ -18,6 +18,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { db } from "@/lib/db";
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
 import AdminSection from "@/components/admin/AdminSection";
@@ -32,7 +33,7 @@ export default async function OnboardingPage() {
   if (role !== "ADMIN" && role !== "RSSI" && role !== "SUPERADMIN") {
     redirect("/admin");
   }
-  const tenantId = session.user.tenantId as string;
+  const tenantId = await getCurrentTenantId();
   const userId = session.user.id as string;
 
   // Etat actuel du tenant : a-t-il deja amorce le setup ?

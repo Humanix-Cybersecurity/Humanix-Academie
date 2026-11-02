@@ -4,6 +4,7 @@
 import { NextResponse } from "next/server";
 import { renderToBuffer } from "@react-pdf/renderer";
 import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { lireEtatRegles } from "@/lib/regles-organisation/etat";
 import { texteActe } from "@/lib/regles-organisation/deliberation";
 import { DeliberationPdf } from "@/lib/regles-organisation/pdf";
@@ -20,7 +21,7 @@ export async function GET() {
   ) {
     return NextResponse.json({ error: "forbidden" }, { status: 403 });
   }
-  const etat = await lireEtatRegles(session.user.tenantId as string);
+  const etat = await lireEtatRegles(await getCurrentTenantId());
   const texte = texteActe({ ...etat, genereLe: new Date() });
   const buffer = await renderToBuffer(<DeliberationPdf texte={texte} />);
   return new NextResponse(new Uint8Array(buffer), {

@@ -33,6 +33,9 @@ export default defineConfig({
     include: ["**/*.{test,spec}.{ts,tsx}"],
     exclude: [
       "node_modules/**",
+      // Arbres de travail crees par l'app Claude dans le depot : leurs copies
+      // des tests et leurs node_modules ne sont pas la suite du projet.
+      ".claude/**",
       ".next/**",
       "connectors/**",
       "outlook-addin/**",

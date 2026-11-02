@@ -14,6 +14,7 @@
 // l'EventSource. Le reste de la page est server-side rendered.
 
 import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
 import { SUPPORTED_FRAMEWORKS } from "@/lib/mapping-grc";
@@ -48,7 +49,7 @@ export default async function CisoAssistantAdminPage() {
   if (role !== "ADMIN" && role !== "RSSI" && role !== "SUPERADMIN") {
     redirect("/");
   }
-  const tenantId = session.user.tenantId as string;
+  const tenantId = await getCurrentTenantId();
 
   const [connection, runs] = await Promise.all([
     db.cisoAssistantConnection.findUnique({ where: { tenantId } }),

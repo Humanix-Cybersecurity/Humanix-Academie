@@ -8,6 +8,7 @@
 
 import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { db } from "@/lib/db";
 import { auditLog, AuditActions } from "@/lib/audit";
 
@@ -23,7 +24,7 @@ export async function updateAutomations(
   if (role !== "ADMIN" && role !== "RSSI" && role !== "SUPERADMIN") {
     return { ok: false, error: "forbidden" };
   }
-  const tenantId = session.user.tenantId as string;
+  const tenantId = await getCurrentTenantId();
 
   // FormData -> bool : un input checkbox non coche n'envoie rien (pas
   // "false" mais absent), donc on lit la presence de la cle plutot que

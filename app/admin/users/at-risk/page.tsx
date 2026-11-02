@@ -15,6 +15,7 @@
 
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { listAtRiskUsers } from "@/lib/admin/at-risk-users";
 import { listRepeatOffenders } from "@/lib/phishing/repeat-offenders";
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
@@ -47,7 +48,7 @@ export default async function AdminUsersAtRiskPage({
   ) {
     redirect("/admin");
   }
-  const tenantId = session.user.tenantId as string;
+  const tenantId = await getCurrentTenantId();
 
   const params = await searchParams;
   const threshold = params.threshold ? parseInt(params.threshold, 10) : 40;

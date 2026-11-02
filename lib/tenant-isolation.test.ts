@@ -58,6 +58,18 @@ vi.mock("@/lib/auth", () => ({
   })),
 }));
 
+// L'espace actif se resout depuis les en-tetes de la requete (sous-domaine) :
+// hors requete, on le fixe a l'espace d'origine de l'admin des fixtures.
+vi.mock("@/lib/current-tenant", () => ({
+  getCurrentTenantId: vi.fn(async () => "tenant-A"),
+}));
+// La revalidation de l'acces admin a l'espace actif (defense en profondeur du
+// garde) lit la base : on la tient pour acquise ici, ce test porte sur
+// l'isolation des cibles, pas sur le garde.
+vi.mock("@/lib/tenant-membership", () => ({
+  canActAsAdminInTenant: vi.fn(async () => true),
+}));
+
 vi.mock("@/lib/audit", () => ({
   auditLog: vi.fn(async () => true),
   AuditActions: new Proxy({}, { get: (_t, prop) => String(prop) }),

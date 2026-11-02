@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { db } from "@/lib/db";
 import { generateApiKey } from "@/lib/crypto";
 
@@ -11,7 +12,7 @@ async function requireAdmin() {
   const role = session.user!.role;
   if (role !== "ADMIN" && role !== "RSSI" && role !== "SUPERADMIN")
     throw new Error("forbidden");
-  return { tenantId: session.user!.tenantId as string };
+  return { tenantId: await getCurrentTenantId() };
 }
 
 export async function createApiKey(

@@ -5,15 +5,14 @@
 // (exercices) mesures automatiquement ; le reste est declare et persiste.
 
 import Link from "next/link";
-import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { computeTenantRecyf } from "@/lib/nis2/recyf-tenant";
 import RecyfPostureBoard from "@/components/nis2/RecyfPostureBoard";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminNis2Page() {
-  const session = await auth();
-  const tenantId = session!.user.tenantId as string;
+  const tenantId = await getCurrentTenantId();
 
   const data = await computeTenantRecyf(tenantId, { recordSnapshot: true });
 

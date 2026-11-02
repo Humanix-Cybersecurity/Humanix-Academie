@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // /admin/challenge - Cyber-Challenges (gate Pro+).
 import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { db } from "@/lib/db";
 import { getActiveChallenge, getChallengeRanking } from "@/lib/challenge";
 import StartChallengeForm from "@/components/StartChallengeForm";
@@ -15,7 +16,7 @@ export const dynamic = "force-dynamic";
 
 export default async function AdminChallengePage() {
   const session = await auth();
-  const tenantId = session!.user.tenantId as string;
+  const tenantId = await getCurrentTenantId();
 
   const plan = await getTenantPlan(tenantId);
   if (!planHasFeature(plan, "challenges", session?.user?.role)) {

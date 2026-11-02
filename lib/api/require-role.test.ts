@@ -17,9 +17,20 @@ vi.mock("@/lib/auth", () => ({
 vi.mock("@/lib/audit", () => ({
   auditLog: vi.fn(async () => true),
 }));
+// L'espace actif et les acces externes viennent de modules qui lisent les
+// en-tetes de la requete : mockes aussi. Par defaut, aucun contexte (null) :
+// requireRole retombe sur le role de la session, comme avant les acces croises.
+vi.mock("@/lib/current-tenant", () => ({
+  getCurrentTenantAccess: vi.fn(async () => null),
+}));
+vi.mock("@/lib/tenant-membership", () => ({
+  hasTenantAccess: vi.fn(async () => false),
+}));
 
 import { auth } from "@/lib/auth";
 import { auditLog } from "@/lib/audit";
+import { getCurrentTenantAccess } from "@/lib/current-tenant";
+import { hasTenantAccess } from "@/lib/tenant-membership";
 import {
   requireSession,
   requireRole,
@@ -217,5 +228,110 @@ describe("requireTenantMember (anti cross-tenant)", () => {
     const g = await requireTenantMember("t1", ["ADMIN", "RSSI"]);
     expect("response" in g).toBe(true);
     if ("response" in g) expect(g.response.status).toBe(403);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Acces croise : l'espace vise par la requete n'est pas l'espace d'origine.
+// Le role juge est le role EFFECTIF dans l'espace vise (lib/current-tenant),
+// pas celui de la session. Ajoute le 2026-11-02 avec la fin de la migration
+// vers l'espace actif.
+// ---------------------------------------------------------------------------
+function acces(
+  status: "home" | "cross" | "mismatch" | "downgraded",
+  role: string | null,
+) {
+  return {
+    userId: "u1",
+    homeTenantId: "t1",
+    homeRole: "ADMIN",
+    tenantId: status === "home" ? "t1" : "t2",
+    role,
+    status,
+    redirectTo: null,
+  };
+}
+
+describe("requireRole en acces croise (espace vise != espace d'origine)", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    vi.mocked(getCurrentTenantAccess).mockResolvedValue(null);
+    vi.mocked(hasTenantAccess).mockResolvedValue(false);
+    vi.mocked(auth).mockResolvedValue(
+      fakeSession({ id: "u1", role: "ADMIN", tenantId: "t1" }),
+    );
+  });
+
+  it("juge le role effectif : un acces externe MANAGER n'ouvre pas une route ADMIN", async () => {
+    vi.mocked(getCurrentTenantAccess).mockResolvedValue(
+      acces("cross", "MANAGER"),
+    );
+    const g = await requireAdmin();
+    expect("response" in g).toBe(true);
+    if ("response" in g) expect(g.response.status).toBe(403);
+    expect(auditLog).toHaveBeenCalledOnce();
+  });
+
+  it("laisse passer un acces externe ADMIN", async () => {
+    vi.mocked(getCurrentTenantAccess).mockResolvedValue(
+      acces("cross", "ADMIN"),
+    );
+    const g = await requireAdmin();
+    expect("session" in g).toBe(true);
+    expect(auditLog).not.toHaveBeenCalled();
+  });
+
+  it("refuse sans acces a l'espace du sous-domaine (mismatch), meme ADMIN chez soi", async () => {
+    vi.mocked(getCurrentTenantAccess).mockResolvedValue(
+      acces("mismatch", null),
+    );
+    const g = await requireAdmin();
+    expect("response" in g).toBe(true);
+    if ("response" in g) expect(g.response.status).toBe(403);
+  });
+
+  it("refuse un acces externe de rang inferieur au role d'origine (downgraded)", async () => {
+    vi.mocked(getCurrentTenantAccess).mockResolvedValue(
+      acces("downgraded", "MANAGER"),
+    );
+    const g = await requireRole(["MANAGER", "ADMIN"]);
+    expect("response" in g).toBe(true);
+  });
+
+  it("sur l'espace d'origine, le role est celui de la session", async () => {
+    vi.mocked(auth).mockResolvedValue(
+      fakeSession({ id: "u1", role: "MANAGER", tenantId: "t1" }),
+    );
+    vi.mocked(getCurrentTenantAccess).mockResolvedValue(
+      acces("home", "MANAGER"),
+    );
+    expect("session" in (await requireRole(["MANAGER"]))).toBe(true);
+    expect("response" in (await requireAdmin())).toBe(true);
+  });
+});
+
+describe("requireTenantMember avec acces externe", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    vi.mocked(getCurrentTenantAccess).mockResolvedValue(null);
+    vi.mocked(auth).mockResolvedValue(
+      fakeSession({ id: "u1", role: "ADMIN", tenantId: "t1" }),
+    );
+  });
+
+  it("un acces externe au tenant cible vaut appartenance", async () => {
+    vi.mocked(hasTenantAccess).mockResolvedValue(true);
+    const g = await requireTenantMember("t2");
+    expect("session" in g).toBe(true);
+    expect(hasTenantAccess).toHaveBeenCalledWith("u1", "t2");
+    expect(auditLog).not.toHaveBeenCalled();
+  });
+
+  it("sans acces externe, 404 et audit comme avant", async () => {
+    vi.mocked(hasTenantAccess).mockResolvedValue(false);
+    const g = await requireTenantMember("t2");
+    expect("response" in g).toBe(true);
+    if ("response" in g) expect(g.response.status).toBe(404);
+    expect(auditLog).toHaveBeenCalledOnce();
   });
 });

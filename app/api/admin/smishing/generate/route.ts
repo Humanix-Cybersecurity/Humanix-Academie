@@ -10,6 +10,7 @@
 //  - Aucun stockage : le SMS retourne au client, pas persiste
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { getTenantPlan, planHasFeature } from "@/lib/plans";
 import { checkRateLimit } from "@/lib/rate-limit";
 import {
@@ -46,7 +47,7 @@ export async function POST(req: Request) {
   ) {
     return NextResponse.json({ error: "forbidden" }, { status: 403 });
   }
-  const tenantId = session.user!.tenantId as string;
+  const tenantId = await getCurrentTenantId();
   if (!tenantId) {
     return NextResponse.json({ error: "no_tenant" }, { status: 400 });
   }

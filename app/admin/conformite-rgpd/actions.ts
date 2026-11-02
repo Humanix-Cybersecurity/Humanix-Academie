@@ -15,6 +15,7 @@
 // vers toute l'organisation.
 import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { db } from "@/lib/db";
 import { auditLog, AuditActions } from "@/lib/audit";
 import {
@@ -31,7 +32,7 @@ export async function definirStatutEtape(
   note?: string,
 ): Promise<ResultatAction> {
   const session = await auth();
-  if (!session?.user?.id || !session.user.tenantId) {
+  if (!session?.user?.id) {
     return { ok: false, erreur: "non_authentifie" };
   }
 
@@ -54,7 +55,7 @@ export async function definirStatutEtape(
       update: { statut },
     });
   } else {
-    const tenantId = session.user.tenantId;
+    const tenantId = await getCurrentTenantId();
     await db.etapeConformiteTenant.upsert({
       where: { tenantId_cle: { tenantId, cle } },
       create: {

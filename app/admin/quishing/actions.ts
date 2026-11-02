@@ -6,6 +6,7 @@
 
 import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { db } from "@/lib/db";
 import {
   launchQuishingCampaign,
@@ -24,7 +25,7 @@ async function requireAdmin() {
   if (role !== "ADMIN" && role !== "RSSI" && role !== "SUPERADMIN") {
     throw new Error("forbidden");
   }
-  return { tenantId: session.user!.tenantId as string };
+  return { tenantId: await getCurrentTenantId() };
 }
 
 export type LaunchQuishingResult =

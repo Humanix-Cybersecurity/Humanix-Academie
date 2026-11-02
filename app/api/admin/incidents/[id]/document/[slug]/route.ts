@@ -5,6 +5,7 @@
 import { NextResponse } from "next/server";
 import { renderToBuffer } from "@react-pdf/renderer";
 import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { db } from "@/lib/db";
 import { DOCUMENT_REGISTRY } from "@/lib/incident-response/pdf-templates";
 
@@ -22,7 +23,7 @@ export async function GET(
   if (role !== "ADMIN" && role !== "RSSI" && role !== "SUPERADMIN") {
     return NextResponse.json({ error: "forbidden" }, { status: 403 });
   }
-  const tenantId = session.user!.tenantId as string;
+  const tenantId = await getCurrentTenantId();
 
   const { id, slug } = await params;
   const doc = DOCUMENT_REGISTRY[slug];

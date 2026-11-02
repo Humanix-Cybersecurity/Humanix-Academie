@@ -11,6 +11,7 @@
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { db } from "@/lib/db";
 import { auditLog, AuditActions, AuditOutcomes } from "@/lib/audit";
 import {
@@ -37,7 +38,7 @@ async function requireAdminTenant(): Promise<AuthCtx> {
   }
   return {
     ok: true,
-    tenantId: session.user.tenantId as string,
+    tenantId: await getCurrentTenantId(),
     email: session.user.email ?? "unknown",
     role,
   };

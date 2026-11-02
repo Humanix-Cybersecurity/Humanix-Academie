@@ -10,6 +10,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { db } from "@/lib/db";
 import { auditLog, AuditActions } from "@/lib/audit";
 import { validerCoordonnees } from "@/lib/facturation/coordonnees";
@@ -33,7 +34,7 @@ export async function enregistrerIdentiteFacturation(donnees: FormData) {
   if (!session?.user || (role !== "ADMIN" && role !== "SUPERADMIN")) {
     redirect("/admin");
   }
-  const tenantId = session.user.tenantId as string;
+  const tenantId = await getCurrentTenantId();
 
   // Validation partagee avec le checkout public : les deux chemins doivent
   // appliquer EXACTEMENT les memes regles, sinon une adresse acceptee d'un
@@ -139,7 +140,7 @@ export async function emettreFactureManquante(donnees: FormData) {
   if (!session?.user || (role !== "ADMIN" && role !== "SUPERADMIN")) {
     redirect("/admin");
   }
-  const tenantId = session.user.tenantId as string;
+  const tenantId = await getCurrentTenantId();
   const ref = propre(donnees.get("paiementRef"), 100);
   if (!ref)
     redirect(

@@ -4,7 +4,7 @@
 // Vue consolidee + liste des etablissements + creation d'un nouveau site.
 
 import Link from "next/link";
-import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { getTenantPlan } from "@/lib/plans";
 import { loadTenantTree, buildConsolidatedStats } from "@/lib/multi-tenant";
 import {
@@ -18,8 +18,7 @@ import AdminPageHeader from "@/components/admin/AdminPageHeader";
 export const dynamic = "force-dynamic";
 
 export default async function EtablissementsPage() {
-  const session = await auth();
-  const tenantId = session!.user.tenantId as string;
+  const tenantId = await getCurrentTenantId();
 
   const plan = await getTenantPlan(tenantId);
   if (!["pro", "enterprise"].includes(plan)) {

@@ -5,7 +5,7 @@
 // (upsert RecyfAssessment) au lieu d'encoder dans l'URL.
 
 import Link from "next/link";
-import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { db } from "@/lib/db";
 import type { RecyfProfil } from "@/lib/nis2/recyf";
 import DiagnosticRecyfForm from "@/components/nis2/DiagnosticRecyfForm";
@@ -14,8 +14,7 @@ import { saveRecyfAssessment } from "../actions";
 export const dynamic = "force-dynamic";
 
 export default async function EvaluerRecyfPage() {
-  const session = await auth();
-  const tenantId = session!.user.tenantId as string;
+  const tenantId = await getCurrentTenantId();
 
   const existing = await db.recyfAssessment.findUnique({ where: { tenantId } });
   const initialProfil: RecyfProfil = existing?.profil === "EE" ? "EE" : "EI";

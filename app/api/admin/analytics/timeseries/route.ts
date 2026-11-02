@@ -24,6 +24,7 @@
 
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { getTenantTimeseries } from "@/lib/analytics/snapshot";
 
 export const dynamic = "force-dynamic";
@@ -42,7 +43,7 @@ export async function GET(req: Request) {
   ) {
     return NextResponse.json({ error: "forbidden" }, { status: 403 });
   }
-  const tenantId = session.user.tenantId as string;
+  const tenantId = await getCurrentTenantId();
 
   const url = new URL(req.url);
   const daysParam = url.searchParams.get("days");

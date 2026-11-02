@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // /admin/api-keys - Gestion des clés API publiques (Pro+).
 import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { db } from "@/lib/db";
 import ApiKeysManager from "@/components/ApiKeysManager";
 import PlanGate from "@/components/PlanGate";
@@ -12,7 +13,7 @@ export const dynamic = "force-dynamic";
 
 export default async function AdminApiKeysPage() {
   const session = await auth();
-  const tenantId = session!.user.tenantId as string;
+  const tenantId = await getCurrentTenantId();
 
   const plan = await getTenantPlan(tenantId);
   if (!planHasFeature(plan, "api", session?.user?.role)) {

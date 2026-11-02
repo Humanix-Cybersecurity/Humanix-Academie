@@ -6,6 +6,7 @@
 
 import { z } from "zod";
 import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { db } from "@/lib/db";
 import { getTenantPlan, planHasFeature } from "@/lib/plans";
 import {
@@ -52,7 +53,7 @@ async function requireAdminWithPlan() {
   const role = session.user!.role;
   if (role !== "ADMIN" && role !== "RSSI" && role !== "SUPERADMIN")
     throw new Error("forbidden");
-  const tenantId = session.user!.tenantId as string;
+  const tenantId = await getCurrentTenantId();
   const plan = await getTenantPlan(tenantId);
   if (!planHasFeature(plan, "phishing_ia", session?.user?.role))
     throw new Error("plan_required");

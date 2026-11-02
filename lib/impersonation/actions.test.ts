@@ -18,6 +18,11 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
 vi.mock("@/lib/auth", () => ({ auth: vi.fn() }));
+// L'espace actif se resout depuis les en-tetes de la requete : hors requete,
+// on le fixe a l'espace des fixtures.
+vi.mock("@/lib/current-tenant", () => ({
+  getCurrentTenantId: vi.fn(async () => "t1"),
+}));
 
 vi.mock("@/lib/db", () => ({
   db: {

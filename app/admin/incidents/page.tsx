@@ -4,6 +4,7 @@
 
 import Link from "next/link";
 import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { listIncidents } from "@/lib/incident-response/service";
 import {
   INCIDENT_TYPE_LABELS,
@@ -36,7 +37,7 @@ const STATUS_COLORS: Record<string, string> = {
 
 export default async function AdminIncidentsPage() {
   const session = await auth();
-  const tenantId = session!.user.tenantId as string;
+  const tenantId = await getCurrentTenantId();
 
   const plan = await getTenantPlan(tenantId);
   if (!planHasFeature(plan, "incidents", session?.user?.role)) {

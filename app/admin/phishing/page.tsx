@@ -8,6 +8,7 @@
 // =============================================================================
 
 import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { db } from "@/lib/db";
 import LaunchCampaignForm from "@/components/LaunchCampaignForm";
 import PlanGate from "@/components/PlanGate";
@@ -25,7 +26,7 @@ export const dynamic = "force-dynamic";
 export default async function AdminPhishingPage() {
   // Auth garantie par app/admin/layout.tsx (defense-in-depth)
   const session = await auth();
-  const tenantId = session!.user.tenantId as string;
+  const tenantId = await getCurrentTenantId();
 
   const plan = await getTenantPlan(tenantId);
 

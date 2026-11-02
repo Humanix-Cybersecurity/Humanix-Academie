@@ -5,6 +5,7 @@
 
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { FEATURE_MIN_PLAN, getTenantPlan, planHasFeature } from "@/lib/plans";
 import PlanGate from "@/components/PlanGate";
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
@@ -26,7 +27,7 @@ export default async function AdminSmishingPage() {
   ) {
     redirect("/admin");
   }
-  const tenantId = session.user!.tenantId as string;
+  const tenantId = await getCurrentTenantId();
   const plan = await getTenantPlan(tenantId);
 
   if (!planHasFeature(plan, "smishing", session?.user?.role)) {

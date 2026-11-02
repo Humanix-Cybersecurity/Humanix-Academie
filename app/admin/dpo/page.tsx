@@ -28,6 +28,7 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { db } from "@/lib/db";
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
 import AdminSection from "@/components/admin/AdminSection";
@@ -64,7 +65,7 @@ export default async function AdminDpoPage() {
     redirect("/admin");
   }
 
-  const tenantId = session.user.tenantId as string;
+  const tenantId = await getCurrentTenantId();
   const since = new Date(Date.now() - NINETY_DAYS_MS);
 
   // 1. Compteurs RGPD sur 90 jours

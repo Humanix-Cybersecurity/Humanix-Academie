@@ -4,6 +4,7 @@
 import { NextResponse } from "next/server";
 import { renderToBuffer } from "@react-pdf/renderer";
 import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { lireEtatRegles } from "@/lib/regles-organisation/etat";
 import { dateLongue } from "@/lib/regles-organisation/deliberation";
 import { AffichePdf } from "@/lib/regles-organisation/pdf";
@@ -21,7 +22,7 @@ export async function GET() {
   ) {
     return NextResponse.json({ error: "forbidden" }, { status: 403 });
   }
-  const etat = await lireEtatRegles(session.user.tenantId as string);
+  const etat = await lireEtatRegles(await getCurrentTenantId());
   const v = VOCABULAIRE[etat.typeOrganisation];
   const buffer = await renderToBuffer(
     <AffichePdf

@@ -5,6 +5,7 @@
 // anti-phishing à un récidiviste. Décision humaine RSSI/admin, audit-loggée.
 
 import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { assignPhishingRemediation } from "@/lib/phishing/repeat-offenders";
@@ -17,7 +18,7 @@ export async function assignPhishingRemediationAction(formData: FormData) {
   if (role !== "ADMIN" && role !== "RSSI" && role !== "SUPERADMIN") {
     redirect("/admin/users/at-risk?error=forbidden");
   }
-  const tenantId = session.user.tenantId as string;
+  const tenantId = await getCurrentTenantId();
   const userId = String(formData.get("userId") ?? "").trim();
   if (!userId) redirect("/admin/users/at-risk?error=missing_user");
 

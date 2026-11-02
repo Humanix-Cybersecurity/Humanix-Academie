@@ -3,14 +3,13 @@
 // Si l'user est connecte, on affiche le PLAN actif du tenant pour rendre
 // la demo plus credible (chaque visiteur sait quelle offre il est en train
 // de tester).
-import { auth } from "@/lib/auth";
+import { getCurrentTenantIdOrNull } from "@/lib/current-tenant";
 import { getTenantPlan, PLAN_LABEL, PLAN_EMOJI } from "@/lib/plans";
 
 export default async function DemoBanner() {
   if (process.env.DEMO_MODE !== "true") return null;
 
-  const session = await auth();
-  const tenantId = session?.user?.tenantId;
+  const tenantId = await getCurrentTenantIdOrNull();
   const plan = tenantId ? await getTenantPlan(tenantId) : null;
 
   return (

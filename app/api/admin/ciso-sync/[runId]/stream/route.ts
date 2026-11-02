@@ -15,6 +15,7 @@
 
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { db } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
@@ -35,7 +36,7 @@ export async function GET(
   if (role !== "ADMIN" && role !== "RSSI" && role !== "SUPERADMIN") {
     return new NextResponse("forbidden", { status: 403 });
   }
-  const tenantId = session.user.tenantId as string;
+  const tenantId = await getCurrentTenantId();
 
   const run = await db.cisoAssistantSyncRun.findUnique({
     where: { id: runId },

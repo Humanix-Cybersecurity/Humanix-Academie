@@ -12,6 +12,7 @@
 
 import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { db } from "@/lib/db";
 import { sanitizeEmailHtml } from "@/lib/sanitize-html";
 import { premierGrapheme } from "@/lib/emoji";
@@ -24,7 +25,7 @@ async function requireAdmin() {
     throw new Error("forbidden");
   }
   return {
-    tenantId: session.user.tenantId as string,
+    tenantId: await getCurrentTenantId(),
     userId: session.user.id as string,
   };
 }

@@ -3,6 +3,7 @@
 import { NextResponse } from "next/server";
 import { renderToBuffer } from "@react-pdf/renderer";
 import { auth } from "@/lib/auth";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import { db } from "@/lib/db";
 import { ConformityReport } from "@/lib/pdf-report";
 
@@ -16,7 +17,7 @@ export async function GET() {
   if (role !== "ADMIN" && role !== "MANAGER" && role !== "SUPERADMIN") {
     return NextResponse.json({ error: "forbidden" }, { status: 403 });
   }
-  const tenantId = session.user!.tenantId as string;
+  const tenantId = await getCurrentTenantId();
 
   const [tenant, users, saisons, allProgress] = await Promise.all([
     db.tenant.findUnique({ where: { id: tenantId } }),
