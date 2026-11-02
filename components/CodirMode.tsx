@@ -14,6 +14,7 @@
 // A11y : Escape pour quitter, role=dialog quand actif, focus trap natif via fullscreenAPI.
 
 import { useEffect, useRef, useState } from "react";
+import { dateLongueParis } from "@/lib/date-paris";
 
 type Action = {
   label: string;
@@ -81,7 +82,7 @@ export default function CodirMode(props: CodirModeProps) {
     setActive(false);
   }
 
-  const today = new Date().toLocaleDateString("fr-FR", { dateStyle: "long" });
+  const today = dateLongueParis(new Date());
 
   return (
     <>

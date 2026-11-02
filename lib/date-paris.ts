@@ -15,6 +15,9 @@
 //   (lib/periode.ts) et les factures. Le texte est assemble a partir des
 //   champs numeriques (formatToParts) et non de format(), pour ne pas
 //   dependre non plus des separateurs que chaque moteur ICU choisit.
+//
+//   Dans un composant client, toute date passe par ici : la regle est tenue
+//   par components/dates-client.test.ts.
 
 const FORMAT = new Intl.DateTimeFormat("fr-FR", {
   timeZone: "Europe/Paris",
@@ -27,14 +30,24 @@ const FORMAT = new Intl.DateTimeFormat("fr-FR", {
   hourCycle: "h23",
 });
 
+const FORMAT_LONG = new Intl.DateTimeFormat("fr-FR", {
+  timeZone: "Europe/Paris",
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+});
+
 type Champ = "year" | "month" | "day" | "hour" | "minute" | "second";
 type Champs = Record<Champ, string>;
 
-function champsParis(instant: Date | string): Champs | null {
+function champsParis(
+  format: Intl.DateTimeFormat,
+  instant: Date | string,
+): Champs | null {
   const d = instant instanceof Date ? instant : new Date(instant);
   if (Number.isNaN(d.getTime())) return null;
   const champs = {} as Champs;
-  for (const p of FORMAT.formatToParts(d)) {
+  for (const p of format.formatToParts(d)) {
     if (p.type !== "literal") champs[p.type as Champ] = p.value;
   }
   // Minuit est sorti en « 24 » sur d'anciens moteurs malgre hourCycle.
@@ -44,14 +57,28 @@ function champsParis(instant: Date | string): Champs | null {
 
 /** « 31/10/2026 » : le jour civil a Paris. Chaine vide si la date est invalide. */
 export function dateParis(instant: Date | string): string {
-  const c = champsParis(instant);
+  const c = champsParis(FORMAT, instant);
   return c ? `${c.day}/${c.month}/${c.year}` : "";
 }
 
-/** « 31/10/2026 14:12:52 » : l'instant a l'heure de Paris. Chaine vide si invalide. */
-export function dateHeureParis(instant: Date | string): string {
-  const c = champsParis(instant);
-  return c
-    ? `${c.day}/${c.month}/${c.year} ${c.hour}:${c.minute}:${c.second}`
-    : "";
+/**
+ * « 31/10/2026 14:12:52 » : l'instant a l'heure de Paris. Chaine vide si
+ * invalide. `secondes: false` donne « 31/10/2026 14:12 ».
+ */
+export function dateHeureParis(
+  instant: Date | string,
+  { secondes = true }: { secondes?: boolean } = {},
+): string {
+  const c = champsParis(FORMAT, instant);
+  if (!c) return "";
+  const heure = secondes
+    ? `${c.hour}:${c.minute}:${c.second}`
+    : `${c.hour}:${c.minute}`;
+  return `${c.day}/${c.month}/${c.year} ${heure}`;
+}
+
+/** « 2 novembre 2026 » : le jour civil a Paris, en toutes lettres. */
+export function dateLongueParis(instant: Date | string): string {
+  const c = champsParis(FORMAT_LONG, instant);
+  return c ? `${c.day} ${c.month} ${c.year}` : "";
 }

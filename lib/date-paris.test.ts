@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { afterEach, describe, expect, it } from "vitest";
-import { dateHeureParis, dateParis } from "./date-paris";
+import { dateHeureParis, dateLongueParis, dateParis } from "./date-paris";
 
 const FUSEAU_INITIAL = process.env.TZ;
 
@@ -36,6 +36,12 @@ describe("dateHeureParis", () => {
     expect(dateHeureParis(d)).toBe(dateHeureParis(d.toISOString()));
   });
 
+  it("peut taire les secondes", () => {
+    expect(
+      dateHeureParis("2026-10-31T13:12:52.000Z", { secondes: false }),
+    ).toBe("31/10/2026 14:12");
+  });
+
   it("rend une chaine vide pour une date invalide", () => {
     expect(dateHeureParis("n'importe quoi")).toBe("");
     expect(dateHeureParis(new Date(Number.NaN))).toBe("");
@@ -66,5 +72,24 @@ describe("dateParis", () => {
 
   it("rend une chaine vide pour une date invalide", () => {
     expect(dateParis("")).toBe("");
+  });
+});
+
+describe("dateLongueParis", () => {
+  it("ecrit le jour civil a Paris en toutes lettres", () => {
+    expect(dateLongueParis("2026-11-02T10:00:00.000Z")).toBe("2 novembre 2026");
+    expect(dateLongueParis("2026-07-14T22:30:00.000Z")).toBe("15 juillet 2026");
+  });
+
+  it("ne depend pas du fuseau du processus", () => {
+    const iso = "2026-07-14T22:30:00.000Z";
+    const rendus = ["UTC", "Asia/Tokyo"].map((tz) =>
+      dansLeFuseau(tz, () => dateLongueParis(iso)),
+    );
+    expect(rendus).toEqual(["15 juillet 2026", "15 juillet 2026"]);
+  });
+
+  it("rend une chaine vide pour une date invalide", () => {
+    expect(dateLongueParis("hier")).toBe("");
   });
 });

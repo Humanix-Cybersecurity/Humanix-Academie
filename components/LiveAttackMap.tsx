@@ -16,6 +16,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import clsx from "clsx";
+import { dateHeureParis } from "@/lib/date-paris";
 
 type LiveEvent = {
   id: string;
@@ -291,8 +292,5 @@ function formatRelativeTime(iso: string): string {
   if (diff < 60) return `il y a ${Math.floor(diff)} s`;
   if (diff < 3600) return `il y a ${Math.floor(diff / 60)} min`;
   if (diff < 86400) return `il y a ${Math.floor(diff / 3600)} h`;
-  return new Date(iso).toLocaleString("fr-FR", {
-    dateStyle: "short",
-    timeStyle: "short",
-  });
+  return dateHeureParis(iso, { secondes: false });
 }

@@ -14,6 +14,7 @@ import {
 } from "@/lib/exposure/exposure-score";
 import { deriveRemediationPlan } from "@/lib/exposure/remediation";
 import { saveRemediationPlan } from "./actions";
+import { dateParis } from "@/lib/date-paris";
 
 // Parcours auto-OSINT guidé en 4 phases : CHERCHER -> LIMITER -> SUPPRIMER ->
 // PROTÉGER. L'utilisateur EXÉCUTE lui-même chaque action ; Humanix ne lance
@@ -501,7 +502,7 @@ export default function ExpositionChecker() {
                         {b.title}
                       </a>{" "}
                       <span className="text-xs opacity-80">
-                        ({new Date(b.incidentDate).toLocaleDateString("fr-FR")})
+                        ({dateParis(b.incidentDate)})
                       </span>
                     </li>
                   ))}
