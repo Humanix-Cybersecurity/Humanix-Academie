@@ -18,6 +18,7 @@
 import { useState, useTransition } from "react";
 import { runDeliverabilityCheck } from "./actions";
 import type { AuthRecord, DnsAuthCheckResult } from "@/lib/smtp/dns-auth-check";
+import { dateHeureParis } from "@/lib/date-paris";
 
 export default function DeliverabilityCheck({ domain }: { domain: string }) {
   const [isPending, startTransition] = useTransition();
@@ -140,8 +141,8 @@ export default function DeliverabilityCheck({ domain }: { domain: string }) {
           </details>
 
           <p className="text-[10px] text-gray-400 italic">
-            Verifie le {new Date(result.checkedAt).toLocaleString("fr-FR")} via
-            lookup DNS direct (pas de cache).
+            Verifie le {dateHeureParis(result.checkedAt)} via lookup DNS direct
+            (pas de cache).
           </p>
         </>
       )}

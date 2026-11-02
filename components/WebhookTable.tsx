@@ -5,6 +5,7 @@
 // Server-actions passees via props pour rester en harmonie avec le reste.
 
 import { WEBHOOK_EVENTS, WebhookEventKey } from "@/lib/webhooks/events";
+import { dateHeureParis } from "@/lib/date-paris";
 
 type Row = {
   id: string;
@@ -132,7 +133,7 @@ export default function WebhookTable({
                 </p>
                 {w.lastFiredAt && (
                   <p className="text-gray-500 mt-1">
-                    Dernier : {new Date(w.lastFiredAt).toLocaleString("fr-FR")}
+                    Dernier : {dateHeureParis(w.lastFiredAt)}
                   </p>
                 )}
                 {w.lastError && (

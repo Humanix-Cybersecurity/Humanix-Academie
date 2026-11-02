@@ -6,6 +6,7 @@
 import Link from "next/link";
 import { useState, useTransition } from "react";
 import { dispatchNow, deleteAnecdote } from "@/app/admin/anecdotes/actions";
+import { dateParis } from "@/lib/date-paris";
 
 type Row = {
   id: string;
@@ -31,12 +32,7 @@ const CATEGORY_LABEL: Record<string, string> = {
 };
 
 function fmt(d: string | null): string {
-  if (!d) return "-";
-  return new Date(d).toLocaleDateString("fr-FR", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-  });
+  return d ? dateParis(d) : "-";
 }
 
 export default function AnecdoteAdminTable({

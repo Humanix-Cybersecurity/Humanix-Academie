@@ -15,6 +15,7 @@ import {
   disableMfa,
   regenerateBackupCodes,
 } from "@/app/profil/securite/actions";
+import { dateHeureParis, dateParis } from "@/lib/date-paris";
 
 type Props = {
   email: string;
@@ -44,8 +45,7 @@ export default function SecurityPanel(props: Props) {
       />
       {props.lastLoginAt && (
         <p className="text-xs text-gray-500 italic">
-          Dernière connexion :{" "}
-          {new Date(props.lastLoginAt).toLocaleString("fr-FR")}
+          Dernière connexion : {dateHeureParis(props.lastLoginAt)}
         </p>
       )}
     </div>
@@ -102,7 +102,7 @@ function PasswordSection({
           <p className="text-xs text-gray-500 mt-1">
             {hasPassword
               ? passwordUpdatedAt
-                ? `Modifié le ${new Date(passwordUpdatedAt).toLocaleDateString("fr-FR")}`
+                ? `Modifié le ${dateParis(passwordUpdatedAt)}`
                 : "Mot de passe défini"
               : "Aucun mot de passe défini : tu te connectes par lien magique uniquement."}
           </p>
@@ -342,7 +342,7 @@ function MfaSection({
           <p className="text-xs text-gray-500 mt-1">
             {mfaEnabled
               ? mfaEnabledAt
-                ? `Activée le ${new Date(mfaEnabledAt).toLocaleDateString("fr-FR")}`
+                ? `Activée le ${dateParis(mfaEnabledAt)}`
                 : "Activée"
               : mfaForced
                 ? "⚠️ Votre administrateur exige que vous l'activiez."

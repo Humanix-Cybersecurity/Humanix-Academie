@@ -12,6 +12,7 @@ import {
   updateExternalAdminMembershipRole,
 } from "@/app/superadmin/tenants/[id]/admins/actions";
 import type { TenantAdminEntry } from "@/lib/tenant-membership";
+import { dateParis } from "@/lib/date-paris";
 
 const ASSIGNABLE_ROLES: Role[] = ["MANAGER", "RSSI", "ADMIN"];
 
@@ -80,7 +81,7 @@ export default function ExternalAdminRow({
           )}
           {entry.grantedAt && (
             <p className="text-[11px] text-gray-500 mt-0.5">
-              Accordé le {entry.grantedAt.toLocaleDateString("fr-FR")}
+              Accordé le {dateParis(entry.grantedAt)}
             </p>
           )}
         </div>

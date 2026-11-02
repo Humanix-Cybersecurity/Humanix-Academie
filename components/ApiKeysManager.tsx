@@ -6,6 +6,7 @@ import {
   revokeApiKey,
   deleteApiKey,
 } from "@/app/admin/api-keys/actions";
+import { dateParis } from "@/lib/date-paris";
 
 type Key = {
   id: string;
@@ -181,14 +182,10 @@ export default function ApiKeysManager({ keys }: { keys: Key[] }) {
                     )}
                   </td>
                   <td className="py-3 text-xs text-gray-500">
-                    {k.lastUsedAt
-                      ? new Date(k.lastUsedAt).toLocaleDateString("fr-FR")
-                      : "-"}
+                    {k.lastUsedAt ? dateParis(k.lastUsedAt) : "-"}
                   </td>
                   <td className="py-3 text-xs text-gray-500">
-                    {k.expiresAt
-                      ? new Date(k.expiresAt).toLocaleDateString("fr-FR")
-                      : "Sans"}
+                    {k.expiresAt ? dateParis(k.expiresAt) : "Sans"}
                   </td>
                   <td className="py-3 text-right whitespace-nowrap">
                     {k.isActive && (

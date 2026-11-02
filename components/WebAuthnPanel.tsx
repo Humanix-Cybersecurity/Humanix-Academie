@@ -16,6 +16,7 @@ import {
   deleteWebauthnCredential,
 } from "@/app/profil/securite/webauthn-actions";
 import { humanizeAuthError } from "@/lib/auth-errors";
+import { dateParis } from "@/lib/date-paris";
 
 export type WebAuthnCredentialItem = {
   id: string;
@@ -235,9 +236,9 @@ function CredentialRow({ cred }: { cred: WebAuthnCredentialItem }) {
             </p>
           )}
           <p className="text-xs text-gray-500 mt-1">
-            Enregistrée {new Date(cred.createdAt).toLocaleDateString("fr-FR")}
+            Enregistrée {dateParis(cred.createdAt)}
             {cred.lastUsedAt &&
-              ` · dernière utilisation ${new Date(cred.lastUsedAt).toLocaleDateString("fr-FR")}`}
+              ` · dernière utilisation ${dateParis(cred.lastUsedAt)}`}
           </p>
           <div className="flex gap-1 mt-1 flex-wrap text-[10px]">
             {cred.transports

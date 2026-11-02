@@ -21,6 +21,7 @@ import {
   startSync,
 } from "./actions";
 import CisoSyncTerminal from "./CisoSyncTerminal";
+import { dateHeureParis } from "@/lib/date-paris";
 
 type ExistingConnection = {
   baseUrl: string;
@@ -523,8 +524,7 @@ export default function CisoSyncForm({
 
         {existing?.lastTestedAt && (
           <p className="text-xs text-gray-500 dark:text-gray-400 mt-4">
-            Dernier test :{" "}
-            {new Date(existing.lastTestedAt).toLocaleString("fr-FR")} -{" "}
+            Dernier test : {dateHeureParis(existing.lastTestedAt)} -{" "}
             <span
               className={
                 existing.lastTestStatus === "ok"
@@ -555,8 +555,7 @@ export default function CisoSyncForm({
               </span>
               {existing.lastLiveSyncAt ? (
                 <span className="block mt-0.5">
-                  Dernière mini-sync :{" "}
-                  {new Date(existing.lastLiveSyncAt).toLocaleString("fr-FR")}
+                  Dernière mini-sync : {dateHeureParis(existing.lastLiveSyncAt)}
                   {existing.lastLiveSyncEvent && (
                     <>
                       {" "}
