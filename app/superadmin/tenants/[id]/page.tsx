@@ -20,6 +20,7 @@ import {
   setTenantReseller,
   relancerFacturation,
   facturerRevendeurAction,
+  setTenantParentManaged,
   enregistrerCoordonneesPourTenant,
   emettreFacturePourTenant,
   renvoyerNotificationFacture,
@@ -98,6 +99,9 @@ export default async function TenantDetailPage({
       subscriptionStatus: true,
       isReseller: true,
       plan: true,
+      parentManaged: true,
+      parentManagedAt: true,
+      parent: { select: { id: true, name: true } },
     },
   });
   // tenant existe forcement (health serait null sinon). On a deja notFound() ci-dessus.
@@ -286,6 +290,10 @@ export default async function TenantDetailPage({
             "✓ Statut revendeur activé. Le tenant peut créer des clients en marque blanche (/admin/revendeur)."}
           {msg === "reseller-off" && "✓ Statut revendeur désactivé."}
           {msg === "reseller-noop" && "ℹ Statut revendeur déjà dans cet état."}
+          {msg === "delegated-on" &&
+            "✓ Gestion déléguée activée : les ADMIN et RSSI de l'espace parent administrent ce tenant."}
+          {msg === "delegated-off" && "✓ Gestion déléguée retirée."}
+          {msg === "delegated-noop" && "ℹ Gestion déléguée déjà dans cet état."}
           {msg === "revendeur-facturee" &&
             "✓ Facture revendeur émise et notifiée aux admins du tenant. Elle apparaît dans la liste des factures ci-dessous."}
           {msg === "revendeur-deja" &&
@@ -386,6 +394,53 @@ export default async function TenantDetailPage({
           Gerer les admins →
         </Link>
       </section>
+
+      {/* === GESTION DELEGUEE PAR LE PARENT (revendeur ou siege) === */}
+      {tenantMeta.parent && (
+        <section
+          aria-labelledby="delegated-title"
+          className="rounded-2xl border border-sky-200 dark:border-sky-900/40 bg-sky-50/40 dark:bg-sky-950/20 p-5"
+        >
+          <h2
+            id="delegated-title"
+            className="font-display font-bold text-sky-900 dark:text-sky-200 mb-2"
+          >
+            🤝 Gestion déléguée par l&apos;espace parent
+          </h2>
+          <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
+            Espace enfant de <strong>{tenantMeta.parent.name}</strong>. Activée,
+            la gestion déléguée donne aux ADMIN et RSSI du parent leur rôle dans
+            cet espace (personnes, groupes, modules), par son sous-domaine. Le
+            parent la pose et la retire lui-même ; Humanix peut la retirer ici,
+            par exemple à la demande du client.
+          </p>
+          <p className="text-sm mb-4">
+            État actuel :{" "}
+            {tenantMeta.parentManaged ? (
+              <span className="font-bold text-sky-800 dark:text-sky-200">
+                déléguée
+                {tenantMeta.parentManagedAt &&
+                  ` depuis le ${tenantMeta.parentManagedAt.toLocaleDateString("fr-FR")}`}
+              </span>
+            ) : (
+              <span className="font-bold text-gray-500">autonome</span>
+            )}
+          </p>
+          <form action={setTenantParentManaged}>
+            <input type="hidden" name="tenantId" value={id} />
+            <input
+              type="hidden"
+              name="enable"
+              value={tenantMeta.parentManaged ? "false" : "true"}
+            />
+            <button type="submit" className="btn-secondary text-sm">
+              {tenantMeta.parentManaged
+                ? "Retirer la gestion déléguée"
+                : "Activer la gestion déléguée"}
+            </button>
+          </form>
+        </section>
+      )}
 
       {/* === STATUT REVENDEUR (marque blanche multi-clients) === */}
       <section

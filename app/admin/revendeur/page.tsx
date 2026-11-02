@@ -14,6 +14,7 @@ import { libellePeriode, usageRevendeur } from "@/lib/reseller/facturation";
 import { GRILLE_REVENDEUR } from "@/lib/reseller/tarification";
 import { formaterEuros } from "@/lib/facturation/montants";
 import { getRootDomain } from "@/lib/subdomain-tenant";
+import { urlAdministration } from "@/lib/reseller/administration";
 import NewClientForm from "./NewClientForm";
 
 export const dynamic = "force-dynamic";
@@ -218,6 +219,7 @@ export default async function RevendeurPage({
                   <th className="py-2 pr-4">Marque</th>
                   <th className="py-2 pr-4">Comptes</th>
                   <th className="py-2 pr-4">État</th>
+                  <th className="py-2 pr-4">Gestion</th>
                   <th className="py-2 pr-4">Créé le</th>
                   <th className="py-2"></th>
                 </tr>
@@ -250,16 +252,29 @@ export default async function RevendeurPage({
                         </span>
                       )}
                     </td>
+                    <td className="py-2 pr-4">
+                      {c.parentManaged ? "déléguée" : "autonome"}
+                    </td>
                     <td className="py-2 pr-4 text-gray-500">
                       {c.createdAt.toLocaleDateString("fr-FR")}
                     </td>
-                    <td className="py-2">
+                    <td className="py-2 whitespace-nowrap">
                       <Link
-                        href={`/admin/revendeur/${c.id}`}
+                        href={`/admin/revendeur/`}
                         className="text-accent-600 dark:text-accent-300 hover:underline"
                       >
-                        Gérer →
+                        Fiche →
                       </Link>
+                      {c.parentManaged && (
+                        <a
+                          href={urlAdministration(c, rootDomain)}
+                          target="_blank"
+                          rel="noopener"
+                          className="ml-3 text-accent-600 dark:text-accent-300 hover:underline"
+                        >
+                          Administrer ↗
+                        </a>
+                      )}
                     </td>
                   </tr>
                 ))}

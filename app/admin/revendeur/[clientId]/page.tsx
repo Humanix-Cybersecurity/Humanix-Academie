@@ -10,7 +10,12 @@ import Link from "next/link";
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
 import { getResellerGate, getClientForReseller } from "@/lib/reseller";
 import { getRootDomain } from "@/lib/subdomain-tenant";
-import { saveClientBranding, setClientActive } from "../actions";
+import { urlAdministration } from "@/lib/reseller/administration";
+import {
+  saveClientBranding,
+  setClientActive,
+  setClientParentManaged,
+} from "../actions";
 
 export const dynamic = "force-dynamic";
 
@@ -77,6 +82,9 @@ export default async function ClientPage({
           {msg === "saved" && "✓ Marque du client enregistrée."}
           {msg === "activated" && "✓ Client réactivé."}
           {msg === "suspended" && "✓ Client suspendu."}
+          {msg === "delegated-on" &&
+            "✓ Gestion déléguée activée : vos administrateurs peuvent ouvrir l'administration de ce client."}
+          {msg === "delegated-off" && "✓ Gestion déléguée retirée."}
         </div>
       )}
       {error && (
@@ -256,6 +264,59 @@ export default async function ClientPage({
         </form>
       </section>
 
+      {/* Gestion deleguee */}
+      <section className="rounded-2xl border border-sky-200 dark:border-sky-900/40 bg-sky-50/40 dark:bg-sky-900/15 p-5">
+        <h2 className="font-display font-bold text-sky-900 dark:text-sky-200 mb-2">
+          🤝 Gestion déléguée
+        </h2>
+        <p className="text-sm text-sky-900/80 dark:text-sky-200/80 mb-4">
+          Activée, vos administrateurs (rôles ADMIN et RSSI de{" "}
+          {gate.tenant.name}) gèrent les personnes, les groupes et les modules
+          de ce client depuis son adresse, avec leur rôle habituel. Chaque
+          action est journalisée au nom de son auteur, et les administrateurs du
+          client voient un bandeau qui vous nomme. Désactivée, le client
+          s&apos;administre seul.
+        </p>
+        <p className="text-sm mb-4">
+          État actuel :{" "}
+          {client.parentManaged ? (
+            <span className="font-bold text-sky-800 dark:text-sky-200">
+              déléguée
+              {client.parentManagedAt &&
+                ` depuis le ${client.parentManagedAt.toLocaleDateString("fr-FR")}`}
+            </span>
+          ) : (
+            <span className="font-bold text-gray-600 dark:text-gray-300">
+              autonome
+            </span>
+          )}
+        </p>
+        <div className="flex flex-wrap items-center gap-3">
+          <form action={setClientParentManaged}>
+            <input type="hidden" name="clientId" value={client.id} />
+            <input
+              type="hidden"
+              name="enable"
+              value={client.parentManaged ? "false" : "true"}
+            />
+            <button type="submit" className="btn-secondary text-sm">
+              {client.parentManaged
+                ? "Retirer la gestion déléguée"
+                : "Activer la gestion déléguée"}
+            </button>
+          </form>
+          {client.parentManaged && (
+            <a
+              href={urlAdministration(client, rootDomain)}
+              target="_blank"
+              rel="noopener"
+              className="btn-primary text-sm"
+            >
+              Ouvrir l&apos;administration de {client.name} ↗
+            </a>
+          )}
+        </div>
+      </section>
       {/* Activation / suspension */}
       <section className="rounded-2xl border-2 border-amber-200 dark:border-amber-900/40 bg-amber-50/40 dark:bg-amber-900/15 p-5">
         <h2 className="font-display font-bold text-amber-900 dark:text-amber-200 mb-2">

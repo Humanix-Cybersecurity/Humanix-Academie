@@ -38,6 +38,7 @@ export default async function SuperadminAdminsByTenantPage() {
     bySource: {
       native: accounts.filter((a) => a.source === "native").length,
       membership: accounts.filter((a) => a.source === "membership").length,
+      delegated: accounts.filter((a) => a.source === "delegated").length,
     },
     byRole: {
       SUPERADMIN: accounts.filter((a) => a.effectiveRole === "SUPERADMIN")
@@ -239,10 +240,16 @@ export default async function SuperadminAdminsByTenantPage() {
                             className={`text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 rounded-full ${
                               a.source === "native"
                                 ? "bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-gray-200"
-                                : "bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300"
+                                : a.source === "delegated"
+                                  ? "bg-sky-100 dark:bg-sky-900/40 text-sky-800 dark:text-sky-200"
+                                  : "bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300"
                             }`}
                           >
-                            {a.source === "native" ? "natif" : "membership"}
+                            {a.source === "native"
+                              ? "natif"
+                              : a.source === "delegated"
+                                ? "délégué"
+                                : "membership"}
                           </span>
                         </td>
                         <td className="px-4 py-2.5">

@@ -45,6 +45,7 @@ export async function createClient(formData: FormData) {
   const accentColor = String(formData.get("accentColor") ?? "").trim() || null;
   const adminEmail = String(formData.get("adminEmail") ?? "").trim() || null;
   const adminName = String(formData.get("adminName") ?? "").trim() || null;
+  const parentManaged = formData.get("parentManaged") === "on";
 
   const res = await provisionClientTenant({
     parentTenantId: gate.tenantId,
@@ -56,6 +57,7 @@ export async function createClient(formData: FormData) {
     accentColor,
     adminEmail,
     adminName,
+    parentManaged,
     actor: {
       userId: gate.userId,
       email: (await safeActorEmail()) ?? "reseller",
@@ -246,6 +248,49 @@ export async function setClientActive(formData: FormData) {
   redirect(
     `/admin/revendeur/${clientId}?msg=${enable ? "activated" : "suspended"}`,
   );
+}
+
+/**
+ * Active ou retire la gestion deleguee d'un client (verifie l'appartenance).
+ * Active, les ADMIN et RSSI du revendeur administrent l'espace du client
+ * depuis son hote (cf. lib/reseller/administration.ts) ; la regle est dans
+ * lib/tenant-membership.ts. Le client en est informe par un bandeau.
+ */
+export async function setClientParentManaged(formData: FormData) {
+  const gate = await getResellerGate();
+  if (!gate.ok) redirect("/admin/revendeur?error=forbidden");
+  const clientId = String(formData.get("clientId") ?? "").trim();
+  const enable = String(formData.get("enable") ?? "") === "true";
+  const client = await getClientForReseller(gate.tenantId, clientId);
+  if (!client) redirect("/admin/revendeur?error=forbidden");
+  await db.tenant.update({
+    where: { id: clientId },
+    data: {
+      parentManaged: enable,
+      parentManagedAt: enable ? new Date() : null,
+    },
+  });
+  await auditLog({
+    action: AuditActions.TENANT_UPDATED,
+    actor: {
+      userId: gate.userId,
+      email: (await safeActorEmail()) ?? "reseller",
+      role: gate.role,
+    },
+    tenantId: clientId,
+    target: { type: "tenant", id: clientId, label: client.name },
+    message: enable
+      ? "Gestion déléguée activée par le revendeur : ses administrateurs administrent cet espace"
+      : "Gestion déléguée retirée par le revendeur",
+    metadata: {
+      source: "reseller-portal",
+      parentTenantId: gate.tenantId,
+      parentManaged: enable,
+    },
+  }).catch((e) => console.error("[reseller] audit log failed", e));
+  revalidatePath(`/admin/revendeur/`);
+  revalidatePath("/admin/revendeur");
+  redirect(`/admin/revendeur/?msg=`);
 }
 
 /** Email de l'acteur courant pour l'audit (best-effort). */
