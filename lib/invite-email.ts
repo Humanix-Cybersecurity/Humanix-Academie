@@ -9,9 +9,12 @@
 //
 // COMMENT : on cree un VerificationToken compatible NextAuth nodemailer
 // provider (meme hash sha256(token+secret)), on construit l'URL magic link
-// qui pointe sur le callback NextAuth, on envoie l'email via notre facade
-// lib/email (Scaleway TEM). Quand l'invitee clique, NextAuth verifie le
-// token et la connecte automatiquement.
+// qui pointe sur la page de confirmation /connexion/lien (son bouton envoie le
+// jeton au callback NextAuth en POST, cf. lib/magic-link/confirmation.ts :
+// les messageries d'entreprise ouvrent les liens avant la personne, et le
+// jeton est a usage unique), on envoie l'email via notre facade lib/email
+// (Scaleway TEM). Quand la personne invitee confirme, NextAuth verifie le
+// token et ouvre sa session.
 //
 // SECURITE : on ne touche PAS a la session de l'admin qui declenche
 // l'invitation. signIn() cote server modifierait les cookies de la response
@@ -21,6 +24,7 @@
 import { createHash, randomBytes } from "node:crypto";
 import { db } from "@/lib/db";
 import { sendEmail, isEmailConfigured } from "@/lib/email";
+import { CHEMIN_PAGE_CONFIRMATION } from "@/lib/magic-link/confirmation";
 import {
   getTenantBranding,
   DEFAULT_BRANDING,
@@ -97,10 +101,13 @@ export async function sendInviteMagicLink(
     },
   });
 
-  // 3. Construire l'URL magic link compatible NextAuth callback
+  // 3. Construire le lien : la page de confirmation, pas le callback. Le
+  //    jeton est a usage unique et les messageries d'entreprise ouvrent les
+  //    liens avant la personne ; le bouton de la page envoie token / email /
+  //    callbackUrl au callback NextAuth en POST (lib/magic-link/confirmation).
   const baseUrl = ctx.baseUrl.replace(/\/$/, "");
   const callbackUrl = `${baseUrl}/post-login`;
-  const url = `${baseUrl}/api/auth/callback/nodemailer?callbackUrl=${encodeURIComponent(callbackUrl)}&token=${rawToken}&email=${encodeURIComponent(email)}`;
+  const url = `${baseUrl}${CHEMIN_PAGE_CONFIRMATION}?callbackUrl=${encodeURIComponent(callbackUrl)}&token=${rawToken}&email=${encodeURIComponent(email)}`;
 
   // 4. Brand marque blanche (cascade revendeur) si tenant fourni, sinon Humanix.
   const brand = ctx.tenantId
@@ -177,8 +184,8 @@ de sensibilisation a la cybersecurite.
 </p>
 <p style="margin:0 0 24px;color:#333;font-size:15px">
 Pour activer ton compte et commencer ta formation, clique simplement sur le
-bouton ci-dessous. Aucun mot de passe a creer - c'est un lien magique
-securise qui te connecte directement.
+bouton ci-dessous, puis confirme sur la page qui s'ouvre. Aucun mot de
+passe a creer - c'est un lien magique securise.
 </p>
 </td></tr>
 
