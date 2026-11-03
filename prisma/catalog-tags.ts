@@ -6,7 +6,8 @@
 // tags qui permettent :
 //   - le filtrage rapide dans la console admin (cliquer "rh" affiche les
 //     saisons concernees)
-//   - le groupement par famille (Public / Metiers / Conformite / Avance)
+//   - le groupement par famille (Public / Metiers / Sectoriel / Conformite /
+//     Avance ; liste et libelles dans lib/catalogue/familles.ts)
 //   - les suggestions automatiques lors de l'onboarding tenant
 //
 // CONVENTION DE NOMMAGE
@@ -460,61 +461,3 @@ export const SAISON_TAGS: Record<string, string[]> = {
 export function tagsForSaison(slug: string): string[] {
   return SAISON_TAGS[slug] ?? [];
 }
-
-/**
- * Renvoie la famille ("public" / "metier" / "conformite" / "avance") d'une
- * saison a partir de ses tags. Cherche un tag "famille:X" et renvoie X.
- * Default : "public" si aucune famille explicite (cas de saison custom non
- * categorisee).
- */
-export function familyFromTags(tags: string[]): string {
-  const familyTag = tags.find((t) => t.startsWith("famille:"));
-  return familyTag ? familyTag.slice("famille:".length) : "public";
-}
-
-/**
- * Liste de toutes les familles disponibles, dans l'ordre d'affichage souhaite
- * dans /admin/modules (du plus grand public au plus specialise).
- */
-export const FAMILY_ORDER = [
-  "public",
-  "metier",
-  "sectoriel",
-  "conformite",
-  "avance",
-] as const;
-
-export const FAMILY_LABELS: Record<
-  string,
-  { label: string; emoji: string; description: string }
-> = {
-  public: {
-    label: "Tout public",
-    emoji: "👥",
-    description:
-      "Modules accessibles a tous les collaborateurs, sans prerequis IT.",
-  },
-  metier: {
-    label: "Metiers",
-    emoji: "🎯",
-    description:
-      "Specialises par fonction : RH, compta, dev, dirigeants, commercial...",
-  },
-  sectoriel: {
-    label: "Sectoriel",
-    emoji: "🏛️",
-    description:
-      "Adaptes a un secteur : sante, collectivites, education, industrie...",
-  },
-  conformite: {
-    label: "Conformite",
-    emoji: "📋",
-    description:
-      "NIS2, RGPD, regulations sectorielles. Pour DPO et dirigeants.",
-  },
-  avance: {
-    label: "Avance",
-    emoji: "🚀",
-    description: "Sujets pointus : crise cyber, supply chain, remediation.",
-  },
-};
