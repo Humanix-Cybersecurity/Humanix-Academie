@@ -6,6 +6,84 @@ Toutes les évolutions notables du produit, classées par version. Conforme
 
 ---
 
+## [1.16.0] - 2026-11-03 🤝 Le revendeur administre ses clients, et le lien magique passe les antispams
+
+Le lendemain de la 1.15.0, pour le premier revendeur : il administre lui-même
+les groupes et les modules de chacun de ses espaces clients, et il se connecte
+depuis sa boîte Microsoft 365, dont l'antispam consommait le lien magique
+avant lui. Au passage, l'administration agit enfin dans l'espace qu'elle
+affiche, et les dates s'écrivent pareil sur le serveur et dans le navigateur.
+
+### Added
+
+#### 🤝 Gestion déléguée des espaces enfants
+
+Un revendeur, ou le siège d'une organisation multi-établissements, peut
+administrer les espaces qu'il a créés : personnes, groupes, modules prescrits.
+Un indicateur par espace enfant, `Tenant.parentManaged`, posé par le parent
+et révocable par le parent comme par Humanix ; la règle tient en une ligne
+dans `lib/tenant-membership.ts` : les ADMIN et RSSI du parent ont leur rôle
+dans l'enfant qui porte l'indicateur, MANAGER exclu, et un accès externe
+accordé explicitement garde la main. Aucune ligne d'accès à synchroniser.
+Administrer un enfant, c'est ouvrir `/admin` sur son hôte, sous-domaine de
+marque ou slug : jamais de sélecteur d'espace.
+
+Portail revendeur : case « Gestion déléguée » à la création d'un client,
+colonne Gestion et lien « Administrer ↗ » dans la liste, interrupteur sur la
+fiche. Multi-établissements : un établissement naît administré depuis le
+siège, « Gérer depuis le siège » pour ceux créés avant. L'espace géré voit un
+bandeau « Gestion déléguée : cet espace est aussi administré par X », pendant
+du bandeau inter-espaces que voit le parent. Côté Humanix : état et
+interrupteur sur la fiche super-admin, section « Admins délégués du parent »,
+source « délégué » dans l'inventaire ANSSI des comptes à privilèges, qui
+reste exhaustif. Chaque bascule est journalisée (`TENANT_UPDATED`). (#999)
+
+### Fixed
+
+- **L'administration agit dans l'espace affiché, plus dans l'espace
+  d'origine.** Depuis le 23 mai, un compte peut recevoir un accès à un autre
+  espace et y naviguer par son sous-domaine, mais la migration des pages
+  s'était arrêtée à trois fichiers : quarante autres, dont Groupes et
+  Modules, lisaient encore l'espace de la session. Sur le sous-domaine d'un
+  client, le bandeau annonçait le client et les actions touchaient l'espace
+  d'origine. Aucun accès externe n'ayant été accordé, personne n'était
+  exposé. Cent fichiers passent par l'espace actif et le rôle effectif ; un
+  sous-domaine sans accès n'est plus remplacé en silence par l'espace
+  d'origine ; le sous-domaine de marque est reconnu comme hôte ; un test de
+  garde interdit toute lecture de l'espace de session dans `app/admin`,
+  `app/api/admin` et `lib/impersonation`. La suite d'isolation des actions
+  admin, sautée en silence depuis des mois, tourne de nouveau. (#997)
+- **Le lien magique survit aux antispams.** Le jeton était consommé au
+  premier GET du callback ; Microsoft 365 ouvre les liens reçus pour les
+  analyser, avant la personne, qui tombait sur « lien invalide ou expiré ».
+  Le mail pointe désormais sur `/connexion/lien`, une page sans effet dont
+  le bouton « Me connecter » confirme en POST ; un robot qui suit le lien ne
+  soumet pas le formulaire. Même parade pour les invitations. Les liens
+  envoyés avant la livraison restent valables. Vérifié en production. (#1000)
+- **Les dates des composants client s'écrivent à l'heure de Paris.** La page
+  Sécurité du profil levait une erreur d'hydratation React à chaque
+  ouverture : le serveur en UTC et le navigateur à Paris ne formataient pas
+  la même heure. Neuf composants client passent par `lib/date-paris.ts`,
+  fuseau fixe, et une règle du dépôt interdit aux fichiers client de
+  formater une date selon le fuseau du processus (147 fichiers parcourus).
+  Les dates s'affichent à l'heure de Paris quel que soit le fuseau du
+  navigateur, comme sur les factures et les exports. (#1001, #1002)
+
+### Exploitation
+
+Deux colonnes nouvelles sur `Tenant`, `parentManaged` et `parentManagedAt`,
+avec valeur par défaut, posées par le `db push` de la livraison ; aucune
+migration de données, et rien ne change pour les clients existants tant que
+le parent n'active pas la délégation. Les établissements créés à partir de
+maintenant naissent administrés depuis le siège. La démo ne permet pas
+d'essayer le lien magique, son mode n'a pas de fournisseur e-mail : le
+contrôle se fait en production. Avant d'activer la délégation chez un client
+réel, les modèles de contrat de revente et de DPA restent à compléter.
+
+### Dépendances
+
+- postcss 8.5.32. (#994)
+
 ## [1.15.0] - 2026-11-02 🎯 Des saisons prescrites par groupe, et des textes pour tout le monde
 
 Dix jours après la 1.14.0 : l'administration choisit enfin quelles saisons
