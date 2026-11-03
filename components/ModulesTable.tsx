@@ -22,7 +22,8 @@
 //     obligatoire" appliques a la selection
 //
 // Groupement :
-//   - Public · Metiers · Conformite · Avance (extrait de family:X tags)
+//   - Public · Metiers · Sectoriel · Conformite · Avance · Autres parcours
+//     (tag famille:X ; liste et libelles dans lib/catalogue/familles.ts)
 //   - Sections pliables avec compteur active/total par famille
 //
 // L'etat des filtres est persiste dans l'URL (search params) pour permettre
@@ -42,6 +43,12 @@ import {
   bulkSetSaisonGroupes,
 } from "@/app/admin/actions";
 import PublicVise, { type GroupeOption } from "@/components/admin/PublicVise";
+import {
+  CATEGORIES,
+  LIBELLES_ADMIN,
+  categorieDepuisTags,
+  type Categorie,
+} from "@/lib/catalogue/familles";
 
 type Episode = {
   slug: string;
@@ -75,42 +82,12 @@ type Saison = {
   audience: string;
 };
 
-// --- familles (doit rester aligne avec prisma/catalog-tags.ts) -------------
-const FAMILY_LABELS: Record<
-  string,
-  { label: string; emoji: string; description: string }
-> = {
-  public: {
-    label: "Tout public",
-    emoji: "👥",
-    description: "Modules accessibles a tous, sans prerequis IT.",
-  },
-  metier: {
-    label: "Metiers",
-    emoji: "🎯",
-    description: "Specialises par fonction : RH, compta, dev, dirigeants.",
-  },
-  conformite: {
-    label: "Conformite",
-    emoji: "📋",
-    description: "NIS2, RGPD, regulations sectorielles.",
-  },
-  avance: {
-    label: "Avance",
-    emoji: "🚀",
-    description: "Sujets pointus : crise cyber, supply chain, remediation.",
-  },
-};
-const FAMILY_ORDER = ["public", "metier", "conformite", "avance"] as const;
-type Family = (typeof FAMILY_ORDER)[number];
-
-function familyOf(s: Saison): Family {
-  const ft = s.tags.find((t) => t.startsWith("famille:"));
-  if (!ft) return "public";
-  const f = ft.slice("famille:".length);
-  return (FAMILY_ORDER as readonly string[]).includes(f)
-    ? (f as Family)
-    : "public";
+// --- familles : liste et libelles partages avec /apprendre -----------------
+// (lib/catalogue/familles.ts). Une saison sans tag famille connu tombe dans
+// « Autres parcours » des deux cotes : avant, l'admin la fondait sans un mot
+// dans « Tout public » pendant que l'apprenant la voyait ailleurs.
+function familyOf(s: Saison): Categorie {
+  return categorieDepuisTags(s.tags);
 }
 
 // --- normalisation pour recherche -----------------------------------------
@@ -198,8 +175,8 @@ export default function ModulesTable({
 
   // Groupes (familles) sur le set filtre
   const grouped = useMemo(() => {
-    const map = new Map<Family, Saison[]>();
-    for (const f of FAMILY_ORDER) map.set(f, []);
+    const map = new Map<Categorie, Saison[]>();
+    for (const c of CATEGORIES) map.set(c, []);
     for (const s of filtered) map.get(familyOf(s))!.push(s);
     return map;
   }, [filtered]);
@@ -480,10 +457,10 @@ export default function ModulesTable({
         </div>
       ) : (
         <div className="space-y-6">
-          {FAMILY_ORDER.map((family) => {
+          {CATEGORIES.map((family) => {
             const items = grouped.get(family) ?? [];
             if (items.length === 0) return null;
-            const meta = FAMILY_LABELS[family];
+            const meta = LIBELLES_ADMIN[family];
             const activeCount = items.filter((s) => s.isActive).length;
             return (
               <FamilySection

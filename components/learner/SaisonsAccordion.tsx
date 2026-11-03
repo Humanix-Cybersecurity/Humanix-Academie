@@ -4,7 +4,8 @@
 //
 // Pourquoi : avec ~58 saisons commerciales, le carrousel horizontal était
 // "trop compliqué" (tout sur une rangée à scroller). On regroupe par
-// catégorie (Fondamentaux / Métiers / Conformité / Avancé), et on déplie une
+// catégorie (Fondamentaux / Métiers / Secteurs / Conformité / Avancé, plus
+// « Autres parcours » ; cf. lib/catalogue/familles.ts), et on déplie une
 // catégorie à la fois pour voir ses modules. UNE SEULE section ouverte :
 // ouvrir une catégorie referme la précédente.
 //

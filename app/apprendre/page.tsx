@@ -51,6 +51,11 @@ import LearnerEmptyState from "@/components/learner/LearnerEmptyState";
 import JoinExerciseCard from "@/components/learner/JoinExerciseCard";
 import ReglesCard from "@/components/learner/ReglesCard";
 import { etatPourApprenant } from "@/lib/regles-organisation/etat";
+import {
+  CATEGORIES,
+  LIBELLES_APPRENANT,
+  categorieDepuisTags,
+} from "@/lib/catalogue/familles";
 import { SAISON_PALETTES } from "@/components/learner/palettes";
 import {
   PREMIUM_SAISONS_PREVIEW,
@@ -261,39 +266,10 @@ export default async function ApprendrePage() {
 
   // ===========================================================================
   // Regroupement par CATÉGORIE pour l'accordéon (remplace le carrousel).
-  // La catégorie d'une saison est dérivée de son tag `famille:*` (cf.
-  // catalog-tags.ts, pensé pour ce groupement). Fallback "autres" sinon.
+  // La catégorie d'une saison vient de son tag `famille:*` (posé par
+  // prisma/catalog-tags.ts) ; liste et libellés dans lib/catalogue/familles.ts,
+  // partagés avec /admin/modules. Sans tag famille connu : « Autres parcours ».
   // ===========================================================================
-  const FAMILLE_DEFS: {
-    id: string;
-    tag: string;
-    label: string;
-    emoji: string;
-  }[] = [
-    {
-      id: "fondamentaux",
-      tag: "famille:public",
-      label: "Fondamentaux - pour tout le monde",
-      emoji: "🌱",
-    },
-    { id: "metiers", tag: "famille:metier", label: "Par métier", emoji: "💼" },
-    {
-      id: "conformite",
-      tag: "famille:conformite",
-      label: "Conformité & réglementaire",
-      emoji: "⚖️",
-    },
-    {
-      id: "avance",
-      tag: "famille:avance",
-      label: "Pour aller plus loin",
-      emoji: "🚀",
-    },
-  ];
-  const categoryOf = (tags: string[]): string => {
-    for (const d of FAMILLE_DEFS) if (tags.includes(d.tag)) return d.id;
-    return "autres";
-  };
 
   type Group = {
     cards: ReactNode[];
@@ -326,7 +302,7 @@ export default async function ApprendrePage() {
               total,
           );
 
-    const catId = categoryOf(s.tags ?? []);
+    const catId = categorieDepuisTags(s.tags ?? []);
     const g = groups.get(catId) ?? {
       cards: [],
       saisonCount: 0,
@@ -365,18 +341,15 @@ export default async function ApprendrePage() {
     groups.set(catId, g);
   });
 
-  const CATEGORY_ORDER = [
-    ...FAMILLE_DEFS,
-    { id: "autres", label: "Autres parcours", emoji: "✨" },
-  ];
-  const saisonSections: AccordionSection[] = CATEGORY_ORDER.filter((c) =>
-    groups.has(c.id),
+  const saisonSections: AccordionSection[] = CATEGORIES.filter((c) =>
+    groups.has(c),
   ).map((c) => {
-    const g = groups.get(c.id)!;
+    const g = groups.get(c)!;
+    const libelle = LIBELLES_APPRENANT[c];
     return {
-      id: c.id,
-      label: c.label,
-      emoji: c.emoji,
+      id: c,
+      label: libelle.label,
+      emoji: libelle.emoji,
       saisonCount: g.saisonCount,
       doneModules: g.done,
       totalModules: g.total,
@@ -423,7 +396,7 @@ export default async function ApprendrePage() {
   // Catégorie ouverte par défaut : celle qui contient la saison recommandée
   // (l'apprenant atterrit pile sur son prochain pas).
   const defaultOpenCategoryId = recommendedSaison
-    ? categoryOf(recommendedSaison.tags ?? [])
+    ? categorieDepuisTags(recommendedSaison.tags ?? [])
     : undefined;
 
   return (
