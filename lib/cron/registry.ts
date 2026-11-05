@@ -88,7 +88,8 @@ export const CRON_REGISTRY: CronDefinition[] = [
     label: "Lancement campagnes phishing",
     expectedEveryHours: 1,
     criticality: "high",
-    description: "Démarre les campagnes dont scheduledAt est dans le passé.",
+    description:
+      "Démarre les campagnes programmées arrivées à échéance et termine les lancements interrompus.",
   },
   {
     slug: "phishing-drip",

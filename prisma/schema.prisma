@@ -1320,6 +1320,15 @@ model PhishingResult {
   // batches journaliers (deterministe pour reproductibilite).
   dripScheduledAt  DateTime?
   mailDispatchedAt DateTime?
+  // Reprise apres coupure (novembre 2026) :
+  //   mailAttemptedAt nullable : debut de la derniere tentative d'envoi.
+  //     Pose AVANT l'appel SMTP par lib/phishing/dispatch.ts, il sert de
+  //     reservation : tant qu'il date de moins de 10 minutes et que
+  //     mailDispatchedAt IS NULL, aucun autre traitement n'envoie ce mail.
+  //     Passe ce delai la tentative est tenue pour morte (processus coupe
+  //     par une livraison, un redemarrage) et le mail peut etre repris.
+  //   NULL sur les lignes anterieures : elles restent reprenables.
+  mailAttemptedAt  DateTime?
   // Funnel tracking (Phishing Engine v2, mai 2026) :
   //   openedAt    : premier GET du pixel tracking (=mail ouvert)
   //   clickedAt   : premier GET de la landing /phishing/[token]

@@ -5,10 +5,16 @@
 // reutilise depuis plusieurs entry points sans duplication.
 //
 // Responsabilites :
-//   1. Creer la PhishingCampaign + les PhishingResult avec tokens uniques
+//   1. Creer la PhishingCampaign + les PhishingResult avec tokens uniques,
+//      en une seule ecriture
 //   2. Pre-check SMTP du tenant (en mode prod)
 //   3. Envoyer les mails un par un via le SMTP du tenant
+//      (lib/phishing/dispatch.ts : reservation, envoi, trace)
 //   4. Logger un Event "phishing_campaign_launched"
+//
+// Si le processus est coupe pendant l'etape 3 (livraison, redemarrage),
+// la campagne garde sentAt = null : le cron phishing-launch termine
+// l'envoi immediat, le cron phishing-drip les envois etales.
 //
 // Ce qui est HORS scope ici :
 //   - Auth / RBAC : a faire au niveau caller
@@ -20,13 +26,9 @@
 // launchCampaign(), on factorise pour eviter le drift.
 
 import { db } from "@/lib/db";
-import { injectTrackingPixel } from "@/lib/phishing";
-import {
-  getEmailTemplateBySlug,
-  renderEmailHtml,
-} from "@/lib/phishing/email-template";
+import { dispatchLure } from "@/lib/phishing/dispatch";
+import { getEmailTemplateBySlug } from "@/lib/phishing/email-template";
 import { generateTrackingToken } from "@/lib/crypto";
-import { sendMailViaTenantSmtp } from "@/lib/smtp/sender";
 import type { PhishingTemplate } from "@prisma/client";
 
 export type LaunchTarget = {
@@ -197,19 +199,6 @@ export async function launchPhishingCampaign(
     }
   }
 
-  const campaign = await db.phishingCampaign.create({
-    data: {
-      tenantId,
-      title: tplB ? `${tpl.name} vs ${tplB.name} (A/B)` : tpl.name,
-      template: templateId as PhishingTemplate,
-      // Phase 7a : persiste le slug du variant B pour audit/reporting
-      variantBSlug: templateBId ?? null,
-      scheduledAt: new Date(),
-      sentAt: null,
-      isActive: true,
-    },
-  });
-
   // Phase 7a : assigne deterministe chaque target A ou B avant create.
   // Si pas de templateBId, tous en variant "A" (defaut historique).
   // Phase 7b : si dripStrategy fourni, calcule dripScheduledAt par target
@@ -222,19 +211,35 @@ export async function launchPhishingCampaign(
       )
     : null;
 
-  const results = await db.$transaction(
-    targets.map((u, idx) => {
-      const variant = templateBId ? assignVariant(u.id) : "A";
-      const dripScheduledAt = dripSchedule?.[idx] ?? null;
-      return db.phishingResult.create({
-        data: {
-          campaignId: campaign.id,
-          userId: u.id,
-          trackToken: generateTrackingToken(),
-          status: "SENT",
-          variant,
-          dripScheduledAt,
+  // La campagne et ses destinataires naissent dans UNE SEULE ecriture, tout
+  // ou rien. C'etaient deux ecritures jusqu'en novembre 2026 : une coupure
+  // entre les deux, ou l'echec de la seconde, laissait une campagne sans
+  // destinataires, que le cron phishing-launch prenait pour une campagne
+  // programmee et envoyait a TOUT le tenant.
+  const campaign = await db.phishingCampaign.create({
+    data: {
+      tenantId,
+      title: tplB ? `${tpl.name} vs ${tplB.name} (A/B)` : tpl.name,
+      template: templateId as PhishingTemplate,
+      // Phase 7a : persiste le slug du variant B pour audit/reporting
+      variantBSlug: templateBId ?? null,
+      scheduledAt: new Date(),
+      sentAt: null,
+      isActive: true,
+      results: {
+        createMany: {
+          data: targets.map((u, idx) => ({
+            userId: u.id,
+            trackToken: generateTrackingToken(),
+            status: "SENT" as const,
+            variant: templateBId ? assignVariant(u.id) : "A",
+            dripScheduledAt: dripSchedule?.[idx] ?? null,
+          })),
         },
+      },
+    },
+    include: {
+      results: {
         select: {
           id: true,
           userId: true,
@@ -242,9 +247,13 @@ export async function launchPhishingCampaign(
           variant: true,
           dripScheduledAt: true,
         },
-      });
-    }),
-  );
+      },
+    },
+  });
+  const results = campaign.results;
+  // L'ordre de relecture n'est pas garanti : on retrouve chaque resultat
+  // par destinataire, pour envoyer dans l'ordre des targets.
+  const resultByUser = new Map(results.map((r) => [r.userId, r]));
 
   let sent = 0;
   let failed = 0;
@@ -255,53 +264,36 @@ export async function launchPhishingCampaign(
   if (isDemoMode) {
     sent = results.length;
   } else {
-    const baseUrl =
-      process.env.NEXT_PUBLIC_APP_URL ?? "https://humanix-academie.fr";
-    for (const r of results) {
+    for (const target of targets) {
+      const r = resultByUser.get(target.id);
+      if (!r) continue; // impossible : un resultat est cree par target
       // Skip les results planifies dans le futur -- on les laisse au cron.
       if (r.dripScheduledAt && r.dripScheduledAt.getTime() > nowTs) {
         dripPending++;
         continue;
       }
-      const target = targets.find((t) => t.id === r.userId);
-      if (!target) {
-        failed++;
-        continue;
-      }
-      const firstName = (target.name?.split(" ")[0] ?? "").trim();
-      const cleanBaseUrl = baseUrl.replace(/\/$/, "");
-      const trackingUrl = `${cleanBaseUrl}/phishing/${r.trackToken}`;
-      // Pixel d'open tracking : injecte en fin de HTML. Voir lib/phishing.ts
-      // injectTrackingPixel() pour le rationale (faux positifs proxies, etc).
-      const pixelUrl = `${cleanBaseUrl}/api/phishing/track/open/${r.trackToken}`;
       // Phase 7a : selectionne le bon template selon le variant du target.
       // r.variant a ete assigne lors de la creation ci-dessus (A ou B).
       const activeTpl = r.variant === "B" && tplB ? tplB : tpl;
-      // Phase 0 : renderEmailHtml remplace les placeholders {firstName} et
-      // {trackingUrl} du template string charge depuis la BDD.
-      const lureHtml = renderEmailHtml(activeTpl, firstName, trackingUrl);
-      const html = injectTrackingPixel(lureHtml, pixelUrl);
-      const sendResult = await sendMailViaTenantSmtp(tenantId, {
-        to: target.email,
-        subject: activeTpl.emailSubject,
-        html,
+      // Reservation, rendu (placeholders + pixel d'open tracking), envoi,
+      // puis trace de l'envoi reel dans mailDispatchedAt : tout est dans
+      // dispatchLure, partage avec les deux crons.
+      const outcome = await dispatchLure({
+        resultId: r.id,
+        trackToken: r.trackToken,
+        tenantId,
+        template: activeTpl,
+        recipient: target,
       });
-      if (sendResult.ok) {
+      if (outcome.status === "sent") {
         sent++;
-        // Phase 7b : trace l'envoi reel (vs sentAt qui est la creation du
-        // row). Permet au cron drip de savoir quels results sont encore
-        // en attente.
-        await db.phishingResult.update({
-          where: { id: r.id },
-          data: { mailDispatchedAt: new Date() },
-        });
-      } else {
+      } else if (outcome.status === "failed") {
         failed++;
         // SMTP HS : on stoppe la boucle (pas la peine de tenter les 99
         // autres mails) et on marque la campagne inactive.
         if (
-          sendResult.reason === "smtp_not_configured" ||
-          sendResult.reason === "smtp_decrypt_failed"
+          outcome.reason === "smtp_not_configured" ||
+          outcome.reason === "smtp_decrypt_failed"
         ) {
           await db.phishingCampaign.update({
             where: { id: campaign.id },
@@ -309,11 +301,13 @@ export async function launchPhishingCampaign(
           });
           return {
             ok: false,
-            error: sendResult.reason,
-            message: sendResult.details ?? "SMTP indisponible.",
+            error: outcome.reason,
+            message: outcome.details ?? "SMTP indisponible.",
           };
         }
       }
+      // Reste "taken" : un cron a pris ce mail entre-temps. Il n'est ni
+      // envoye ni en echec ICI, on ne le compte pas.
     }
     if (sent > 0) {
       await db.phishingCampaign.update({
