@@ -9,6 +9,15 @@
 //     - campaign.isActive (pas annulee)
 //   On envoie le mail via le SMTP du tenant et on set mailDispatchedAt.
 //
+// RÉSERVATION (novembre 2026) : l'envoi passe par lib/phishing/dispatch.ts,
+//   comme le lancement. Le premier lot d'un envoi étalé part dès le
+//   lancement, avec une échéance déjà passée : si ce cron tombe pendant que
+//   le lancement y est encore, il voyait les mêmes lignes « dues, pas
+//   encore envoyées » et écrivait une seconde fois. Un mail réservé par un
+//   autre traitement est désormais laissé de côté (compteur `reserved`) ;
+//   si ce traitement meurt, la réservation expire et le mail est repris au
+//   passage suivant.
+//
 // FREQUENCE CIBLE : toutes les heures (planifie en cron OS / Vercel cron /
 // GitHub Actions / Scaleway Cron). Le cron principal /api/cron/phishing-launch
 // reste pour le lancement initial des campagnes. Ce cron est pour le suivi
@@ -25,12 +34,8 @@ import { NextResponse } from "next/server";
 import { timingSafeEqual } from "node:crypto";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { sendMailViaTenantSmtp } from "@/lib/smtp/sender";
-import {
-  getEmailTemplateBySlug,
-  renderEmailHtml,
-} from "@/lib/phishing/email-template";
-import { injectTrackingPixel } from "@/lib/phishing";
+import { dispatchLure } from "@/lib/phishing/dispatch";
+import { getEmailTemplateBySlug } from "@/lib/phishing/email-template";
 import { recordCronRun } from "@/lib/cron/record";
 
 export const dynamic = "force-dynamic";
@@ -67,6 +72,8 @@ type DripProcessResult = {
   picked: number;
   sent: number;
   failed: number;
+  /** Mails laissés à un autre traitement, qui les tenait déjà. */
+  reserved: number;
   errors: string[];
 };
 
@@ -103,12 +110,9 @@ async function processDueDripResults(
     picked: due.length,
     sent: 0,
     failed: 0,
+    reserved: 0,
     errors: [],
   };
-
-  const baseUrl =
-    process.env.NEXT_PUBLIC_APP_URL ?? "https://humanix-academie.fr";
-  const cleanBaseUrl = baseUrl.replace(/\/$/, "");
 
   // Cache des templates par cle "tenantId:slug" pour eviter de re-fetch
   // a chaque iteration (200 items potentiels).
@@ -138,31 +142,25 @@ async function processDueDripResults(
         continue;
       }
 
-      const firstName = (r.user.name?.split(" ")[0] ?? "").trim();
-      const trackingUrl = `${cleanBaseUrl}/phishing/${r.trackToken}`;
-      const pixelUrl = `${cleanBaseUrl}/api/phishing/track/open/${r.trackToken}`;
-      const lureHtml = renderEmailHtml(tpl, firstName, trackingUrl);
-      const html = injectTrackingPixel(lureHtml, pixelUrl);
-
-      const sendResult = await sendMailViaTenantSmtp(r.campaign.tenantId, {
-        to: r.user.email,
-        subject: tpl.emailSubject,
-        html,
+      const outcome = await dispatchLure({
+        resultId: r.id,
+        trackToken: r.trackToken,
+        tenantId: r.campaign.tenantId,
+        template: tpl,
+        recipient: r.user,
       });
 
-      if (sendResult.ok) {
-        await db.phishingResult.update({
-          where: { id: r.id },
-          data: { mailDispatchedAt: new Date() },
-        });
+      if (outcome.status === "sent") {
         result.sent++;
+      } else if (outcome.status === "taken") {
+        result.reserved++;
       } else {
         result.failed++;
         // SMTP HS : on stoppe la campagne entiere pour ce tenant (les autres
         // results suivront le meme sort, autant arreter le massacre).
         if (
-          sendResult.reason === "smtp_not_configured" ||
-          sendResult.reason === "smtp_decrypt_failed"
+          outcome.reason === "smtp_not_configured" ||
+          outcome.reason === "smtp_decrypt_failed"
         ) {
           await db.phishingCampaign.update({
             where: { id: r.campaign.id },
