@@ -43,6 +43,10 @@ const WHITELIST = new Set([
   // prouver que les dates rendues n'en dependent pas. Le code de l'app ne le
   // lit jamais : Node l'applique seul, et les conteneurs tournent en UTC.
   "TZ",
+  // PATH : scripts/reset-demo.test.ts lance reset-demo.sh avec, en tete du
+  // PATH, un dossier de doublures (podman, curl, flock...). Variable du
+  // systeme : le code de l'app ne la lit jamais.
+  "PATH",
   "ABSENT",
   "ASYNC_REQUIRED",
   "CACHED",
