@@ -128,6 +128,30 @@ systemctl --user enable podman-compose@humanix-demo
 > source de dérive. Ce dépôt a passé deux jours à refermer exactement ce genre
 > d'écart (Vector, la crontab). Une seule source de vérité : la compose.
 
+**Un redémarrage ramène la pile en couleur a.** Constaté sur la production le
+2026-11-06 : au démarrage, les conteneurs applicatifs des deux piles ont été
+recréés sous le nom de la couleur a (`humanix-<pile>-app`, ports 3000 et 3001),
+depuis l'image `latest` de leur pile. Le code servi est bien celui de la
+dernière livraison, mais le conteneur de couleur b (`humanix-<pile>-appb`,
+ports 3010 et 3011) n'existe plus. Explication probable, non vérifiée sur
+l'hôte : l'unité lance `podman-compose up` avec le seul `.env` de la pile, donc
+sans la couleur ni le port que `deploy.sh` pose pendant une bascule
+(`APP_COULEUR`, `APP_HOST_PORT`).
+
+`.humanix-deployed`, lui, **n'est pas réécrit** : celui de la production
+annonçait encore `couleur=b` et `port=3010` alors que seul le port 3000
+répondait. Ses lignes `commit=` et `ref=` restent justes ; `couleur=` et
+`port=` décrivent la dernière bascule, pas ce qui tourne, jusqu'à la livraison
+suivante. La couleur en service se lit dans le moteur :
+
+```bash
+podman ps --filter name=-app --format '{{.Names}}  {{.Ports}}'
+```
+
+Les scripts ne se fient donc pas à ce fichier seul : `cron-host.sh` ne garde
+le port noté que s'il répond et sonde sinon les deux couleurs de sa pile,
+`reset-demo.sh` demande à podman le port de chaque conteneur qu'il relance.
+
 ### Déclaration du moteur
 
 `scripts/deploy.sh` lit `CONTAINER_ENGINE` dans le `.env` de la stack :

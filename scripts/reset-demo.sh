@@ -27,8 +27,26 @@
 #      comme deploy.sh) : `prisma db push` recree le schema, puis seed du
 #      catalogue, seed des comptes de demonstration (DEMO_MODE=true),
 #      bootstrap admin ;
-#   4. redemarre la couleur qui servait, attend qu'elle reponde, verifie que
-#      les comptes de demonstration existent.
+#   4. redemarre ce qu'il a arrete, attend que chaque couleur reponde sur le
+#      port que podman lui connait, verifie que les comptes de demonstration
+#      existent.
+#
+# SUR QUEL PORT IL ATTEND
+#
+#   Sur celui que podman publie pour chaque conteneur qu'il va arreter,
+#   demande avant l'arret : `podman port humanix-demo-app 3000/tcp`.
+#
+#   Il le lisait dans .humanix-deployed, que deploy.sh ecrit a chaque
+#   livraison. Mais un redemarrage de l'hote recree la pile en couleur a
+#   sans reecrire ce fichier : le 2026-11-06, celui de la production
+#   annoncait encore couleur=b et port=3010 alors que seul le port 3000
+#   repondait. Une demo dans cet etat aurait ete remise a zero
+#   correctement, puis attendue sur un port ou plus rien n'ecoute : ECHEC
+#   apres HUMANIX_HEALTH_WAIT secondes, sans verification des comptes.
+#
+#   Le moteur decrit ce qui tourne, pas ce qui a ete livre. S'il ne sait pas
+#   dire le port d'une couleur en service, le script s'arrete avant d'avoir
+#   touche a quoi que ce soit.
 #
 # CE QU'IL REFUSE
 #
@@ -54,6 +72,8 @@
 #   HUMANIX_DEMO_DIR   (defaut /opt/humanix-demo)
 #   HUMANIX_CRON_LOG   (defaut /var/log/humanix/cron.log) - ligne de synthese
 #   HUMANIX_HEALTH_WAIT (defaut 180) - secondes d'attente du redemarrage
+#   HUMANIX_DEMO_LOCK  (defaut /tmp/humanix-demo-reset.lock) - verrou ; les
+#                      tests le placent dans leur bac a sable
 #
 # CRON
 #
@@ -65,6 +85,10 @@ set -euo pipefail
 DEMO_DIR="${HUMANIX_DEMO_DIR:-/opt/humanix-demo}"
 CRON_LOG="${HUMANIX_CRON_LOG:-/var/log/humanix/cron.log}"
 HEALTH_WAIT="${HUMANIX_HEALTH_WAIT:-180}"
+VERROU="${HUMANIX_DEMO_LOCK:-/tmp/humanix-demo-reset.lock}"
+# Port d'ecoute de l'application dans son conteneur, le meme pour toutes les
+# couleurs (cf. `ports:` et `healthcheck:` de docker-compose.humanix.yml).
+PORT_INTERNE=3000
 DRY_RUN=0
 [ "${1:-}" = "--dry-run" ] && DRY_RUN=1
 
@@ -87,6 +111,18 @@ synthese() {
   if [ "$DRY_RUN" = "0" ] && [ -w "$CRON_LOG" ]; then
     echo "$ligne" >> "$CRON_LOG"
   fi
+}
+
+# Port de l'hote sur lequel podman publie l'application d'un conteneur.
+# podman repond `127.0.0.1:3001` : on garde ce qui suit le dernier
+# deux-points de la premiere ligne, ce qui convient aussi a une adresse IPv6
+# et a la forme longue `3000/tcp -> 127.0.0.1:3001`. Rien d'exploitable :
+# code 1.
+port_publie() {
+  local ligne
+  ligne="$(podman port "$1" "${PORT_INTERNE}/tcp" 2>/dev/null | head -n 1)" || true
+  [[ "$ligne" =~ :([0-9]+)[[:space:]]*$ ]] || return 1
+  echo "${BASH_REMATCH[1]}"
 }
 
 # En cas d'erreur, on redemarre ce qu'on a arrete : une demo a moitie
@@ -132,26 +168,33 @@ POSTGRES_CONTENEUR="humanix-${STACK}-postgres"
 podman ps --format '{{.Names}}' | grep -qx "$POSTGRES_CONTENEUR" || { log "$POSTGRES_CONTENEUR ne tourne pas"; false; }
 
 # Une seule remise a zero a la fois.
-exec 9>"/tmp/humanix-demo-reset.lock"
+exec 9>"$VERROU"
 flock -n 9 || { log "une remise a zero est deja en cours"; false; }
 
 # Couleurs applicatives presentes et celles qui tournent.
 COULEURS_PRESENTES="$(podman ps -a --format '{{.Names}}' | grep -E "^humanix-${STACK}-app(b)?$" || true)"
 COULEURS_ACTIVES="$(podman ps --format '{{.Names}}' | grep -E "^humanix-${STACK}-app(b)?$" || true)"
-PORT_ACTIF="$(grep -m1 -E '^port=[0-9]+$' .humanix-deployed 2>/dev/null | cut -d= -f2 || true)"
-[ -n "$PORT_ACTIF" ] || PORT_ACTIF="$(grep -E '^APP_HOST_PORT=' .env | tail -1 | cut -d= -f2)"
-[ -n "$PORT_ACTIF" ] || PORT_ACTIF=3001
 
 log "pile : $DEMO_DIR ($COMPOSE)"
-log "couleurs presentes : $(echo ${COULEURS_PRESENTES:-aucune} | tr '\n' ' ') ; en service : $(echo ${COULEURS_ACTIVES:-aucune} | tr '\n' ' ') ; port : $PORT_ACTIF"
+log "couleurs presentes : $(echo ${COULEURS_PRESENTES:-aucune}) ; en service : $(echo ${COULEURS_ACTIVES:-aucune})"
 [ -n "$COULEURS_ACTIVES" ] || { log "aucune couleur applicative ne tourne : rien a remettre a zero proprement"; false; }
+
+# Le port de chaque couleur en service, demande a podman AVANT l'arret : si
+# le moteur ne sait pas repondre, on le sait sans avoir rien touche. C'est
+# sur ces ports qu'on attendra le retour de l'application a l'etape 4.
+PORTS_ACTIFS=""
+for c in $COULEURS_ACTIVES; do
+  p="$(port_publie "$c")" || { log "podman ne dit pas sur quel port $c est publie : rien n'a ete touche"; false; }
+  log "$c est publie sur 127.0.0.1:$p"
+  PORTS_ACTIFS="$PORTS_ACTIFS $p"
+done
 
 if [ "$DRY_RUN" = "1" ]; then
   log "--dry-run : plan"
   log "  1. podman stop $COULEURS_ACTIVES"
   log "  2. DROP SCHEMA public CASCADE ; CREATE SCHEMA public  (dans $POSTGRES_CONTENEUR)"
   log "  3. $COMPOSE run --rm --no-deps app preparer"
-  log "  4. podman start $COULEURS_ACTIVES, puis attente de http://127.0.0.1:$PORT_ACTIF/api/health"
+  log "  4. podman start $COULEURS_ACTIVES, puis attente de$(printf ' http://127.0.0.1:%s/api/health' $PORTS_ACTIFS)"
   synthese OK 0 "dry-run, rien touche"
   exit 0
 fi
@@ -193,16 +236,22 @@ done
 COULEURS_A_RELANCER=""
 
 ETAPE="attente de la reponse"
+# Chaque couleur relancee doit repondre, sur son propre port.
 attente=0
+MUETS="$PORTS_ACTIFS"
 while [ "$attente" -lt "$HEALTH_WAIT" ]; do
-  if curl -sf --max-time 3 "http://127.0.0.1:${PORT_ACTIF}/api/health" 2>/dev/null | grep -q '"status":"ok"'; then
-    break
-  fi
+  MUETS=""
+  for p in $PORTS_ACTIFS; do
+    if ! curl -sf --max-time 3 "http://127.0.0.1:${p}/api/health" 2>/dev/null | grep -q '"status":"ok"'; then
+      MUETS="$MUETS $p"
+    fi
+  done
+  [ -n "$MUETS" ] || break
   sleep 3
   attente=$((attente + 3))
 done
-[ "$attente" -lt "$HEALTH_WAIT" ] || { log "la demo ne repond pas sur 127.0.0.1:$PORT_ACTIF apres ${HEALTH_WAIT}s"; false; }
-log "la demo repond sur 127.0.0.1:$PORT_ACTIF apres ${attente}s"
+[ -z "$MUETS" ] || { log "la demo ne repond pas sur$(printf ' 127.0.0.1:%s' $MUETS) apres ${HEALTH_WAIT}s"; false; }
+log "la demo repond sur$(printf ' 127.0.0.1:%s' $PORTS_ACTIFS) apres ${attente}s"
 
 ETAPE="verification des comptes de demonstration"
 COMPTES="$(podman exec "$POSTGRES_CONTENEUR" sh -c '

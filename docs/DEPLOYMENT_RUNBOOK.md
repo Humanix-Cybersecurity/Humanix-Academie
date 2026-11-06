@@ -209,6 +209,11 @@ cat /opt/humanix-demo/.humanix-deployed
 # commit=...  ref=main  content_pro=...  deployed_at=...  deployed_by=...
 ```
 
+Le fichier porte aussi `couleur=` et `port=`, écrits à la bascule. Ces deux
+lignes ne valent que jusqu'au prochain redémarrage de l'hôte, qui ramène la
+pile en couleur a sans réécrire le fichier : la couleur en service se lit avec
+`podman ps` (cf. [`PODMAN.md`](PODMAN.md), « Démarrage au boot »).
+
 ### Pré-requis : accès au submodule privé
 
 La machine doit pouvoir cloner `humanix-content-pro` (clé de déploiement). Sans

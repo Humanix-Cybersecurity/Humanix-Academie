@@ -220,8 +220,15 @@ exactement ce que fait une livraison :
 3. `podman-compose run --rm --no-deps app preparer`, c'est-à-dire
    `prisma db push`, seed du catalogue, seed des comptes de démonstration
    (`DEMO_MODE=true`), bootstrap admin ;
-4. redémarrage de la couleur, attente de `/api/health`, vérification que
-   les comptes `@demo-pme.fr` existent.
+4. redémarrage de la couleur, attente de `/api/health` sur le port que
+   podman publie pour elle, vérification que les comptes `@demo-pme.fr`
+   existent.
+
+Ce port est demandé à podman avant l'arrêt
+(`podman port humanix-demo-app 3000/tcp`), jamais lu dans `.humanix-deployed` :
+un redémarrage de l'hôte ramène la pile en couleur a sans réécrire ce fichier
+(cf. [`PODMAN.md`](PODMAN.md), « Démarrage au boot »). Si podman ne sait pas
+dire le port, le script s'arrête avant d'avoir touché à quoi que ce soit.
 
 Il **refuse** tout répertoire dont le `.env` ne dit pas `STACK=demo` et
 `DEMO_MODE=true` : il ne peut pas s'exécuter contre la production. Le
