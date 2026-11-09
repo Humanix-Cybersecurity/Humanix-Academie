@@ -6,6 +6,119 @@ Toutes les évolutions notables du produit, classées par version. Conforme
 
 ---
 
+## [1.16.1] - 2026-11-09 🔒 Les appels sortants ne suivent plus les redirections, et un lancement coupé est repris
+
+Cinq commits depuis la 1.16.0, aucune fonctionnalité. Le premier motif de
+cette version est un correctif de sécurité : les webhooks et le client CISO
+Assistant validaient l'adresse de leur cible, puis suivaient ses redirections
+vers des adresses que cette validation interdit. **Les instances
+auto-hébergées sont concernées depuis la 1.0.0 : la mise à jour suffit, sans
+réglage à changer.** Avec lui, trois corrections livrées la semaine
+dernière : un lancement de simulation coupé est repris au lieu d'être
+relancé sur tout l'espace, les saisons sectorielles ont leur section, et la
+remise à zéro de la démo attend sur le bon port.
+
+### Security
+
+#### 🔒 Un appel épinglé ne suit plus aucune redirection
+
+Les webhooks sortants et le client CISO Assistant appellent une adresse
+saisie par l'administration d'un espace. Ils la valident (ni loopback, ni
+lien-local, ni métadonnées cloud, et aucune plage privée pour les webhooks),
+puis épinglent la connexion sur l'adresse validée, pour qu'une seconde
+résolution DNS ne la déplace pas. Deux trous restaient. Aucun des trois
+appels ne fixait l'option `redirect`, donc `fetch` suivait les redirections.
+Et l'épinglage passe par `lookup`, que Node n'appelle que pour un nom
+d'hôte : une adresse IP littérale ouvre le socket sans lui.
+
+Une cible validée pouvait donc répondre par une redirection 307 vers
+`http://127.0.0.1:port/` et faire rejouer la requête, méthode et corps
+compris, sur une adresse interne au serveur. Reproduit de bout en bout sur le
+client CISO Assistant : le service interne recevait le POST du login, et le
+début de sa réponse revenait dans le message d'erreur du test de connexion.
+Côté webhooks, seul le statut HTTP revenait. Une redirection vers un nom
+d'hôte restait épinglée. Il faut un compte habilité à configurer ces
+intégrations dans un espace : ADMIN ou MANAGER pour les webhooks, ADMIN ou
+RSSI pour CISO Assistant. Toutes les versions depuis la 1.0.0 sont
+concernées ; l'épinglage ajouté en 1.3.0 ne fermait pas ce chemin.
+
+Deux verrous, chacun suffisant seul et vérifié séparément :
+
+- **Le connecteur de l'agent épinglé** (`lib/net/pinned-agent.ts`) refuse
+  toute adresse littérale absente de la liste validée
+  (`ERR_PINNED_ADDRESS_REFUSED`). Nom ou littéral, le socket ne sort plus que
+  vers une adresse validée ; la comparaison est numérique, donc insensible à
+  l'écriture de l'adresse.
+- **Les trois appels** partent en `redirect: "manual"`, et un statut 301,
+  302, 303, 307 ou 308 devient un échec explicite : `redirect_refused` dans
+  la dernière erreur d'un webhook, « Redirection refusée » côté CISO
+  Assistant, avec un message qui dit quoi corriger.
+
+33 tests nouveaux, dont six sur de vraies connexions locales ; chaque verrou
+retiré fait échouer les siens. `SECURITY.md`, le rapport d'audit et la page
+publique des webhooks disent désormais que les redirections ne sont pas
+suivies. Le connecteur Python autonome n'est pas concerné : il tourne dans
+l'organisation qui l'exploite, avec une URL qu'elle seule configure. (#1011)
+
+### Fixed
+
+- **Un lancement de simulation coupé est repris, plus relancé.** Une campagne
+  de phishing lancée depuis l'interface garde sa date d'envoi vide tant que
+  sa boucle d'envoi tourne, et pour de bon si le processus est coupé au
+  milieu : livraison, redémarrage de l'hôte, plantage. Le cron horaire
+  `phishing-launch` la prenait pour une campagne programmée jamais démarrée :
+  il ajoutait à la cohorte chaque compte apprenant ou manager de l'espace,
+  puis écrivait à tout le monde, personnes déjà servies comprises, avec le
+  modèle codé en dur, sans le modèle de l'espace ni le pixel de suivi. Un
+  lancement ciblé sur un groupe devenait un envoi à tout l'espace. L'envoi
+  passe désormais par un seul point, `lib/phishing/dispatch.ts`, qui réserve
+  chaque message avant de l'envoyer : de deux traitements concurrents un seul
+  envoie, et la réservation laissée par un processus mort expire au bout de
+  dix minutes. Le cron termine la cohorte d'un lancement sans y ajouter
+  personne, et la campagne naît avec ses destinataires, en une seule
+  écriture. Limite assumée : si la coupure tombe entre l'acceptation d'un
+  message par le serveur SMTP et sa trace en base, cette personne, et elle
+  seule, le reçoit deux fois. 56 tests, sur une base en mémoire qui rejoue
+  coupures et concurrence. (#1005)
+- **Les saisons sectorielles ont leur section.** Dix-sept saisons portent
+  `famille:sectoriel` depuis juin : les dix saisons « Cyber » par secteur et
+  les sept saisons « Mairie ». La page `/apprendre` et le tableau
+  `/admin/modules` gardaient chacun leur liste de quatre familles : ces
+  saisons tombaient dans « Autres parcours » côté apprentissage et, sans un
+  mot, dans « Tout public » côté administration. Un revendeur ne retrouvait
+  pas dans son administration le groupe affiché à ses équipes. Une seule
+  liste désormais, `lib/catalogue/familles.ts`, une section « Sectoriel »
+  côté administration et « Par secteur d'activité » côté apprentissage, et
+  des tests de garde : aucune saison sans famille connue, un libellé pour
+  chaque famille des deux côtés. (#1004)
+- **La remise à zéro de la démo attend sur le port que podman publie.**
+  `scripts/reset-demo.sh` lisait son port d'attente dans la trace de la
+  dernière bascule, qui ne décrit pas ce qui tourne : après un redémarrage de
+  l'hôte, une pile revient en couleur a sans réécrire cette trace. Une démo
+  dans cet état aurait été remise à zéro correctement, puis attendue
+  180 secondes sur un port où rien n'écoute, sans vérification des comptes de
+  démonstration. Le script demande désormais son port à podman pour chaque
+  conteneur qu'il va arrêter, avant de l'arrêter, et s'arrête sans rien
+  toucher si podman ne sait pas répondre. Premier test d'un script shell du
+  dépôt : 14 scénarios dans un bac à sable, dont 12 échouent sur l'ancien
+  script. Vérifié par la remise à zéro du dimanche 8 novembre. (#1006)
+
+### Exploitation
+
+Une colonne nouvelle, `PhishingResult.mailAttemptedAt`, vide sur les lignes
+existantes, posée par le `db push` de la livraison ; aucune migration de
+données. Un webhook ou une connexion CISO Assistant dont l'adresse répondait
+par une redirection échoue désormais avec un message explicite : il faut
+saisir l'adresse finale. Rien de fiable n'en dépendait, un 301 ou un 302
+suivi transformait déjà le POST en GET sans corps ; le cas réel, une « URL de
+base » en `http://` devant un serveur qui force `https`, échouait déjà en
+« Login echec 405 ». Après un redémarrage de l'hôte, la couleur en service se
+lit avec `podman ps`, pas dans la trace de la dernière bascule.
+
+### Dépendances
+
+- nodemailer 10.3.1. (#995)
+
 ## [1.16.0] - 2026-11-03 🤝 Le revendeur administre ses clients, et le lien magique passe les antispams
 
 Le lendemain de la 1.15.0, pour le premier revendeur : il administre lui-même
