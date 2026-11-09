@@ -38,6 +38,7 @@ const TEST_STATUS_LABELS: Record<string, string> = {
   auth_failed: "Authentification refusée",
   unreachable: "Inaccessible",
   schema_error: "Schéma incompatible",
+  redirect_refused: "Redirection refusée",
   unknown: "Erreur inconnue",
 };
 

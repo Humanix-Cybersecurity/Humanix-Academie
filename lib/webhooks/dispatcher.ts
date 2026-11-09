@@ -4,7 +4,10 @@
 // pour ne pas bloquer la requete utilisateur.
 //
 // SECURITE :
-//  - SSRF : on refuse toute URL non https + range privee (IPs internes)
+//  - SSRF : on refuse toute URL non https + range privee (IPs internes), la
+//    connexion est epinglee sur l'IP validee, et une redirection n'est JAMAIS
+//    suivie (echec explicite "redirect_refused") : la cible validee ne
+//    designe pas a notre place une seconde destination
 //  - Timeout 5s par requete
 //  - Signature HMAC SHA-256 pour les webhooks GENERIC (header x-humanix-signature)
 //  - On enregistre succes/echec en DB pour la console admin
@@ -36,7 +39,11 @@ import { lookup } from "node:dns/promises";
 // paquet, quelle que soit la version embarquee par Node.
 import { fetch as fetchUndici, type Agent } from "undici";
 import { db } from "@/lib/db";
-import { buildPinnedAgent, type PinnedAddress } from "@/lib/net/pinned-agent";
+import {
+  buildPinnedAgent,
+  isRedirectStatus,
+  type PinnedAddress,
+} from "@/lib/net/pinned-agent";
 import {
   WEBHOOK_EVENTS,
   WebhookEventKey,
@@ -123,7 +130,9 @@ export function isPrivateIp(ip: string): boolean {
  * NB : ce filtre ne suffit pas seul (un domaine public peut resoudre vers une
  * IP interne = DNS rebinding). La validation de l'IP REELLEMENT resolue, puis
  * l'epinglage de la connexion dessus, sont faits juste avant le fetch dans
- * postWithTimeout (resolvePublicHost + buildPinnedAgent).
+ * postWithTimeout (resolvePublicHost + buildPinnedAgent). Il ne valide pas
+ * non plus ce que la cible REPOND : une redirection n'est donc jamais suivie
+ * (cf. postWithTimeout).
  */
 export function isSafeWebhookUrl(rawUrl: string): boolean {
   let u: URL;
@@ -196,8 +205,12 @@ async function postWithTimeout(
     // Anti-SSRF / DNS-rebinding : on resout + valide l'IP, PUIS on epingle la
     // connexion dessus. undici ne re-resout plus le hostname de son cote (le
     // filtre string isSafeWebhookUrl ne voit pas une resolution malveillante,
-    // et une 2e resolution rouvrirait la fenetre TOCTOU). Le socket sort donc
-    // exactement vers l'IP vetee ; le Host header et le SNI restent le hostname.
+    // et une 2e resolution rouvrirait la fenetre TOCTOU). Le Host header et le
+    // SNI restent le hostname.
+    //
+    // L'epinglage ne couvre que la PREMIERE destination. Pour que le socket ne
+    // sorte vraiment que vers l'IP vetee, il faut aussi ne suivre aucune
+    // redirection : cf. `redirect: "manual"` plus bas.
     let hostname: string;
     try {
       hostname = new URL(url).hostname;
@@ -214,11 +227,29 @@ async function postWithTimeout(
       headers: { "content-type": "application/json", ...headers },
       body,
       signal: ctrl.signal,
+      // Une redirection n'est JAMAIS suivie. Suivre un 30x, c'est laisser la
+      // cible validee designer une 2e destination que personne n'a validee.
+      // Reproduit le 2026-11-09 sur undici 8.12.3 : une cible publique qui
+      // repond `307 Location: http://[::1]:port/` faisait rejouer le POST et
+      // son corps sur le loopback de l'hote, car un litteral d'IP ne passe
+      // pas par `lookup` et echappait donc a l'epinglage DNS.
+      //
+      // "manual" rend la reponse 30x telle quelle, sans la suivre. L'agent
+      // epingle refuse par ailleurs tout litteral d'IP hors de la liste
+      // validee : 2e verrou, cf. lib/net/pinned-agent.ts.
+      redirect: "manual",
     };
     // undici dispatcher : ignore par les types DOM Fetch mais respecte par le
     // fetch() de Next.js (undici sous-jacent).
     init.dispatcher = agent;
     const res = await fetchUndici(url, init as never);
+    if (isRedirectStatus(res.status)) {
+      // Echec EXPLICITE plutot que silencieux : la console admin affiche
+      // "HTTP 307 - redirect_refused" et il suffit de saisir l'URL finale.
+      // Rien de fiable n'en dependait : un 301/302 suivi transformait deja le
+      // POST en GET sans corps, donc sans l'evenement.
+      return { ok: false, status: res.status, error: "redirect_refused" };
+    }
     return { ok: res.ok, status: res.status };
   } catch (e: unknown) {
     return {

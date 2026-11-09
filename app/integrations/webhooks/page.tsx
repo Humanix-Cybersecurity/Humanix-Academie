@@ -231,6 +231,12 @@ export default function WebhooksDocPage() {
             <code>localhost</code>).
           </li>
           <li>
+            <strong>Redirections refusées</strong> : une réponse 301, 302, 303,
+            307 ou 308 n'est jamais suivie. La livraison échoue avec{" "}
+            <code>redirect_refused</code> : renseignez l'URL finale de votre
+            point d'entrée.
+          </li>
+          <li>
             <strong>Timeout strict</strong> : 5 secondes par tentative, le reste
             est annulé.
           </li>
