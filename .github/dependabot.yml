@@ -11,6 +11,13 @@
 #   sur tous les packages critiques. Si une MAJOR est nécessaire, on la
 #   fait à la main, en pleine conscience.
 #
+#   Leçons du 9 novembre 2026, bloc npm :
+#     - un groupe SANS `patterns` n'est pas un fourre-tout : Dependabot le
+#       juge plus spécifique qu'un motif à joker, et il vidait les piles
+#       (cf. « UNE PILE = UNE PR » plus bas) ;
+#     - sans `cooldown`, Dependabot propose des versions de 3 jours, sous la
+#       règle des 7 jours du projet (cf. « Délai de carence » plus bas).
+#
 # Documentation : https://docs.github.com/code-security/dependabot
 
 version: 2
@@ -37,13 +44,70 @@ updates:
       prefix-development: "chore(deps-dev)"
       include: "scope"
 
+    # ----- Délai de carence : rien de moins de 7 jours -----
+    #
+    # La règle du projet : on n'installe pas une version publiée depuis moins
+    # de 7 jours. Sans ce bloc, Dependabot applique son délai par défaut de
+    # 3 jours : le 2026-11-09, il a ouvert quatre PR sur des versions plus
+    # jeunes que cela (la plus récente avait moins de 4 jours), que la CI a
+    # installées et qu'il a fallu laisser mûrir une par une avant de fusionner.
+    #
+    # Avec 7 jours, Dependabot propose pour chaque paquet la version la plus
+    # récente publiée depuis au moins 7 jours, à la seconde près : une PR qui
+    # arrive est une PR dont l'âge est déjà bon.
+    #
+    # Trois limites à garder en tête :
+    #   - le délai ne s'applique PAS aux mises à jour de sécurité, celles
+    #     qu'une alerte Dependabot déclenche : elles arrivent tout de suite ;
+    #   - il porte sur les paquets que Dependabot monte, pas sur les
+    #     dépendances transitives que npm résout au passage : relire les âges
+    #     dans le verrou avant de fusionner reste nécessaire ;
+    #   - un correctif de sécurité publié SANS alerte (next 16.4.5 et
+    #     undici 8.12.4, le 2026-11-09) attend comme les autres : entre 7 et
+    #     14 jours après sa sortie, avec un passage hebdomadaire. Les notes de
+    #     version se lisent quand même.
+    cooldown:
+      default-days: 7
+
     # ----- Groupes : tous filtrés à minor + patch -----
+    #
+    # UNE PILE = UNE PR. Les deux groupes « others » portent `patterns: ["*"]`,
+    # et ce n'est pas décoratif.
+    #
+    # Dependabot range chaque dépendance dans le groupe le plus SPÉCIFIQUE qui
+    # la contient, pas dans le premier de la liste comme le dit sa
+    # documentation. Barème lu dans son code le 2026-11-09 (dependabot-core,
+    # updater/lib/dependabot/updater/pattern_specificity_calculator.rb) :
+    # nom exact 1000, groupe SANS `patterns` 500, motif à joker autour de 95,
+    # `*` seul 1.
+    #
+    # Un groupe sans `patterns` battait donc tout motif à joker. Journal du
+    # passage du 2026-11-09 :
+    #
+    #   Skipping @tailwindcss/postcss for group 'tailwind-stack' - belongs to
+    #   more specific group 'development-others'
+    #
+    # et de même pour @prisma/client et @auth/prisma-adapter, partis dans
+    # production-others. Résultat : tailwindcss dans une PR,
+    # @tailwindcss/postcss dans une autre, deux PR vertes dont la fusion
+    # conjointe donnait un verrou incohérent. `prisma` et `@prisma/client`,
+    # qui doivent rester alignés, pouvaient monter séparément de la même façon.
+    #
+    # Avec `*`, un groupe « others » devient le MOINS spécifique : il ne reçoit
+    # que ce qu'aucune pile ne réclame. L'ordre de la liste donne le même
+    # résultat si Dependabot revenait à la règle de sa documentation.
+    #
+    # Pour le vérifier après un passage : chercher « belongs to more specific
+    # group » dans le journal du job. Aucune pile ne doit y céder un paquet à
+    # un groupe « others » ; l'inverse est attendu.
     groups:
       next-stack:
         patterns:
           - "next"
           - "next-*"
           - "@next/*"
+          # Publié avec next, au même numéro : il monte avec lui.
+          - "eslint-config-next"
           - "react"
           - "react-dom"
           - "@types/react"
@@ -75,11 +139,15 @@ updates:
           - "minor"
           - "patch"
       production-others:
+        patterns:
+          - "*"
         dependency-type: "production"
         update-types:
           - "minor"
           - "patch"
       development-others:
+        patterns:
+          - "*"
         dependency-type: "development"
         update-types:
           - "minor"
