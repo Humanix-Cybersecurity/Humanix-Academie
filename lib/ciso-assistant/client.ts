@@ -34,7 +34,11 @@
 // paquet, quelle que soit la version embarquee par Node.
 import { Agent, fetch as fetchUndici } from "undici";
 import { lookup } from "node:dns/promises";
-import { buildPinnedAgent, type PinnedAddress } from "@/lib/net/pinned-agent";
+import {
+  buildPinnedAgent,
+  isRedirectStatus,
+  type PinnedAddress,
+} from "@/lib/net/pinned-agent";
 import type { CisoEvidence } from "./build-bundle";
 
 /**
@@ -118,6 +122,43 @@ async function assertCisoHostAllowed(
   return results.map((r) => ({ address: r.address, family: r.family }));
 }
 
+/**
+ * Une redirection n'est JAMAIS suivie par ce client.
+ *
+ * Le baseUrl est valide puis epingle (assertCisoHostAllowed + agent epingle),
+ * mais suivre un 30x reviendrait a laisser le serveur d'en face designer une
+ * 2e destination que personne n'a validee et a y rejouer la requete : le
+ * token Knox quand l'origine est la meme, le corps (identifiants du login,
+ * PDF de preuve) sur un 307/308.
+ *
+ * Reproduit de bout en bout le 2026-11-09 sur undici 8.12.3 : un baseUrl
+ * valide qui repondait `307 Location: http://127.0.0.1:port/` atteignait le
+ * loopback de l'hote, pourtant interdit par isForbiddenCisoIp (un litteral
+ * d'IP ne passe pas par `lookup`, donc pas par l'epinglage), et le debut de
+ * la reponse du service interne revenait dans le message d'erreur du test de
+ * connexion.
+ *
+ * Les appels partent donc en `redirect: "manual"` et un statut de redirection
+ * devient un echec explicite. Rien de legitime n'en depend : tous les chemins
+ * d'API de ce fichier finissent par "/" (pas de redirection APPEND_SLASH cote
+ * Django), et un 301/302 suivi transformait deja un POST en GET sans corps.
+ * Le cas reel est une URL de base en http:// devant un serveur qui force
+ * https, ou un portail d'authentification pose devant l'API : le message dit
+ * quoi corriger au lieu d'un "Login echec 405" incomprehensible.
+ */
+function redirectRefusedMessage(
+  method: string,
+  path: string,
+  r: { status: number; headers: { get(name: string): string | null } },
+): string {
+  const location = r.headers.get("location");
+  const target = location ? ` vers ${location.slice(0, 200)}` : "";
+  return (
+    `Redirection HTTP ${r.status} refusée sur ${method} ${path}${target} : ` +
+    "saisissez l'adresse finale dans « URL de base »."
+  );
+}
+
 export type CisoConnectionInput = {
   baseUrl: string;
   username: string;
@@ -154,7 +195,12 @@ export type TestConnectionResult =
   | { ok: true; folderId: string; existingEvidences: number }
   | {
       ok: false;
-      reason: "auth_failed" | "unreachable" | "schema_error" | "unknown";
+      reason:
+        | "auth_failed"
+        | "unreachable"
+        | "schema_error"
+        | "redirect_refused"
+        | "unknown";
       error: string;
     };
 
@@ -274,6 +320,8 @@ export class CisoAssistantClient {
       method,
       headers,
       ...(body !== undefined && { body: JSON.stringify(body) }),
+      // Aucune redirection suivie : cf. redirectRefusedMessage.
+      redirect: "manual",
     };
     // Anti-SSRF / DNS-rebinding : on revalide l'IP resolue du baseUrl avant
     // CHAQUE requete (le token Knox est attache ci-dessus, il ne doit jamais
@@ -285,10 +333,20 @@ export class CisoAssistantClient {
     // fetch() de Next.js (undici sous-jacent).
     (init as RequestInit & { dispatcher?: unknown }).dispatcher =
       this.pinnedDispatcher(addresses);
-    return fetchUndici(
+    const r = (await fetchUndici(
       `${this.conn.baseUrl}${path}`,
       init as never,
-    ) as unknown as Promise<Response>;
+    )) as unknown as Response;
+    if (isRedirectStatus(r.status)) {
+      // Le corps d'un 30x ne sera jamais lu : on le libere pour rendre le
+      // socket au pool epingle, puis on echoue explicitement.
+      await r.body?.cancel().catch(() => {});
+      throw new CisoError(
+        "redirect_refused",
+        redirectRefusedMessage(method, path, r),
+      );
+    }
+    return r;
   }
 
   /** Auth Knox via /api/iam/login/. */
@@ -1492,12 +1550,26 @@ export class CisoAssistantClient {
       method: "POST",
       headers,
       body: pdfBuffer as unknown as BodyInit,
+      // Meme regle que request() : aucune redirection suivie.
+      redirect: "manual",
     };
     (init as RequestInit & { dispatcher?: unknown }).dispatcher =
       this.pinnedDispatcher(addresses);
     const r = await fetchUndici(url, init as never);
     if ([200, 201, 204].includes(r.status)) {
       return { ok: true };
+    }
+    if (isRedirectStatus(r.status)) {
+      await r.body?.cancel().catch(() => {});
+      return {
+        ok: false,
+        status: r.status,
+        error: redirectRefusedMessage(
+          "POST",
+          `/api/evidences/${evidenceId}/upload/`,
+          r,
+        ),
+      };
     }
     return {
       ok: false,
@@ -1822,7 +1894,12 @@ export class CisoAssistantClient {
 
 export class CisoError extends Error {
   constructor(
-    public reason: "auth_failed" | "unreachable" | "schema_error" | "unknown",
+    public reason:
+      | "auth_failed"
+      | "unreachable"
+      | "schema_error"
+      | "redirect_refused"
+      | "unknown",
     message: string,
   ) {
     super(message);

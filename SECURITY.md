@@ -160,7 +160,8 @@ Détails publics : [/securite/rapport-audit](https://humanix-cybersecurity.fr/se
   ou redirect `/connexion` si pas de cookie session)
 - **DOMPurify** pour la sanitization HTML générée par Mistral (audit Cure53,
   whitelist stricte de balises)
-- **isSafeWebhookUrl()** anti-SSRF (refuse IP privées + `.local` + `.internal`)
+- **isSafeWebhookUrl()** anti-SSRF (refuse IP privées + `.local` + `.internal`),
+  connexion épinglée sur l'IP validée, aucune redirection HTTP suivie
 - **anti-PII** sur les prompts Mistral (regex email/SIRET/SIREN/téléphone)
 - **HSTS preload** + `Permissions-Policy` (camera/mic/geo désactivés)
 - **HAProxy** UA filter (sqlmap/nikto/nmap → 403), méthodes HTTP allowlistées

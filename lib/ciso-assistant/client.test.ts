@@ -11,7 +11,12 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import * as dnsPromises from "node:dns/promises";
 import { Agent, fetch as fetchUndici } from "undici";
-import { CisoAssistantClient, isForbiddenCisoIp } from "./client";
+import {
+  CisoAssistantClient,
+  CisoError,
+  isForbiddenCisoIp,
+  testCisoConnection,
+} from "./client";
 
 // On mock la resolution DNS du baseUrl pour piloter ce que VOIT le garde, et on
 // espionne fetch() pour observer (a) qu'aucune connexion ne part vers une cible
@@ -204,5 +209,158 @@ describe("CisoAssistantClient - garde SSRF + epinglage IP (anti DNS-rebinding)",
     expect(seen[0]).toBeInstanceOf(Agent);
     expect(seen[1]).toBeInstanceOf(Agent);
     expect(seen[1]).not.toBe(seen[0]);
+  });
+});
+
+describe("CisoAssistantClient - une redirection n'est jamais suivie", () => {
+  // Le baseUrl est valide puis epingle, mais c'est le serveur d'en face qui
+  // choisit ce qu'il repond. Reproduit le 2026-11-09 sur undici 8.12.3 : un
+  // `307 Location: http://[::1]:port/` faisait rejouer la requete sur le
+  // loopback de l'hote, un litteral d'IP echappant a l'epinglage DNS.
+  //
+  // Ici : le contrat du client (redirect: "manual", echec explicite, une seule
+  // requete). Que l'option empeche REELLEMENT undici de suivre est prouve sur
+  // de vraies connexions dans lib/net/pinned-agent.test.ts.
+  const conn = {
+    baseUrl: "https://ciso.example.com",
+    username: "admin",
+    password: "secret",
+    folderName: "Humanix Académie",
+    verifySSL: true,
+  };
+
+  type UndiciResponse = Awaited<ReturnType<typeof fetchUndici>>;
+
+  function redirectResponse(status: number, location?: string): UndiciResponse {
+    return new Response(null, {
+      status,
+      headers: location ? { location } : {},
+    }) as unknown as UndiciResponse;
+  }
+
+  const fetchSpy = vi.mocked(fetchUndici);
+
+  function sentInit(call = 0): { method?: string; redirect?: string } {
+    return fetchSpy.mock.calls[call][1] as never;
+  }
+
+  beforeEach(() => {
+    mockLookup.mockReset();
+    fetchSpy.mockReset();
+    // La cible est legitime en apparence : IP publique.
+    mockLookup.mockResolvedValue([{ address: "93.184.216.34", family: 4 }]);
+  });
+
+  it.each([301, 302, 303, 307, 308])(
+    "login : un HTTP %i est un echec explicite, sans 2e requete",
+    async (status) => {
+      fetchSpy.mockResolvedValue(
+        redirectResponse(status, "http://[::1]:8000/api/iam/login/"),
+      );
+      const client = new CisoAssistantClient(conn);
+
+      const err = await client.login().catch((e: unknown) => e);
+
+      expect(err).toBeInstanceOf(CisoError);
+      expect((err as CisoError).reason).toBe("redirect_refused");
+      expect((err as CisoError).message).toBe(
+        `Redirection HTTP ${status} refusée sur POST /api/iam/login/ ` +
+          "vers http://[::1]:8000/api/iam/login/ : " +
+          "saisissez l'adresse finale dans « URL de base ».",
+      );
+      // Une seule requete : ni les identifiants ni le token ne sont rejoues
+      // vers la destination annoncee par Location.
+      expect(fetchSpy).toHaveBeenCalledTimes(1);
+      expect(sentInit().method).toBe("POST");
+      expect(sentInit().redirect).toBe("manual");
+    },
+  );
+
+  it("refuse aussi sur un GET, et sans en-tete Location", async () => {
+    fetchSpy.mockResolvedValue(redirectResponse(302));
+    const client = new CisoAssistantClient(conn);
+
+    const err = await client.ensureFolder().catch((e: unknown) => e);
+
+    expect(err).toBeInstanceOf(CisoError);
+    expect((err as CisoError).reason).toBe("redirect_refused");
+    expect((err as CisoError).message).toBe(
+      "Redirection HTTP 302 refusée sur GET /api/folders/ : " +
+        "saisissez l'adresse finale dans « URL de base ».",
+    );
+    expect(fetchSpy).toHaveBeenCalledTimes(1);
+    expect(sentInit().redirect).toBe("manual");
+  });
+
+  it("borne un Location demesure dans le message", async () => {
+    fetchSpy.mockResolvedValue(
+      redirectResponse(307, `https://ailleurs.example/${"a".repeat(5000)}`),
+    );
+    const client = new CisoAssistantClient(conn);
+
+    const err = await client.login().catch((e: unknown) => e);
+
+    expect(err).toBeInstanceOf(CisoError);
+    expect((err as CisoError).message.length).toBeLessThan(350);
+    expect((err as CisoError).message).toContain("URL de base");
+  });
+
+  it("testCisoConnection remonte le motif redirect_refused, pas « Erreur inconnue »", async () => {
+    // Cas reel : URL de base en http:// devant un serveur qui force https.
+    fetchSpy.mockResolvedValue(
+      redirectResponse(301, "https://ciso.example.com/api/iam/login/"),
+    );
+
+    const result = await testCisoConnection({
+      ...conn,
+      baseUrl: "http://ciso.example.com",
+    });
+
+    expect(result).toEqual({
+      ok: false,
+      reason: "redirect_refused",
+      error:
+        "Redirection HTTP 301 refusée sur POST /api/iam/login/ " +
+        "vers https://ciso.example.com/api/iam/login/ : " +
+        "saisissez l'adresse finale dans « URL de base ».",
+    });
+    expect(fetchSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it("uploadAttachment : meme refus, rendu dans son contrat { ok: false }", async () => {
+    // Le PDF de preuve ne doit pas etre rejoue ailleurs (un 308 garde le corps).
+    fetchSpy.mockResolvedValue(
+      redirectResponse(308, "http://169.254.169.254/latest/"),
+    );
+    const client = new CisoAssistantClient(conn);
+
+    const up = await client.uploadAttachment(
+      "ev-1",
+      "preuve.pdf",
+      Buffer.from("%PDF-1.7"),
+    );
+
+    expect(up).toEqual({
+      ok: false,
+      status: 308,
+      error:
+        "Redirection HTTP 308 refusée sur POST /api/evidences/ev-1/upload/ " +
+        "vers http://169.254.169.254/latest/ : " +
+        "saisissez l'adresse finale dans « URL de base ».",
+    });
+    expect(fetchSpy).toHaveBeenCalledTimes(1);
+    expect(sentInit().method).toBe("POST");
+    expect(sentInit().redirect).toBe("manual");
+  });
+
+  it("temoin : uploadAttachment aboutit toujours sur un 201", async () => {
+    fetchSpy.mockResolvedValue(
+      new Response(null, { status: 201 }) as unknown as UndiciResponse,
+    );
+    const client = new CisoAssistantClient(conn);
+
+    await expect(
+      client.uploadAttachment("ev-1", "preuve.pdf", Buffer.from("%PDF-1.7")),
+    ).resolves.toEqual({ ok: true });
   });
 });

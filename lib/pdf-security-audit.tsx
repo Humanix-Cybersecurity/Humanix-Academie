@@ -529,7 +529,7 @@ export function SecurityAuditReport() {
           ["CSRF", "Server Actions Next.js avec protection CSRF native."],
           [
             "SSRF",
-            "isSafeWebhookUrl() refuse non-HTTPS, IPs privées, .local/.internal.",
+            "isSafeWebhookUrl() refuse non-HTTPS, IPs privées, .local/.internal. Connexion épinglée sur l'IP validée, aucune redirection HTTP suivie.",
           ],
           [
             "Open redirect",
