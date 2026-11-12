@@ -6,6 +6,75 @@ Toutes les évolutions notables du produit, classées par version. Conforme
 
 ---
 
+## [1.16.2] - 2026-11-12 📦 Deux montées de sécurité, et un Dependabot qui attend sept jours
+
+Quatre commits depuis la 1.16.1, aucun changement de code applicatif. Next et
+undici ont chacun publié une version de sécurité la semaine dernière : treize
+avis à eux deux, dont un seul peut concerner le produit. Elles entrent ici,
+une fois passés les sept jours que le projet s'impose avant d'installer une
+version. La configuration de Dependabot, elle, ne se comportait pas comme sa
+documentation le décrit : elle est corrigée, preuve lue dans son journal.
+
+### Security
+
+- **next 16.4.5** : sept avis de gravité moyenne. Un seul peut concerner le
+  produit : GHSA-7qx7-33qx-rqx2 (CVE-2026-119347), l'optimiseur d'images
+  `/_next/image` pouvait traiter un SVG malgré le refus par défaut, alors que
+  les espaces en marque blanche téléversent leur logo, SVG compris. Les six
+  autres visent des fonctions que le produit n'utilise pas : la directive
+  `use cache` et les Cache Components (GHSA-mfr8-8qww-v76h,
+  GHSA-vc7v-qv4w-wrv8, GHSA-vvgp-ww4w-46vf, GHSA-rhh4-g77r-r9qj), le renvoi
+  tel quel d'une réponse amont (GHSA-pc58-hwjq-p385) et le runtime Edge
+  (GHSA-f3mh-rxg3-f5g2). (#1007)
+- **undici 8.12.4** : six avis, dont un de gravité haute
+  (GHSA-mqg3-3v4r-cm32, CVE-2026-116592), sur le cache HTTP, les
+  intercepteurs et la vérification d'intégrité de `fetch`
+  (GHSA-7xg3-fphp-28hg, GHSA-5rm8-gv32-r954, GHSA-9v6h-8rgp-m69f,
+  GHSA-3g9m-rv3r-w5w2, GHSA-r4pc-4jcp-7pqc). Le produit n'utilise aucune de
+  ces fonctions, et depuis la 1.16.1 ses appels par undici ne suivent plus
+  aucune redirection. La montée a été essayée contre ce code avant sa
+  fusion. (#1009)
+- **Avis de sécurité de la 1.16.1** : le correctif des redirections sur les
+  appels sortants est décrit dans GHSA-rvm2-qq96-q54q, publié le 9 novembre.
+
+### Changed
+
+- **Dependabot range ses PR par pile, et attend sept jours.** Le lundi
+  9 novembre, Tailwind est arrivé coupé en deux PR : fusionnées ensemble,
+  elles auraient donné un verrou invalide, sans conflit ni contrôle rouge.
+  Cause lue dans le code de Dependabot : une dépendance va au groupe le plus
+  spécifique qui la contient, pas au premier de la liste comme le dit sa
+  documentation, et un groupe sans `patterns` passe pour plus spécifique
+  qu'un motif à joker. Les deux groupes fourre-tout portent désormais
+  `patterns: ["*"]`, le motif le moins spécifique, `eslint-config-next`
+  rejoint la pile de `next`, et un délai de sept jours (`cooldown`) écarte
+  les versions trop jeunes, au lieu de les proposer pour qu'on les fasse
+  attendre à la main. Vérifié dans le journal du passage suivant : douze
+  paquets rangés dans leur pile, aucun cédé à un groupe fourre-tout, et les
+  versions de moins de sept jours écartées. (#1012)
+
+### Exploitation
+
+Aucun changement de schéma, rien à faire côté hôte. La garde des sept jours a
+été tenue pour chaque version montée : âge relu à la seconde, empreintes du
+verrou comparées au registre, aucun script d'installation nouveau. Les
+instances auto-hébergées reçoivent les deux montées de sécurité par l'image
+de cette version.
+
+### Dépendances
+
+- Outils de développement : vitest et @vitest/coverage-v8 5.1.0, vite 8.3.6,
+  eslint-config-next 16.4.5, @tailwindcss/postcss 4.3.4, qui amène Tailwind
+  4.3.4 dans tout l'arbre. (#1010)
+
+### Connu
+
+- vite 8.3.6 reste dans la plage de l'avis GHSA-p4f5-76q4-ffq7, publié le
+  10 novembre : exécution de code par une requête au serveur de
+  développement de vite, quand il est exposé au réseau. Le produit n'utilise
+  vite que par vitest, sans serveur exposé, et vite ne fait pas partie de
+  l'image. Le correctif, vite 8.3.7, suivra une fois ses sept jours passés.
+
 ## [1.16.1] - 2026-11-09 🔒 Les appels sortants ne suivent plus les redirections, et un lancement coupé est repris
 
 Cinq commits depuis la 1.16.0, aucune fonctionnalité. Le premier motif de
