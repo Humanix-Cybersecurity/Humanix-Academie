@@ -20,6 +20,7 @@ import io
 import logging
 import os
 import subprocess
+import wave
 from pathlib import Path
 from typing import Optional
 
@@ -109,8 +110,8 @@ async def synthesize(req: SynthesizeReq):
     # Synthèse vers WAV en mémoire
     wav_buf = io.BytesIO()
     try:
-        with open(os.devnull, "wb") as null:
-            voice.synthesize(req.text, wav_buf)
+        with wave.open(wav_buf, "wb") as wav_file:
+            voice.synthesize(req.text, wav_file)
     except Exception as e:
         log.exception(f"synthesize failed: {e}")
         raise HTTPException(500, "synthesis failed")
