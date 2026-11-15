@@ -157,7 +157,7 @@ while [ $# -gt 0 ]; do
     --yes|-y)  ASSUME_YES=1 ;;
     -h|--help)
       # L'en-tete, jusqu'a la premiere ligne qui n'est plus un commentaire.
-      awk 'NR > 2 && /^[^#]/ { exit } NR > 2 { sub(/^# ?/, ""); print }' "$0"
+      sed -n '3,${/^[^#]/q;s/^# \{0,1\}//p;}' "$0"
       exit 0
       ;;
     *) echo "$USAGE" >&2; exit 1 ;;
@@ -213,7 +213,7 @@ sql() {
 # La version du serveur qui REPOND, pas celle du binaire pose dans l'image :
 # c'est elle qui dit si le remplacement a eu lieu.
 version_en_service() {
-  { sql "show server_version" 2>/dev/null || true; } | awk 'NR == 1 { print $1 }'
+  { sql "show server_version" 2>/dev/null || true; } | head -n 1 | cut -d' ' -f1
 }
 
 # Deux nombres qui ne bougent pas pendant l'operation : s'ils changent, ce
@@ -294,14 +294,21 @@ haproxy_serveur() {
 
 # Statut d'un serveur du backend de la pile : colonne 18 du CSV de
 # `show stat` (UP, DOWN, DRAIN, MAINT...).
+#
+# grep, cut et tr, pas awk : ce script ne demande que bash, coreutils, grep
+# et sed. Les executeurs de la CI n'ont pas awk (constate le 2026-11-15), et
+# un outil de moins a supposer sur l'hote ne coute rien.
 haproxy_statut() {
   { haproxy_envoyer "show stat" || true; } \
-    | awk -F, -v b="$BACKEND" -v s="$1" '$1 == b && $2 == s { print $18; exit }'
+    | { grep -E "^${BACKEND},$1," || true; } | head -n 1 | cut -d, -f18
 }
 
+# Tous les serveurs du backend, sous la forme `prod_a=UP prod_b=DOWN`.
 haproxy_resume() {
   { haproxy_envoyer "show stat" || true; } \
-    | awk -F, -v b="$BACKEND" '$1 == b && $2 != "BACKEND" { printf "%s=%s ", $2, $18 }'
+    | { grep -E "^${BACKEND}," || true; } \
+    | { grep -v -E "^${BACKEND},BACKEND," || true; } \
+    | cut -d, -f2,18 | tr ',\n' '= '
 }
 
 # Remet a `ready` la couleur qui vient de revenir, et attend que HAProxy la
@@ -540,7 +547,11 @@ podman pod exists "$POD" || refuser "le pod $POD n'existe pas"
 # Retirer le pod retire TOUT ce qu'il contient : on s'assure qu'il ne contient
 # que la pile visee.
 DANS_LE_POD="$(podman ps -a --filter "pod=$POD" --format '{{.Names}} {{index .Labels "io.podman.compose.project"}}')"
-ETRANGERS="$(awk -v p="$PROJET" 'NF && $2 != p { print $1 }' <<<"$DANS_LE_POD")"
+ETRANGERS=""
+while read -r nom projet _; do
+  [ -n "$nom" ] || continue
+  [ "$projet" = "$PROJET" ] || ETRANGERS="$ETRANGERS $nom"
+done <<<"$DANS_LE_POD"
 [ -z "$ETRANGERS" ] || refuser "le pod $POD contient des conteneurs etrangers a $PROJET : $(echo $ETRANGERS)"
 grep -q "^${PG} " <<<"$DANS_LE_POD" || refuser "$PG n'est pas dans le pod $POD"
 # Et l'inverse : un conteneur de la pile reste hors du pod survivrait au

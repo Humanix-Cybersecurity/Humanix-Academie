@@ -16,16 +16,23 @@
 //   - ce qui est remis en place quand un geste échoue, selon qu'il échoue
 //     avant ou après le retrait du pod ;
 //   - le retour à `ready` côté HAProxy, sans lequel une pile revenue saine en
-//     couleur a ne recevrait aucune requête après une livraison en couleur b.
+//     couleur a ne recevrait aucune requête après une livraison en couleur b ;
+//   - les outils que le script suppose. Le chemin de chaque essai ne contient
+//     que les doublures et la liste OUTILS_SUPPOSES : un outil de plus dans le
+//     script, et tout tombe ici plutôt que sur un exécuteur de la CI. La
+//     première version appelait awk, que ces exécuteurs n'ont pas : 37 tests
+//     verts sur le poste, rouges en CI (2026-11-15).
 
 import { spawnSync } from "node:child_process";
 import {
   chmodSync,
+  existsSync,
   mkdirSync,
   mkdtempSync,
   readFileSync,
   rmSync,
   statSync,
+  symlinkSync,
   writeFileSync,
 } from "node:fs";
 import { createServer, type Server } from "node:net";
@@ -35,6 +42,27 @@ import { afterEach, describe, expect, it } from "vitest";
 
 const SCRIPT = resolve(import.meta.dirname, "update-postgres.sh");
 const BASH_DISPONIBLE = spawnSync("bash", ["-c", "exit 0"]).status === 0;
+
+// Tout ce que le script et les doublures ont le droit d'appeler en plus des
+// doublures elles-mêmes : bash, coreutils, grep et sed. C'est ce qu'offrent
+// les exécuteurs de la CI comme l'hôte de production.
+const OUTILS_SUPPOSES = [
+  "bash",
+  "basename",
+  "cat",
+  "cp",
+  "cut",
+  "date",
+  "dirname",
+  "grep",
+  "head",
+  "mv",
+  "rm",
+  "sed",
+  "sort",
+  "tail",
+  "tr",
+];
 
 const IMAGE = "docker.io/library/postgres:16-alpine";
 // Identifiants d'image, 64 chiffres hexadécimaux comme ceux de podman.
@@ -423,6 +451,21 @@ function creerBac(scenario: Scenario = {}): string {
     writeFileSync(join(bin, nom), contenu);
     chmodSync(join(bin, nom), 0o755);
   }
+
+  // Le reste du chemin : des liens vers les seuls outils supposés, pris là où
+  // ce poste les range.
+  const outils = join(bac, "outils");
+  mkdirSync(outils);
+  const dossiers = (process.env.PATH ?? "").split(":").filter(Boolean);
+  for (const outil of OUTILS_SUPPOSES) {
+    const trouve = dossiers
+      .map((dossier) => join(dossier, outil))
+      .find((chemin) => existsSync(chemin));
+    if (!trouve) {
+      throw new Error(`outil supposé introuvable sur ce poste : ${outil}`);
+    }
+    symlinkSync(trouve, join(outils, outil));
+  }
   return bac;
 }
 
@@ -442,7 +485,10 @@ function lancer(bac: string, args: string[], entree = ""): Resultat {
     input: entree,
     env: {
       ...process.env,
-      PATH: `${join(bac, "bin")}:${process.env.PATH ?? ""}`,
+      // Les doublures, puis les outils supposés, et rien d'autre : pas le
+      // chemin du poste, où awk, python3 ou jq répondraient à la place d'un
+      // exécuteur qui ne les a pas.
+      PATH: `${join(bac, "bin")}:${join(bac, "outils")}`,
       BAC: bac,
       HUMANIX_DEMO_DIR: join(bac, "demo"),
       HUMANIX_PROD_DIR: join(bac, "prod"),
@@ -992,6 +1038,60 @@ describe.skipIf(!BASH_DISPONIBLE)(
       expect(r.code).toBe(1);
       expect(r.sortie).toContain("usage :");
       expect(r.journal).toEqual([]);
+    });
+
+    describe("les outils qu'il suppose", () => {
+      it("va au bout avec bash, coreutils, grep et sed pour tout bagage", () => {
+        // Le parcours le plus long : couleur b au départ, HAProxy pilotable,
+        // production, donc toutes les lectures et tous les filtres du script.
+        const bac = creerBac({
+          pile: "prod",
+          couleur: "b",
+          haproxy: { prod_a: "DRAIN", prod_b: "UP" },
+          etat: { "public-ok": "" },
+        });
+
+        const r = lancer(bac, ["prod", "--yes"]);
+
+        expect(r.sortie).not.toContain("command not found");
+        expect(r.sortie).toContain(
+          "HAProxy pilotable : prod_a=DRAIN prod_b=UP",
+        );
+        expect(r.sortie).toContain("HAProxy : prod_a est UP");
+        expect(r.sortie).toContain(
+          "OK : PostgreSQL 16.13 -> 16.16 sur la pile prod",
+        );
+        expect(r.code).toBe(0);
+      });
+
+      it("revient en arrière sans autre outil", () => {
+        const bac = creerBac({
+          haproxy: { demo_a: "UP", demo_b: "DOWN" },
+          etat: { [`pg-muette/${NOUVELLE}`]: "" },
+        });
+
+        const r = lancer(bac, ["demo"]);
+
+        expect(r.sortie).not.toContain("command not found");
+        expect(r.sortie).toContain("RETOUR ARRIERE reussi");
+        expect(r.code).not.toBe(0);
+      });
+
+      it("affiche son aide : l'en-tête, et rien du code", () => {
+        const r = lancer(creerBac(), ["--help"]);
+
+        expect(r.code).toBe(0);
+        expect(r.sortie).not.toContain("command not found");
+        expect(r.sortie).toContain(
+          "update-postgres.sh - Renouvelle l'image PostgreSQL d'une pile",
+        );
+        expect(r.sortie).toContain("POURQUOI IL RECREE TOUTE LA PILE");
+        expect(r.sortie).toContain("EXIT CODES");
+        expect(r.sortie).not.toContain("set -euo pipefail");
+        // Plus aucune ligne de commentaire : le croisillon de tête est retiré.
+        expect(r.sortie).not.toMatch(/^#/m);
+        expect(r.journal).toEqual([]);
+      });
     });
   },
 );
