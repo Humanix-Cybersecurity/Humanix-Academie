@@ -133,10 +133,15 @@ systemctl --user enable podman-compose@humanix-demo
 recréés sous le nom de la couleur a (`humanix-<pile>-app`, ports 3000 et 3001),
 depuis l'image `latest` de leur pile. Le code servi est bien celui de la
 dernière livraison, mais le conteneur de couleur b (`humanix-<pile>-appb`,
-ports 3010 et 3011) n'existe plus. Explication probable, non vérifiée sur
-l'hôte : l'unité lance `podman-compose up` avec le seul `.env` de la pile, donc
-sans la couleur ni le port que `deploy.sh` pose pendant une bascule
-(`APP_COULEUR`, `APP_HOST_PORT`).
+ports 3010 et 3011) n'existe plus. Explication, lue le 2026-11-15 dans l'unité
+et dans podman-compose 1.5.0 : l'unité lance `podman-compose up --no-start` avec
+le seul `.env` de la pile, donc sans la couleur, le port ni la révision que
+`deploy.sh` pose pendant une livraison (`APP_COULEUR`, `APP_HOST_PORT`,
+`HUMANIX_REVISION`). L'empreinte de la compose n'est alors plus celle des
+conteneurs en place (`io.podman.compose.config-hash`), et `up` démonte toute la
+pile avant de la recréer. Sans livraison depuis le dernier démarrage, les
+empreintes sont égales et rien n'est recréé : les conteneurs existants
+redémarrent tels quels.
 
 `.humanix-deployed`, lui, **n'est pas réécrit** : celui de la production
 annonçait encore `couleur=b` et `port=3010` alors que seul le port 3000
@@ -199,6 +204,110 @@ podman exec -i humanix-demo-postgres sh -c \
 
 Référence au moment de la migration : **37 saisons, 13 users, 2 tenants**.
 
+## Renouveler PostgreSQL
+
+**La base ne se met pas à jour toute seule.** La compose nomme
+`postgres:16-alpine`, un tag mouvant, et rien ne le retire :
+
+- `deploy.sh` ne touche plus à la base depuis le 2026-08-19 (`--no-deps`,
+  exprès) ;
+- aucune tâche planifiée ne tire d'image, et `podman-auto-update.timer` est
+  désactivé ;
+- un redémarrage de l'hôte recrée le conteneur, mais sur l'image déjà
+  présente.
+
+Constaté le 2026-11-15 : prod et démo en **16.13**, sur une image du
+2026-04-21. Trois versions de sécurité manquaient (16.14, 16.15, 16.16), soit
+77 failles corrigées en amont. Rien ne le signalait : Trivy ne regarde que
+l'image applicative, et Dependabot un Dockerfile (`docker/postgres`) que ces
+piles n'utilisent pas.
+
+PostgreSQL publie ses versions mineures **chaque trimestre, le deuxième jeudi
+de février, mai, août et novembre**. À chacune, lire la rubrique « Migration »
+des [notes de version](https://www.postgresql.org/docs/release/), puis :
+
+```bash
+/opt/humanix-prod/scripts/update-postgres.sh demo --dry-run   # état et plan, sans rien toucher
+/opt/humanix-prod/scripts/update-postgres.sh demo             # la démo d'abord, toujours
+/opt/humanix-prod/scripts/update-postgres.sh prod             # demande confirmation
+```
+
+Le script vit dans le clone de la production, comme ceux de la crontab : il
+n'arrive sur l'hôte qu'avec une livraison de la **production**.
+
+### Pourquoi il recrée toute la pile
+
+Changer d'image, c'est recréer le conteneur. Or sous podman-compose un
+`depends_on` devient `--requires` : l'application et Vector dépendent de
+postgres, et Podman refuse de retirer un conteneur dont un autre dépend. La
+base ne se remplace pas seule.
+
+La pile est créée par l'unité `podman-compose@humanix-<pile>` (cf. « Démarrage
+au boot »). Mais son `up --no-start` ne **recrée** des conteneurs que si leur
+empreinte diffère de celle de la compose, et une image qui change sous un tag
+ne change pas cette empreinte. Après un simple `podman pull`, ni
+`systemctl --user restart` ni un redémarrage de l'hôte ne remplaceraient la
+base. Elle ne le serait qu'au premier démarrage qui suit une livraison : un
+jour, sans prévenir, et sans que personne l'ait décidé.
+
+Le script rend ce chemin déterministe : il arrête l'unité, retire le pod de la
+pile, relance l'unité, qui recrée tout sur les images présentes.
+`podman pod rm` retire les conteneurs et laisse les volumes nommés (lu dans
+Podman 5.7.0 : seuls les volumes anonymes partent) : `humanix_<pile>_pg` n'est
+pas touché.
+
+### Ce qu'il faut savoir avant de lancer
+
+|         |                                                                                                                             |
+| ------- | --------------------------------------------------------------------------------------------------------------------------- |
+| Coupure | HAProxy répond 503 de l'arrêt de l'application à son retour : moins d'une minute                                            |
+| Quand   | Loin des tâches planifiées : ni aux minutes 00 et 30, ni entre 01h00 et 05h00                                               |
+| Filet   | En production, instantané chiffré par `dump-securite.sh` avant le premier arrêt                                             |
+| Couleur | La pile revient en couleur a, comme après un redémarrage de l'hôte                                                          |
+| HAProxy | Le script remet la couleur a à `ready` : après une livraison en couleur b, `deploy.sh` l'a laissée en `drain`               |
+| Échec   | Avant le retrait du pod, la pile est relancée telle quelle ; après, le tag est remis sur l'image d'avant et la pile recréée |
+
+**Enchaîner les deux piles.** Le tag local est commun à la démo et à la
+production. La démo renouvelée, il désigne la nouvelle image : la production la
+prendrait à sa prochaine recréation, donc au premier démarrage de l'hôte qui
+suit une livraison, sans instantané ni vérification. La démo sert à éprouver,
+la production suit dans la foulée.
+
+L'image d'avant reste sous `localhost/humanix-postgres-precedent:<version>`, à
+l'abri d'un `podman image prune`. Quand la nouvelle version a fait ses
+preuves, la retirer par `podman rmi` de ce nom.
+
+### Vérifier, et revenir en arrière après coup
+
+```bash
+for c in humanix-prod-postgres humanix-demo-postgres; do
+  podman exec "$c" sh -c 'psql -At -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "show server_version"'
+done
+```
+
+Le script revient seul en arrière quand il échoue. Pour revenir plus tard, à
+la main, c'est son propre geste, pile par pile :
+
+```bash
+podman tag localhost/humanix-postgres-precedent:16.13 docker.io/library/postgres:16-alpine
+systemctl --user stop podman-compose@humanix-demo
+podman pod rm pod_humanix-demo
+systemctl --user start podman-compose@humanix-demo
+```
+
+Deux précautions : le tag est **commun aux deux piles**, et HAProxy doit
+revoir la couleur a (`sudo systemctl reload haproxy` si la pile servait en
+couleur b). Les versions mineures d'une même branche partagent le même format
+de données : revenir de 16.16 à 16.13 sur le même volume est sans risque.
+
+### Ce que le script ne fait pas
+
+- **Un changement de version majeure** (16 vers 17) : c'est `pg_upgrade`, ou un
+  dump et une restauration, pas un changement d'image. Le script le refuse.
+- **Les `REINDEX`** que demandent parfois les notes de version. Au 2026-11-15
+  la base n'a que des index btree, aucune colonne `bpchar` et aucune extension
+  hors `plpgsql` : aucune des réindexations de 16.14 à 16.16 ne la concerne.
+
 ## Ce qui reste à faire
 
 - [x] ~~**Éprouver un vrai redémarrage machine.**~~ **Fait le 2026-08-13.**
@@ -210,6 +319,13 @@ Référence au moment de la migration : **37 saisons, 13 users, 2 tenants**.
               passe pas `--profile`. Le service ne survivait que par
               `restart: unless-stopped`. Le profil a été retiré du service.
 
+- [ ] **Rien ne signale une nouvelle version de PostgreSQL.** Le renouvellement
+      est manuel et tient à un calendrier (cf. « Renouveler PostgreSQL »). Deux
+      pistes : épingler l'image par digest dans `docker-compose.humanix.yml`
+      et laisser Dependabot proposer le suivant, ce qui demande que la
+      livraison retire l'image épinglée avant tout redémarrage de l'hôte ; ou
+      une tâche planifiée qui compare le digest local à celui du registre et
+      l'écrit dans `cron.log`.
 - [ ] **L'unité systemd générée est incomplète.** `podman-compose systemd -a
   register` écrit `COMPOSE_FILE=docker-compose.yml` seul, sans le fichier
       d'observabilité. Corrigé à la main dans
