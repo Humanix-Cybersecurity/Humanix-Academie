@@ -223,6 +223,22 @@ Le `docker-compose.yml` de `/opt/...` a volontairement divergé du dépôt (cf.
 [`INFRA_STACKS_DEPLOYED.md`](INFRA_STACKS_DEPLOYED.md)) : le script ne le touche
 pas et signale les modifications locales qu'il préserve.
 
+### Ce qu'une livraison ne met pas à jour : PostgreSQL
+
+`deploy.sh` ne livre que l'application. La base suit le tag mouvant
+`postgres:16-alpine`, que ni une livraison ni un redémarrage de l'hôte ne
+retirent : le 2026-11-15, elle avait trois versions de sécurité de retard. Elle
+se renouvelle à part, chaque trimestre, la démo d'abord :
+
+```bash
+/opt/humanix-prod/scripts/update-postgres.sh demo --dry-run
+/opt/humanix-prod/scripts/update-postgres.sh demo
+/opt/humanix-prod/scripts/update-postgres.sh prod
+```
+
+Le site répond 503 pendant moins d'une minute. Le pourquoi et le retour arrière
+sont dans [`PODMAN.md`](PODMAN.md), « Renouveler PostgreSQL ».
+
 ---
 
 ## H. Smoke tests post-deploy
