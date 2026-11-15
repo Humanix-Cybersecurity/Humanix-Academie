@@ -15,7 +15,7 @@
 # Sécurité : tourne en utilisateur non-root, pas de port exposé sur l'host
 # (uniquement réseau Docker interne `humanix_backend`).
 
-FROM python:3.11-slim@sha256:9534e5a8e315485d4061ed659af0fd78a284c015f9b73661b41d6bab25604534 AS base
+FROM python:3.11-slim@sha256:07d4824036af339fa1b6ef769cc99d9c10a141769538b52b3b597c84f7a7b535 AS base
 
 # Dépendances système : ffmpeg pour le transcodage WAV→MP3 + libsndfile
 # (requis par soundfile, dépendance indirecte de piper).
