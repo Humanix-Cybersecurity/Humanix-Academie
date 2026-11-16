@@ -101,7 +101,7 @@
     "zod": "^4.6.7"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4.3.4",
+    "@tailwindcss/postcss": "^4.3.5",
     "@types/canvas-confetti": "^1.6.4",
     "@types/node": "^22.20.5",
     "@types/papaparse": "^5.3.15",
