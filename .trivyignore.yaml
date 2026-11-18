@@ -52,4 +52,36 @@
 # expiraient toutes le meme jour : 23 alertes rouges le meme matin se
 # lisent comme du bruit, pas comme une alerte.
 
-vulnerabilities: []
+vulnerabilities:
+  # picomatch, toutes les versions publiees (<= 4.0.7) : deni de service par
+  # expression reguliere sur un extglob repete a une seule branche, par
+  # exemple `+(*)` ou `+(*a)`. GHSA-fc5q-39xc-vjpf / CVE-2026-112366, HIGH.
+  # L'avis date du 2026-10-19 ; GitHub l'a revu le 2026-11-17, et npm audit
+  # le rapporte depuis ce jour-la.
+  #
+  # AUCUN CORRECTIF AMONT au 2026-11-18 : la 4.0.7 du 2026-08-24 est la
+  # derniere version, et la correction attend dans la PR 194 de
+  # micromatch/picomatch. Il n'y a donc rien a monter, a la difference de
+  # body-parser en octobre.
+  #
+  # Ou il se trouve : dans l'outillage de DEVELOPPEMENT seulement.
+  #   - connectors/mcp-server : vitest et vite, puis tinyglobby et fdir,
+  #     tous sur picomatch 4.0.7. C'est ce verrou, audite dev inclus, qui
+  #     met en rouge le controle exige "npm audit" de toutes les PR ;
+  #   - racine : la meme chaine, plus fast-glob puis micromatch sur
+  #     picomatch 2.3.2 sous ESLint. `npm ls picomatch --omit=dev` ne rend
+  #     rien, et picomatch est absent de l'image (cf. plus haut).
+  #
+  # Pourquoi c'est acceptable : il faut que l'attaquant fournisse le motif.
+  # Ici picomatch ne recoit que les motifs de nos propres fichiers de
+  # configuration (vitest, ESLint), sur le poste et sur les executeurs de
+  # CI. Aucune entree d'utilisateur ne l'atteint.
+  #
+  # A chaque tour : `npm view picomatch dist-tags.latest`. Des qu'une
+  # version corrigee a sept jours, `npm update picomatch
+  # --package-lock-only` a la racine et dans connectors/mcp-server, puis
+  # retirer cette entree. Sans correctif a l'expiration : reexaminer, puis
+  # reporter la date en le justifiant.
+  - id: GHSA-fc5q-39xc-vjpf
+    statement: "picomatch : aucun correctif amont au 2026-11-18, dependance de developpement seulement, motifs issus de nos fichiers de configuration"
+    expired_at: 2026-12-15
