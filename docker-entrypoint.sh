@@ -194,6 +194,123 @@ verifier_schema() {
   return 0
 }
 
+# -----------------------------------------------------------------------------
+# GARDE : les secrets sont-ils de vrais secrets ?
+#
+# POURQUOI
+#
+#   AUTH_SECRET signe les sessions : qui le connait se fabrique celle de
+#   n'importe quel compte, administration comprise, sans mot de passe. Il
+#   chiffre aussi les mots de passe SMTP et CISO Assistant ranges en base, et
+#   signe les liens de desinscription.
+#
+#   Or ce depot a publie des valeurs d'exemple pour ce secret : celle que le
+#   docker-compose.yml d'auto-hebergement ecrivait en dur jusqu'en novembre
+#   2026, celle de .env.example, celles de la documentation. Le compose ne
+#   lisait pas le .env : une instance pouvait tourner avec la valeur en dur
+#   alors que son .env en contenait une bonne. Une instance qui tourne avec
+#   l'une de ces valeurs n'a pas de secret.
+#
+#   CRON_SECRET ouvre les routes /api/cron/* : purges, envois de rappels,
+#   lancement des campagnes. Meme raisonnement.
+#
+#   Un service qui repond avec un secret public est pire qu'un service qui
+#   refuse de demarrer.
+#
+# CE QUI EST REFUSE
+#
+#   AUTH_SECRET vide, de moins de 16 caracteres (en dessous, le code de
+#   l'application refuse deja de chiffrer et de signer), ou egal a une valeur
+#   d'exemple publiee. CRON_SECRET egal a sa valeur d'exemple publiee ; vide,
+#   il est accepte, puisque les routes cron refusent alors tout appel.
+#
+#   Aucune exception pour DEMO_MODE=true : scripts/start.sh genere un secret
+#   aleatoire, une demonstration n'a pas besoin d'un secret connu de tous.
+#
+# LA COMPARAISON EST EXACTE, valeur par valeur
+#
+#   Chercher des motifs (« change-me », « remplace ») finirait par refuser un
+#   vrai secret, et changer AUTH_SECRET sur une instance qui a servi n'est pas
+#   gratuit : cf. docs/upgrade.md. On ne refuse que ce qu'on sait public.
+#
+# QUE FAIRE EN CAS DE REFUS
+#
+#   Pas de contournement, et c'est delibere : la correction est de generer une
+#   valeur, ce qui tient en une commande.
+#
+# Uniquement des commandes internes au shell : la garde ne depend d'aucun
+# binaire, ni dans l'image ni dans les tests. Elle n'affiche jamais la valeur
+# d'un secret, seulement son nom et sa longueur.
+# -----------------------------------------------------------------------------
+verifier_secrets() {
+  refus_auth=""
+  refus_cron=""
+
+  case "${AUTH_SECRET:-}" in
+    "")
+      refus_auth="AUTH_SECRET est vide."
+      ;;
+    "demo-secret-change-me-in-prod-d3m0-s3cr3t-1234567890" | \
+    "REMPLACE_MOI_PAR_UN_SECRET_GENERE_AVEC_OPENSSL_RAND_BASE64_32" | \
+    "remplace-moi-par-un-secret-genere" | \
+    "...32+ caractères aléatoires base64..." | \
+    "Iqx9Ot/tCBmrFqkAcLqxdj9DZpvEBALMqoqW2Bxxxxx=" | \
+    "build-time-only-not-a-real-secret")
+      refus_auth="AUTH_SECRET est une valeur d'exemple publiee dans le depot : tout le monde la connait."
+      ;;
+    *)
+      if [ "${#AUTH_SECRET}" -lt 16 ]; then
+        refus_auth="AUTH_SECRET est trop court : ${#AUTH_SECRET} caracteres, il en faut 16 au moins, 32 de preference."
+      fi
+      ;;
+  esac
+
+  case "${CRON_SECRET:-}" in
+    "demo-cron-secret-change-me-32-chars-minimum-pour-prod")
+      refus_cron="CRON_SECRET est la valeur d'exemple publiee dans le depot : tout le monde la connait."
+      ;;
+  esac
+
+  if [ -z "$refus_auth" ] && [ -z "$refus_cron" ]; then
+    if [ "${#AUTH_SECRET}" -lt 32 ]; then
+      echo "[garde] AVERTISSEMENT : AUTH_SECRET fait ${#AUTH_SECRET} caracteres. 32 au moins sont"
+      echo "        recommandes (openssl rand -base64 32). Le demarrage continue."
+    fi
+    echo "[garde] Secrets : aucune valeur d'exemple."
+    return 0
+  fi
+
+  {
+    echo ""
+    echo "  =============================================="
+    echo "  DEMARRAGE REFUSE : un secret n'en est pas un."
+    echo "  =============================================="
+    echo ""
+    if [ -n "$refus_auth" ]; then
+      echo "  - $refus_auth"
+    fi
+    if [ -n "$refus_cron" ]; then
+      echo "  - $refus_cron"
+    fi
+    echo ""
+    echo "  Corriger : generer une valeur, la poser dans le .env, relancer."
+    echo ""
+    echo "      openssl rand -base64 32      pour AUTH_SECRET"
+    echo "      openssl rand -hex 32         pour CRON_SECRET"
+    echo ""
+    echo "  Sur une instance qui a deja servi, changer AUTH_SECRET deconnecte"
+    echo "  tout le monde et rend illisibles les mots de passe SMTP et CISO"
+    echo "  Assistant enregistres : lire docs/upgrade.md avant."
+    echo ""
+  } >&2
+  exit 1
+}
+
+# Avant tout le reste, dans les deux modes : une configuration qui ne peut pas
+# servir n'a pas non plus a preparer la base, et le refus arrive tout de suite
+# au lieu d'attendre Postgres.
+verifier_secrets
+
 if [ "$1" = "preparer" ]; then
   attendre_postgres
   preparer_etat_partage

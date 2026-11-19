@@ -1,5 +1,10 @@
 # ============================================================
 # HumaniX Academy - Stack Docker production-ready
+#
+# Avant le premier démarrage : cp .env.example .env, puis y poser
+# AUTH_SECRET et POSTGRES_PASSWORD (docs/installation.md, étape 2).
+# Pour un essai sur son poste : ./scripts/start.sh s'en charge.
+#
 # Démarrage : docker compose up --build
 # Reset complet : docker compose down -v && docker compose up --build
 # ============================================================
@@ -19,6 +24,12 @@
 #  - Seul haproxy expose 80/443 sur l'host
 #  - 2 réseaux Docker : frontend (haproxy↔app) et backend (app↔db)
 #  - postgres n'a accès qu'à app (pas à haproxy)
+#  - AUTH_SECRET, CRON_SECRET et le mot de passe de la base ne sont plus dans
+#    ce fichier : ils viennent du .env, et la stack refuse de démarrer sans
+#    AUTH_SECRET ni POSTGRES_PASSWORD
+#  - Il reste deux mots de passe par défaut, à remplacer dans le .env en
+#    production : celui des stats HAProxy (port publié sur 127.0.0.1
+#    seulement) et celui du rôle PostgreSQL en lecture seule
 
 services:
   # =====================================================================
@@ -100,7 +111,15 @@ services:
     restart: unless-stopped
     environment:
       POSTGRES_USER: humanix
-      POSTGRES_PASSWORD: humanix_demo
+      # Pas de valeur par defaut, et c'est delibere : ce fichier ecrivait
+      # `humanix_demo` en dur jusqu'en novembre 2026. La base n'est joignable
+      # que depuis le reseau humanix_backend, mais un mot de passe publie dans
+      # un depot n'en est pas un.
+      #
+      # Lu au PREMIER demarrage seulement, quand le volume est vide. Sur une
+      # base qui existe deja, changer cette variable ne change PAS le mot de
+      # passe de la base : cf. docs/upgrade.md.
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:?POSTGRES_PASSWORD absent du .env - voir docs/installation.md (etape 2), ou docs/upgrade.md pour une base qui existe deja}"
       POSTGRES_DB: humanix
       # Password du role read-only humanix_ro_user. Min 16 chars sinon
       # le script d'init refuse de creer le role.
@@ -202,19 +221,45 @@ services:
     container_name: humanix-app
     restart: unless-stopped
     # PAS de "ports" : on passe systématiquement par haproxy
+    #
+    # LE `.env` EST LA CONFIGURATION DE CE SERVICE
+    #
+    # `env_file` fait entrer dans le conteneur tout ce que le `.env` definit.
+    # Jusqu'en novembre 2026 ce service n'en avait pas, et presque toutes ses
+    # variables etaient ecrites en dur ci-dessous. Le `.env` que le guide fait
+    # remplir ne servait donc qu'aux quelques `${...}` du fichier : ni
+    # AUTH_SECRET, ni l'URL publique, ni le jeton d'envoi des mails, ni le
+    # compte d'amorcage (BOOTSTRAP_ADMIN_*) n'atteignaient l'application.
+    #
+    # Precedence a connaitre : `environment:` l'emporte sur `env_file:`. Une
+    # valeur en dur dans le bloc ci-dessous masque donc le `.env` sans rien
+    # dire. D'ou la regle de ce bloc : seul ce que cette topologie impose est
+    # en dur (adresse de la base, proxy devant). Tout le reste se lit dans le
+    # `.env`, avec un repli quand le `.env` ne dit rien.
+    env_file:
+      - ./.env
     environment:
-      DATABASE_URL: "postgresql://humanix:humanix_demo@postgres:5432/humanix?schema=public"
+      # Construite ici et non lue dans le `.env` : la base est le service
+      # `postgres` de ce fichier, et le mot de passe doit etre le meme des deux
+      # cotes. Le DATABASE_URL du `.env` ne sert donc pas a ce compose.
+      # Le mot de passe entre dans une URL : le generer en hexadecimal
+      # (openssl rand -hex 24), sans caractere a encoder.
+      DATABASE_URL: "postgresql://humanix:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD absent du .env}@postgres:5432/humanix?schema=public"
       # Client read-only pour les surfaces analytiques (cf. lib/db-readonly.ts).
       # Le password vient de POSTGRES_READONLY_PASSWORD du service postgres
       # ci-dessus. Le role est cree au 1er boot par l'image custom.
       # Defense en profondeur : forecasts/heatmap/risk-score passent par
       # ce client, donc impossibles de muter par accident.
       DATABASE_URL_READONLY: "postgresql://humanix_ro_user:${POSTGRES_READONLY_PASSWORD:-humanix_ro_demo_16_chars_min}@postgres:5432/humanix?schema=public"
-      AUTH_SECRET: "demo-secret-change-me-in-prod-d3m0-s3cr3t-1234567890"
-      AUTH_URL: "http://localhost:80"
+      # Signe les sessions, chiffre les mots de passe SMTP et CISO Assistant
+      # ranges en base. Jamais de valeur dans ce fichier : il en a porte une,
+      # publique, jusqu'en novembre 2026. Le conteneur refuse en plus de
+      # demarrer avec une valeur d'exemple (cf. docker-entrypoint.sh).
+      AUTH_SECRET: "${AUTH_SECRET:?AUTH_SECRET absent du .env - le generer avec openssl rand -base64 32, voir docs/installation.md (etape 2)}"
+      AUTH_URL: "${AUTH_URL:-http://localhost:80}"
       AUTH_TRUST_HOST: "true" # Indispensable derrière un reverse proxy
-      NEXT_PUBLIC_APP_URL: "http://localhost"
-      NEXT_PUBLIC_APP_NAME: "HumaniX Academy"
+      NEXT_PUBLIC_APP_URL: "${NEXT_PUBLIC_APP_URL:-http://localhost}"
+      NEXT_PUBLIC_APP_NAME: "${NEXT_PUBLIC_APP_NAME:-HumaniX Academy}"
       # Lit DEMO_MODE depuis .env (ou la shell). Default "true" pour preserver
       # le comportement historique demo-locale si la variable n'est pas posee.
       # IMPORTANT : sans la substitution ${...}, la valeur en dur ecrasait le
@@ -227,29 +272,28 @@ services:
       # Le garde-fou AUTH_URL (localhost only) empeche l'activation accidentelle
       # en prod meme si la variable fuite.
       DEV_MODE: "${DEV_MODE:-false}"
-      EMAIL_FROM: "demo@humanix.local"
+      EMAIL_FROM: "${EMAIL_FROM:-demo@humanix.local}"
       # Scaleway TEM - vide en demo, le code retombe en mode "simulated"
-      SCALEWAY_TEM_TOKEN: ""
-      SCALEWAY_TEM_PROJECT_ID: ""
-      SCALEWAY_TEM_REGION: "fr-par"
+      SCALEWAY_TEM_TOKEN: "${SCALEWAY_TEM_TOKEN:-}"
+      SCALEWAY_TEM_PROJECT_ID: "${SCALEWAY_TEM_PROJECT_ID:-}"
+      SCALEWAY_TEM_REGION: "${SCALEWAY_TEM_REGION:-fr-par}"
       NODE_ENV: "production"
       # === TTS premium serveur ===
-      # Choisis ton provider :
+      # Choisis ton provider, dans le `.env` :
       #   "voxtral" -> Mistral Voxtral SaaS (necessite MISTRAL_API_KEY plus bas)
-      #   "piper"   -> Container Piper local (lance avec --profile piper)
-      #   ""        -> pas de TTS serveur, fallback Web Speech API navigateur
-      # Si vide et MISTRAL_API_KEY est fourni, "voxtral" est utilise par defaut.
-      TTS_PROVIDER: "voxtral"
-      # Pour le mode Piper uniquement : URL du container TTS sur le reseau backend.
-      # Decommente cette ligne ET `TTS_PROVIDER: "piper"` ci-dessus.
-      # TTS_SERVER_URL: "http://tts:5500"
-      TTS_SERVER_URL: ""
+      #   "piper"   -> Container Piper local (service `tts` de ce fichier)
+      # Sans TTS_PROVIDER dans le `.env`, "voxtral" est retenu.
+      TTS_PROVIDER: "${TTS_PROVIDER:-voxtral}"
+      # Pour le mode Piper uniquement : URL du container TTS sur le reseau
+      # backend. Poser dans le `.env` TTS_PROVIDER=piper et
+      # TTS_SERVER_URL=http://tts:5500
+      TTS_SERVER_URL: "${TTS_SERVER_URL:-}"
       # Plan minimum requis pour beneficier du TTS premium serveur.
       # Aligne sur lib/plans.ts. Valeurs : trial / solo / essentielle / pro / premium
-      # En demo locale (DEMO_MODE=true) on baisse a "trial" pour que tout user
-      # demo ait acces au TTS et puisse tester la voix Marie. En prod, c'est
-      # remonte a "pro" via le `.env` Ansible (cf. ansible/templates/env.prod.j2).
-      TTS_MIN_PLAN: "trial"
+      # Sans TTS_MIN_PLAN dans le `.env`, c'est "trial" : en demo locale
+      # (DEMO_MODE=true) tout user demo a ainsi acces au TTS et peut tester la
+      # voix Marie. Le `.env.example` le remonte a "pro".
+      TTS_MIN_PLAN: "${TTS_MIN_PLAN:-trial}"
       # === IA generative + TTS Voxtral (Mistral souverain FR) ===
       # MISTRAL_API_KEY DOIT venir de l'environnement / du .env, sinon
       # `environment:` ecraserait `env_file:` et la cle disparaitrait dans
@@ -258,22 +302,26 @@ services:
       # `.env` que docker compose charge automatiquement. Vide -> features
       # IA et TTS Voxtral desactivees, l'app sert les fixtures statiques.
       MISTRAL_API_KEY: "${MISTRAL_API_KEY:-}"
-      MISTRAL_MODEL: "ministral-8b-latest"
+      MISTRAL_MODEL: "${MISTRAL_MODEL:-ministral-8b-latest}"
       # === SSO Google + Microsoft ===
       # Si vide, les boutons SSO ne s'affichent pas (fallback magic link).
       # Pour activer Google : creer un projet sur console.cloud.google.com,
       # ajouter une URL de redirection : http://localhost/api/auth/callback/google
-      AUTH_GOOGLE_ID: ""
-      AUTH_GOOGLE_SECRET: ""
+      AUTH_GOOGLE_ID: "${AUTH_GOOGLE_ID:-}"
+      AUTH_GOOGLE_SECRET: "${AUTH_GOOGLE_SECRET:-}"
       # Pour Microsoft / Entra ID : portal.azure.com → App registrations
       # Redirect URI : http://localhost/api/auth/callback/microsoft-entra-id
-      AUTH_MICROSOFT_ENTRA_ID_ID: ""
-      AUTH_MICROSOFT_ENTRA_ID_SECRET: ""
-      AUTH_MICROSOFT_ENTRA_ID_ISSUER: ""
-      # === Cron secret (observatoire des fuites + autres jobs futurs) ===
-      # Generer avec : openssl rand -hex 32
-      # Utilise pour /api/cron/breaches-refresh (auth header x-cron-secret)
-      CRON_SECRET: "demo-cron-secret-change-me-32-chars-minimum-pour-prod"
+      AUTH_MICROSOFT_ENTRA_ID_ID: "${AUTH_MICROSOFT_ENTRA_ID_ID:-}"
+      AUTH_MICROSOFT_ENTRA_ID_SECRET: "${AUTH_MICROSOFT_ENTRA_ID_SECRET:-}"
+      AUTH_MICROSOFT_ENTRA_ID_ISSUER: "${AUTH_MICROSOFT_ENTRA_ID_ISSUER:-}"
+      # === Cron secret (toutes les routes /api/cron/*) ===
+      # Vide par defaut : ces routes refusent alors tout appel. Pour activer
+      # les taches planifiees, poser CRON_SECRET dans le `.env`
+      # (openssl rand -hex 32) et lancer aussi docker-compose.cron.yml, qui lit
+      # la meme variable.
+      # Jamais de valeur dans ce fichier : il en a porte une, publique,
+      # jusqu'en novembre 2026, et le conteneur la refuse au demarrage.
+      CRON_SECRET: "${CRON_SECRET:-}"
     networks:
       - humanix_frontend
       - humanix_backend

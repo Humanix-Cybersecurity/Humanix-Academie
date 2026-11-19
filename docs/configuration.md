@@ -31,6 +31,12 @@ DATABASE_URL="postgresql://USER:PASSWORD@HOST:PORT/DATABASE?schema=public"
 | `DATABASE`       | `humanix`                                       | Nom de la base, créée préalablement                    |
 | `?schema=public` | obligatoire                                     | Prisma utilise le schema `public` par défaut           |
 
+**Avec le `docker-compose.yml` du dépôt**, ne la renseigne pas : le compose
+construit lui-même cette URL à partir de `POSTGRES_PASSWORD`, le mot de passe
+de la base qu'il crée. C'est `POSTGRES_PASSWORD` qui est requis dans le `.env`
+(`openssl rand -hex 24`). Il n'est lu qu'à la création de la base : pour le
+changer ensuite, voir [upgrade.md](./upgrade.md).
+
 **Bonnes pratiques** :
 
 - Ne JAMAIS exposer ce port sur Internet
@@ -55,8 +61,12 @@ openssl rand -base64 32
 
 **Important** :
 
-- 32 caractères minimum
-- Régénérer = invalider toutes les sessions existantes (déconnecte tous les utilisateurs)
+- 32 caractères au moins sont recommandés. En dessous de 16, le conteneur
+  refuse de démarrer
+- Ne recopie jamais une valeur d'exemple, celle de cette page comprise : le
+  conteneur refuse de démarrer avec les valeurs que ce dépôt a publiées
+- Régénérer = déconnecter tout le monde, et rendre illisibles les mots de
+  passe SMTP et CISO Assistant enregistrés (voir [upgrade.md](./upgrade.md))
 - Ne JAMAIS commiter en git (gitignore couvre `.env`)
 - Stocker dans un secret manager en production
 
@@ -357,22 +367,38 @@ exec node node_modules/.bin/next start
 
 ---
 
-## Validation des variables au démarrage
+## Validation des secrets au démarrage
 
-Humanix valide toutes les variables critiques au démarrage via Zod
-(cf. `lib/env.ts`). Si une variable requise manque ou est mal formée,
-l'application **refuse de démarrer** avec un message d'erreur clair :
+Avant toute autre chose, le conteneur vérifie ses secrets
+(`docker-entrypoint.sh`) et **refuse de démarrer** si :
+
+- `AUTH_SECRET` est vide ou fait moins de 16 caractères ;
+- `AUTH_SECRET` vaut l'une des valeurs d'exemple que ce dépôt a publiées
+  (ancien `docker-compose.yml`, `.env.example`, documentation) ;
+- `CRON_SECRET` vaut la valeur d'exemple de l'ancien `docker-compose.yml`.
+  Vide, il est accepté : les routes `/api/cron/*` refusent alors tout appel.
+
+Le journal du conteneur dit pourquoi, sans jamais afficher la valeur :
 
 ```
-✗ Configuration invalide :
-  - DATABASE_URL : doit commencer par postgresql://
-  - AUTH_SECRET : doit faire au moins 32 caractères
+  DEMARRAGE REFUSE : un secret n'en est pas un.
 
-Voir docs/configuration.md pour la documentation complète.
+  - AUTH_SECRET est une valeur d'exemple publiee dans le depot : tout le monde la connait.
 ```
 
-C'est une protection **anti-déploiement-cassé** : préférable de planter au
-démarrage que de tourner en mode dégradé silencieux.
+Il n'y a pas de contournement : la correction est de générer une valeur. Entre
+16 et 31 caractères, le conteneur démarre en le signalant.
+
+Avec le `docker-compose.yml` du dépôt, un contrôle a lieu plus tôt encore :
+`docker compose` refuse de lancer la stack tant que `AUTH_SECRET` ou
+`POSTGRES_PASSWORD` manquent dans le `.env`.
+
+Une base injoignable arrête aussi le démarrage (`DATABASE_URL`). Les autres
+variables ne sont pas contrôlées au démarrage : une URL publique fausse ou un
+jeton d'envoi absent se voient à l'usage.
+
+C'est une protection **anti-déploiement-cassé** : un service qui répond avec
+un secret connu de tous est pire qu'un service qui refuse de démarrer.
 
 ---
 
