@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { useState, useMemo } from "react";
 import { calculateMonthlyPrice } from "@/lib/pricing";
+import { remiseAnnuellePourcent } from "@/lib/prix";
 
 export default function PricingSimulator() {
   const [seats, setSeats] = useState(30);
@@ -20,6 +21,13 @@ export default function PricingSimulator() {
     [seats],
   );
   const savingsAmount = (monthlyOnlyResult.total - monthlyTotal) * 12;
+  // La remise du palier simule, pas la plus forte de la grille : « -21% »
+  // s'affichait aussi sur une equipe de 80, ou l'annuel Pro vaut -17 %.
+  const tierId = result.tier.id;
+  const annualDiscount =
+    result.isFree || result.isQuote || tierId === "community"
+      ? null
+      : remiseAnnuellePourcent(tierId);
 
   return (
     <div>
@@ -92,9 +100,11 @@ export default function PricingSimulator() {
             }`}
           >
             Annuel
-            <span className="absolute -top-1 -right-1 bg-success text-white text-[8px] font-bold px-1.5 py-0.5 rounded-full">
-              -21%
-            </span>
+            {annualDiscount !== null && (
+              <span className="absolute -top-1 -right-1 bg-success text-white text-[8px] font-bold px-1.5 py-0.5 rounded-full">
+                -{annualDiscount}%
+              </span>
+            )}
           </button>
         </div>
 
@@ -123,7 +133,7 @@ export default function PricingSimulator() {
               <p className="text-4xl sm:text-5xl font-extrabold text-primary-500 mt-1">
                 {monthlyTotal.toLocaleString("fr-FR")} €
                 <span className="text-sm text-gray-500 font-medium">
-                  /mois HT
+                  /mois TTC
                 </span>
               </p>
               {result.tier.pricing.monthly.unit === "user" && (
@@ -134,7 +144,7 @@ export default function PricingSimulator() {
               )}
               <p className="text-xs text-gray-500 mt-2">
                 Annuel :{" "}
-                <strong>{annualTotal.toLocaleString("fr-FR")} €</strong> HT
+                <strong>{annualTotal.toLocaleString("fr-FR")} €</strong> TTC
               </p>
               {billing === "annual" && savingsAmount > 0 && (
                 <p className="text-xs text-success font-bold mt-1">

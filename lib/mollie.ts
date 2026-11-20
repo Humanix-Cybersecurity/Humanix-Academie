@@ -35,6 +35,7 @@ import createMollieClient, {
   PaymentStatus,
 } from "@mollie/api-client";
 import type { PlanId } from "@/lib/plans";
+import { montantEcheanceCentimes } from "@/lib/prix";
 
 // ----------------------------------------------------------------------------
 // Singleton client : on instancie une fois par process pour reutiliser le
@@ -106,13 +107,18 @@ export async function getMollieCustomer(
 }
 
 // ----------------------------------------------------------------------------
-// Pricing : derive prix HT + intervalle Mollie depuis plan + billing + seats.
-// Mollie veut un montant exact (string "X.YZ" + currency) pour chaque charge.
+// Pricing : derive le montant TTC + l'intervalle Mollie depuis plan + billing
+// + seats. Mollie veut un montant exact (string "X.YZ" + currency) pour chaque
+// charge.
 //
-// Source de verite tarifaire (lib/plans.ts) :
-//   - starter : 19 EUR/mois flat (forfait 6-15 sieges), pas de remise annuel
-//   - pro     : 3 EUR/siege/mois, annuel = -10 %
-//   - enterprise : sur devis, pas via Mollie
+// AUCUN PRIX NE S'ECRIT ICI. Le montant vient de montantEcheanceCentimes()
+// (lib/prix.ts), la table que la grille de /tarifs affiche : le prix affiche
+// est le prix preleve. Cette fonction a porte sa propre table jusqu'au
+// 2026-11-20 (annuel Pro a -10 % quand la grille annoncait -17 %, annuel
+// Starter sans remise quand elle annoncait -21 %) ; l'egalite est tenue
+// depuis par lib/prix-affiche-preleve.test.ts.
+//
+// Enterprise est sur devis : pas de paiement Mollie.
 // ----------------------------------------------------------------------------
 export const MOLLIE_BUYABLE_PLANS: PlanId[] = ["starter", "pro"];
 
@@ -138,15 +144,10 @@ export function mollieAmountForPlan(
   const interval: MollieInterval =
     billing === "annual" ? "12 months" : "1 month";
 
-  let cents = 0;
-  if (plan === "starter") {
-    // Plan starter : 19 EUR/mois flat. Annuel = 19 * 12 = 228 EUR (pas de remise).
-    cents = billing === "annual" ? 19_00 * 12 : 19_00;
-  } else if (plan === "pro") {
-    // Plan pro : 3 EUR/siege/mois. Annuel = 3 * 12 * 0.9 = 32.4 EUR/siege.
-    const monthly = seats * 3_00;
-    cents = billing === "annual" ? Math.round(monthly * 12 * 0.9) : monthly;
-  } else {
+  const cents = isPlanBuyable(plan)
+    ? montantEcheanceCentimes(plan, billing, seats)
+    : null;
+  if (cents === null) {
     throw new Error(
       `Plan ${plan} non achetable via Mollie (enterprise = devis).`,
     );

@@ -179,6 +179,30 @@ describe("webhook Mollie - ce a quoi le handler fait confiance", () => {
     expect(args.amount.value).toBe("48.00"); // 16 sieges x 3 EUR
   });
 
+  it("annuel : l'abonnement est cree au prix de la grille, pas a un autre", async () => {
+    // Le renouvellement annuel est ce que Mollie prelevera seul, dans un an.
+    // Jusqu'au 2026-11-20 il etait cree a 2 592,00 EUR pour 80 sieges (3 EUR
+    // moins 10 %), quand /tarifs annoncait 2,50 EUR par utilisateur et par
+    // mois, soit 2 400,00. Cf. lib/prix-affiche-preleve.test.ts.
+    mockMollie.getPayment.mockResolvedValue(
+      paiementInitial({
+        amount: { value: "2400.00", currency: "EUR" },
+        metadata: {
+          plan: "pro",
+          seats: "80",
+          billing: "annual",
+          tenantId: "t1",
+        },
+      }),
+    );
+
+    await POST(requeteWebhook("tr_ttSTHVovUv7noCYDBNXVJ"));
+
+    const args = mockMollie.createSubscriptionForCustomer.mock.calls[0][0];
+    expect(args.amount.value).toBe("2400.00");
+    expect(args.interval).toBe("12 months");
+  });
+
   it("ne cree rien deux fois pour le meme evenement", async () => {
     // Mollie retente ses webhooks. Sans cette garde, chaque retentative
     // creerait un abonnement de plus.

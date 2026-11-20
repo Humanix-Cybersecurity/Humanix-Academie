@@ -7,6 +7,11 @@ import { sendEmail, isEmailConfigured } from "@/lib/email";
 import { urlFormulaireCreationTenant } from "@/lib/superadmin/creation-tenant";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { hashIp } from "@/lib/password-reset";
+import {
+  formaterPrix,
+  prixMensuelCentimes,
+  remiseAnnuellePourcent,
+} from "@/lib/prix";
 
 const FOUNDER_EMAIL =
   process.env.FOUNDER_NOTIFICATION_EMAIL ?? "contact@humanix-cybersecurity.fr";
@@ -84,18 +89,30 @@ export async function submitDemandeAbonnement(
     `[demande-abonnement] received plan=${plan} seats=${seats} duration=${duration}m billing=${billing} size=${size || "n/a"} ipHash=${hashIp(ip)}`,
   );
 
-  // Calcul d'estimation (ordre de grandeur, le founder peut affiner) :
-  // Pro = 3 €/user/mois (annuel : -10 %). Enterprise = devis sur-mesure.
-  const monthlyHT =
-    plan === "pro" ? seats * 3 : plan === "starter" && seats > 5 ? 19 : 0;
+  // Calcul d'estimation (ordre de grandeur, le founder peut affiner) : le
+  // prix mensuel de la grille pour ce cycle (lib/prix.ts, la table que le
+  // paiement en ligne preleve), fois la duree. TTC, comme la grille.
+  // Enterprise = devis sur-mesure.
   const months = Number.parseInt(duration, 10);
-  const totalHT =
+  const proMonthlyCents =
     plan === "pro"
-      ? monthlyHT * months * (billing === "annual" ? 0.9 : 1)
+      ? prixMensuelCentimes(
+          "pro",
+          billing === "annual" ? "annual" : "monthly",
+          seats,
+        )
       : null;
+  const annualDiscount =
+    plan === "pro" || plan === "starter" ? remiseAnnuellePourcent(plan) : null;
+  const billingLabel =
+    billing !== "annual"
+      ? "Mensuel"
+      : annualDiscount !== null
+        ? `Annuel (−${annualDiscount} %)`
+        : "Annuel";
   const estimateLine =
-    totalHT !== null
-      ? `Estimation Pro : <strong>${totalHT.toFixed(0)} € HT</strong> sur ${duration} mois (${billing === "annual" ? "annuel -10 %" : "mensuel"})`
+    proMonthlyCents !== null
+      ? `Estimation Pro : <strong>${formaterPrix(proMonthlyCents * months)} € TTC</strong> sur ${duration} mois, paiement ${billingLabel.toLowerCase()}`
       : "Estimation : devis sur-mesure (Enterprise / Starter)";
 
   // Notification email au founder
@@ -120,7 +137,7 @@ export async function submitDemandeAbonnement(
       <tr><td style="padding: 6px 0; color: #64748b;">Plan envisagé</td><td style="padding: 6px 0; font-weight: 600;">${escapeHtml(plan)}</td></tr>
       <tr><td style="padding: 6px 0; color: #64748b;">Sièges</td><td style="padding: 6px 0; font-weight: 600;">${seats}</td></tr>
       <tr><td style="padding: 6px 0; color: #64748b;">Durée</td><td style="padding: 6px 0;">${escapeHtml(duration)} mois</td></tr>
-      <tr><td style="padding: 6px 0; color: #64748b;">Paiement</td><td style="padding: 6px 0;">${billing === "annual" ? "Annuel (-10 %)" : "Mensuel"}</td></tr>
+      <tr><td style="padding: 6px 0; color: #64748b;">Paiement</td><td style="padding: 6px 0;">${billingLabel}</td></tr>
     </table>
     <div style="margin-top: 12px; padding: 10px 12px; background: #ecfdf5; border-left: 3px solid #10b981; border-radius: 4px; font-size: 13px; color: #065f46;">
       ${estimateLine}

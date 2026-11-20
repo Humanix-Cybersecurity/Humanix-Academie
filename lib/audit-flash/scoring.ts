@@ -10,6 +10,11 @@ import {
   CATEGORY_EMOJI,
   TOTAL_MAX_SCORE,
 } from "./questions";
+import {
+  formaterPrix,
+  montantEcheanceCentimes,
+  prixMensuelCentimes,
+} from "@/lib/prix";
 
 export type Answer = "yes" | "no" | "unsure";
 
@@ -172,6 +177,28 @@ export function computeTopRisks(answers: AuditAnswers): RiskItem[] {
 // ===========================================================================
 // OFFRE RECOMMANDEE EN FONCTION DE LA TAILLE
 // ===========================================================================
+// Les prix cites viennent de lib/prix.ts, la table que la grille affiche et
+// que le paiement preleve. Ils etaient ecrits ici a la main, « HT » alors que
+// les prix sont TTC depuis le 2026-08-20, et avec un annuel Starter a 190 EUR
+// que ni la grille (180) ni le paiement ne connaissaient.
+// Seule l'estimation Enterprise reste ecrite a la main : elle est sur devis.
+const SIEGES_PRO_MIN = 16;
+const euros = (cents: number | null): string =>
+  cents === null ? "?" : formaterPrix(cents);
+const STARTER_MENSUEL = euros(prixMensuelCentimes("starter", "monthly", 1));
+const STARTER_AN_MENSUEL = euros(
+  (prixMensuelCentimes("starter", "monthly", 1) ?? 0) * 12,
+);
+const STARTER_AN_ANNUEL = euros(
+  montantEcheanceCentimes("starter", "annual", 1),
+);
+const PRO_MENSUEL_LIBELLE = `${euros(prixMensuelCentimes("pro", "monthly", 1))} € TTC / utilisateur / mois`;
+const PRO_AN_LIBELLE = `à partir de ${euros(
+  (prixMensuelCentimes("pro", "monthly", SIEGES_PRO_MIN) ?? 0) * 12,
+)} € TTC / an (${euros(
+  montantEcheanceCentimes("pro", "annual", SIEGES_PRO_MIN),
+)} € en annuel, ${SIEGES_PRO_MIN} sièges mini)`;
+
 export function recommendPlan(
   size: CompanySize,
   score: number,
@@ -184,8 +211,8 @@ export function recommendPlan(
       return {
         slug: "starter",
         name: "Starter",
-        monthlyPrice: "Gratuit ≤5 · 19 € HT / mois 6-15",
-        annualEstimate: "Gratuit ≤5 · ~190 € HT / an annuel sinon",
+        monthlyPrice: `Gratuit ≤5 · ${STARTER_MENSUEL} € TTC / mois 6-15`,
+        annualEstimate: `Gratuit ≤5 · ${STARTER_AN_ANNUEL} € TTC / an en annuel sinon`,
         rationale:
           "Pour les TPE jusqu'à 15 collaborateurs : démarrage gratuit jusqu'à 5 utilisateurs, puis forfait simple sans engagement.",
         ctaUrl: "/tarifs#starter",
@@ -195,11 +222,11 @@ export function recommendPlan(
         slug: needsBoost ? "pro" : "starter",
         name: needsBoost ? "Pro" : "Starter",
         monthlyPrice: needsBoost
-          ? "3 € HT / utilisateur / mois"
-          : "19 € HT / mois (forfait jusqu'à 15)",
+          ? PRO_MENSUEL_LIBELLE
+          : `${STARTER_MENSUEL} € TTC / mois (forfait jusqu'à 15)`,
         annualEstimate: needsBoost
-          ? "à partir de 576 € HT / an (16 sièges mini)"
-          : "228 € HT / an (190 € en annuel)",
+          ? PRO_AN_LIBELLE
+          : `${STARTER_AN_MENSUEL} € TTC / an (${STARTER_AN_ANNUEL} € en annuel)`,
         rationale: needsBoost
           ? "Votre score indique un besoin d'accompagnement structuré : l'offre Pro inclut le phishing simulé, les challenges d'équipe, l'IA Coach, la marketplace et le Pack NIS2 turnkey."
           : "Si votre équipe est ≤15, l'offre Starter suffit pour démarrer une démarche cyber sérieuse. Migration vers Pro à tout moment.",
@@ -209,8 +236,8 @@ export function recommendPlan(
       return {
         slug: "pro",
         name: "Pro",
-        monthlyPrice: "3 € HT / utilisateur / mois",
-        annualEstimate: "à partir de 576 € HT / an (16 sièges mini)",
+        monthlyPrice: PRO_MENSUEL_LIBELLE,
+        annualEstimate: PRO_AN_LIBELLE,
         rationale:
           "Pour les PME de 16 à 250 collaborateurs : tout le catalogue cyber, phishing simulé illimité, marketplace de modules, IA Coach personnalisé, multi-établissements, Pack NIS2 turnkey, connecteurs SIEM (Sentinel/Splunk/Sekoia).",
         ctaUrl: "/tarifs#pro",

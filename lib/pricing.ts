@@ -1,6 +1,11 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Source de vérité de la grille tarifaire Humanix Académie.
+// La grille tarifaire Humanix Académie, telle que /tarifs l'affiche.
 // Aligné sur le pivot mai 2026 - simplification a 4 paliers.
+//
+// Les MONTANTS viennent de lib/prix.ts, la table que le paiement Mollie lit
+// aussi : le prix affiché est le prix prélevé. Les libellés (`display`,
+// `saving`) restent écrits ici ; lib/prix-affiche-preleve.test.ts vérifie
+// qu'ils citent bien ces montants.
 //
 // 4 paliers :
 //   0. Community Edition  - self-host AGPL gratuit (n'a pas de tenant cloud)
@@ -10,6 +15,12 @@
 
 import type { PlanId } from "@/lib/plans";
 import { PLAN_FREE_SEATS } from "@/lib/plans";
+import {
+  PLAN_PRICE_EUR_MONTHLY,
+  PLAN_PRICE_EUR_MONTHLY_BILLED_ANNUALLY,
+  PLAN_PRICE_PER_USER_EUR_MONTHLY,
+  PLAN_PRICE_PER_USER_EUR_MONTHLY_BILLED_ANNUALLY,
+} from "@/lib/prix";
 import { LIBELLE_CATALOGUE } from "@/lib/catalogue-chiffres";
 
 // Le palier "community" (self-host) n'est pas un PlanId tenant.
@@ -86,12 +97,12 @@ export const TIERS: PricingTier[] = [
     pricing: {
       monthly: {
         display: "Gratuit jusqu'à 5 · puis 19 €/mois",
-        amount: 19,
+        amount: PLAN_PRICE_EUR_MONTHLY.starter,
         unit: "forfait",
       },
       annual: {
         display: "Gratuit jusqu'à 5 · puis 15 €/mois",
-        amount: 15,
+        amount: PLAN_PRICE_EUR_MONTHLY_BILLED_ANNUALLY.starter,
         unit: "forfait",
         saving: "−21 % engagement annuel",
       },
@@ -120,10 +131,14 @@ export const TIERS: PricingTier[] = [
     emoji: "🚀",
     highlight: true,
     pricing: {
-      monthly: { display: "3 €/utilisateur/mois", amount: 3, unit: "user" },
+      monthly: {
+        display: "3 €/utilisateur/mois",
+        amount: PLAN_PRICE_PER_USER_EUR_MONTHLY.pro,
+        unit: "user",
+      },
       annual: {
         display: "2,50 €/utilisateur/mois",
-        amount: 2.5,
+        amount: PLAN_PRICE_PER_USER_EUR_MONTHLY_BILLED_ANNUALLY.pro,
         unit: "user",
         saving: "−17 % engagement annuel",
       },
