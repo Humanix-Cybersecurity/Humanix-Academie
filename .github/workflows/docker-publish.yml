@@ -317,8 +317,10 @@ jobs:
           {
             echo "## Livraison (temps 2, manuel)"
             echo ""
-            echo "Image publiee et smoke-testee. Rien n'a ete deploye : la"
-            echo "livraison se fait a la main sur \`humanix-prod-01\`."
+            echo "Image publiee. Son essai tourne dans le job suivant, 'Smoke test"
+            echo "pulled image' : attendre qu'il soit vert avant de livrer. Rien"
+            echo "n'a ete deploye : la livraison se fait a la main sur"
+            echo "\`humanix-prod-01\`."
             echo ""
             echo '```bash'
             echo "./scripts/deploy.sh ${ENVIRONNEMENT} ${TAG}"
@@ -331,24 +333,43 @@ jobs:
           echo "::notice::Livraison manuelle : ./scripts/deploy.sh ${ENVIRONNEMENT} ${TAG}"
 
   # ===========================================================================
-  # Smoke test post-publish (depuis GHCR, registre primaire)
+  # Essai de l'image publiee (depuis GHCR, registre primaire)
+  #
+  # POURQUOI CE JOB A ETE REECRIT (2026-11-19)
+  #
+  # Il etait vert depuis sa creation, le 2026-05-23, sans que le conteneur ait
+  # repondu une seule fois : une base factice, une variable SKIP_MIGRATIONS
+  # que rien n'a jamais lue, et une boucle d'attente sans branche d'echec. Le
+  # point d'entree attendait PostgreSQL trente secondes puis sortait ; l'etape
+  # se terminait a 0 soixante secondes plus tard.
+  #
+  # L'essai vit maintenant dans scripts/essai-image.sh, que
+  # scripts/essai-image.test.ts couvre : reseau interne, PostgreSQL du depot,
+  # base vierge, preparation au demarrage, puis /api/health et la page
+  # d'accueil. Il ECHOUE si l'image ne sert pas, et retire ce qu'il a cree.
+  #
+  # L'IMAGE EST DESIGNEE PAR SON EMPREINTE, pas par un tag. `edge` et `latest`
+  # bougent : deux publications rapprochees feraient essayer a l'une l'image
+  # de l'autre. On essaie ce que CE run a construit.
   # ===========================================================================
   smoke-test:
     name: Smoke test pulled image
     needs: [preflight, publish]
     if: startsWith(github.ref, 'refs/tags/v') || github.ref == 'refs/heads/main'
     runs-on: self-hosted
-    timeout-minutes: 10
+    # Mesure en local le 2026-11-19 : 100 s pour l'essai lui-meme, dont 80
+    # d'import de l'observatoire qui echoue faute de reseau. S'y ajoutent le
+    # tirage de l'image et, si le demarrage trainait, jusqu'a cinq minutes
+    # d'attente (ESSAI_ATTENTE, cf. le script) : dix minutes laissaient trop
+    # peu de marge.
+    timeout-minutes: 15
+    env:
+      IMAGE: ${{ needs.preflight.outputs.ghcr_image }}@${{ needs.publish.outputs.digest }}
     steps:
-      - name: Determine tag to test
-        id: tag
-        run: |
-          if [[ "${{ github.ref }}" == refs/tags/v* ]]; then
-            TAG="latest"
-          else
-            TAG="edge"
-          fi
-          echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
+      - name: Checkout (pour scripts/essai-image.sh et docker/postgres)
+        uses: actions/checkout@v6
+        with:
+          submodules: false
 
       - name: Login to GHCR (pour pull)
         uses: docker/login-action@v4
@@ -357,36 +378,31 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Pull image
-        run: docker pull ${{ needs.preflight.outputs.ghcr_image }}:${{ steps.tag.outputs.tag }}
-
-      - name: Run container (skip migrations, fake DATABASE_URL)
+      - name: Pull image (par empreinte)
         run: |
-          docker run -d --name humanix-smoketest \
-            -p 13000:3000 \
-            -e DATABASE_URL=postgresql://placeholder:placeholder@placeholder:5432/placeholder \
-            -e AUTH_SECRET=smoketest-secret-not-real-32chars-ok \
-            -e SKIP_MIGRATIONS=true \
-            -e NODE_ENV=production \
-            ${{ needs.preflight.outputs.ghcr_image }}:${{ steps.tag.outputs.tag }}
-          # Attendre que Next.js demarre (max 60s)
-          for i in $(seq 1 60); do
-            if curl -sf http://localhost:13000/ >/dev/null 2>&1; then
-              echo "✓ Container repond apres ${i}s"
-              break
-            fi
-            sleep 1
-          done
+          # Sans empreinte, on essaierait une autre image que celle de ce run.
+          case "$IMAGE" in
+            *@sha256:*) ;;
+            *)
+              echo "::error::empreinte absente, image non identifiee : $IMAGE"
+              exit 1
+              ;;
+          esac
+          docker pull "$IMAGE"
 
-      - name: Container logs (toujours)
-        if: always()
-        run: docker logs humanix-smoketest 2>&1 | tail -50
+      - name: Essai de l'image sur une base vierge
+        env:
+          # Deux publications peuvent tourner en meme temps : les noms que le
+          # script cree portent ce suffixe.
+          ESSAI_SUFFIXE: ${{ github.run_id }}-${{ github.run_attempt }}
+        run: ./scripts/essai-image.sh "$IMAGE"
 
+      # Le script retire lui-meme ses conteneurs, son reseau et son image
+      # PostgreSQL, que l'essai ait reussi ou non. Il ne reste ici que le
+      # menage des images anciennes de l'executeur.
       - name: Cleanup
         if: always()
-        run: |
-          docker rm -f humanix-smoketest 2>/dev/null || true
-          docker image prune -af --filter "until=24h" 2>/dev/null || true
+        run: docker image prune -af --filter "until=24h" 2>/dev/null || true
 
   # ===========================================================================
   # Scan de vulnerabilites de l'image publiee (Trivy) - #755
