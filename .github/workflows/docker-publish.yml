@@ -31,6 +31,24 @@ name: Docker Publish (OSS)
 #   - push d'un tag git `v*.*.*` : tags `:1.2.3`, `:1.2`, `:1`, `:latest`
 #   - workflow_dispatch : declenchement manuel avec tag custom
 #
+# === Dans quel ordre (depuis le 2026-11-20) ===
+#
+#   1. `publish` construit l'image et l'envoie au registre SOUS SA SEULE
+#      EMPREINTE : aucun tag n'est pose ;
+#   2. `smoke-test` tire cette image par son empreinte et l'essaie sur une
+#      base vierge (scripts/essai-image.sh) ;
+#   3. `promote` pose les tags sur cette meme empreinte, et verifie qu'ils la
+#      designent (scripts/publier-tags.sh). Il depend de l'essai : pas d'essai
+#      vert, pas de tag.
+#
+#   Avant, les tags partaient des la construction. Un essai rouge ne retenait
+#   rien : le 2026-11-20, au premier vrai passage de l'essai, `edge` pointait
+#   deja sur l'image qui venait d'echouer.
+#
+#   Une image dont l'essai echoue reste au registre, sans tag : on peut la
+#   tirer par l'empreinte que donne le journal pour comprendre, personne ne la
+#   recoit par `edge` ou `latest`.
+#
 # === Mode OSS pur (sans content-pro) ===
 #
 # Checkout sans submodule prive. Le Dockerfile gere via `mkdir -p content-pro`
@@ -120,8 +138,10 @@ jobs:
     if: github.repository_owner == 'Humanix-Cybersecurity'
     outputs:
       ghcr_image: ${{ steps.config.outputs.ghcr_image }}
-      hub_image: ${{ steps.config.outputs.hub_image }}
       hub_enabled: ${{ steps.config.outputs.hub_enabled }}
+      # Pas de sortie `hub_image` : elle contient DOCKERHUB_USERNAME, et GitHub
+      # ne transmet pas d'un job a l'autre une sortie qui contient un secret.
+      # Le job `promote` recalcule ce nom la ou il s'en sert.
     steps:
       - name: Resolve registry config
         id: config
@@ -140,24 +160,29 @@ jobs:
           if [[ -n "${DH_USER}" && -n "${DH_TOKEN}" ]]; then
             HUB_IMAGE="${HUB_OVERRIDE:-${DH_USER}/humanix-academie}"
             echo "hub_enabled=true" >> "$GITHUB_OUTPUT"
-            echo "hub_image=${HUB_IMAGE}" >> "$GITHUB_OUTPUT"
             echo "::notice::Docker Hub target: ${HUB_IMAGE} (secrets detectes)"
           else
             echo "hub_enabled=false" >> "$GITHUB_OUTPUT"
-            echo "hub_image=" >> "$GITHUB_OUTPUT"
             echo "::notice::Docker Hub: desactive (secrets DOCKERHUB_USERNAME/TOKEN non definis)"
           fi
 
   # ===========================================================================
-  # Build & publish multi-arch (GHCR + Docker Hub si actif)
+  # Build multi-arch, puis envoi a GHCR SOUS LA SEULE EMPREINTE
+  #
+  # Ce job ne pose AUCUN tag : c'est le job `promote` qui le fait, une fois
+  # l'essai passe. Il rend l'empreinte de ce qu'il a pousse et la liste des
+  # tags a poser. Docker Hub, s'il est actif, ne recoit rien ici non plus.
   # ===========================================================================
   publish:
-    name: Build & push multi-arch
+    name: Build & push par empreinte (sans tag)
     needs: preflight
     runs-on: self-hosted
     timeout-minutes: 90 # Build arm64 par QEMU peut prendre ~30 min
     outputs:
       digest: ${{ steps.build.outputs.digest }}
+      # References completes sur GHCR, une par ligne. Aucun secret dedans :
+      # le nom Docker Hub n'y figure pas (cf. preflight).
+      tags: ${{ steps.meta.outputs.tags }}
     steps:
       - name: Checkout (sans submodule prive)
         # On NE checkoute PAS content-pro/ (submodule prive humanix-content-pro).
@@ -193,28 +218,19 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # === Login Docker Hub (optionnel) ===
-      - name: Login to Docker Hub
-        if: needs.preflight.outputs.hub_enabled == 'true'
-        uses: docker/login-action@v4
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      # === Metadata combine pour les 2 registres ===
+      # === Metadata : labels de l'image, et tags A POSER PLUS TARD ===
       #
-      # docker/metadata-action genere les tags pour TOUTES les images listees
-      # dans `images:`. docker/build-push-action peut ensuite pousser tous
-      # ces tags en une seule fois (manifest commun multi-arch).
+      # docker/metadata-action calcule les tags pour l'image listee dans
+      # `images:`. Ils ne sont PAS passes a la construction : ils sortent du
+      # job (`outputs.tags`) et c'est `promote` qui les pose, apres l'essai.
+      # Seul GHCR est liste : le job `promote` reporte les memes tags sur
+      # Docker Hub quand il est actif.
       - name: Extract metadata (tags, labels)
         id: meta
         uses: docker/metadata-action@v6
         with:
-          # Liste des images cibles, une par ligne. Si hub_enabled=false,
-          # la 2e ligne est absente (vide → ignoree par metadata-action).
           images: |
             ${{ needs.preflight.outputs.ghcr_image }}
-            ${{ needs.preflight.outputs.hub_enabled == 'true' && needs.preflight.outputs.hub_image || '' }}
           tags: |
             type=semver,pattern={{version}},enable=${{ startsWith(github.ref, 'refs/tags/v') }}
             type=semver,pattern={{major}}.{{minor}},enable=${{ startsWith(github.ref, 'refs/tags/v') }}
@@ -236,15 +252,18 @@ jobs:
             io.humanix.compliance.anssi-hg=42-mesures-mappees
             io.humanix.sovereignty=eu-only
 
-      - name: Build & push
+      - name: Build & push (par empreinte, sans tag)
         id: build
         uses: docker/build-push-action@v7
         with:
           context: .
           file: ./Dockerfile
           platforms: ${{ github.event.inputs.platforms || 'linux/amd64' }}
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
+          # NI `push: true` NI `tags:` : l'image part au registre sans nom,
+          # designee par sa seule empreinte (`push-by-digest`). Remettre des
+          # tags ici, c'est les publier AVANT l'essai : scripts/
+          # publier-tags.test.ts le refuse.
+          outputs: type=image,name=${{ needs.preflight.outputs.ghcr_image }},push-by-digest=true,name-canonical=true,push=true
           labels: ${{ steps.meta.outputs.labels }}
           # Cache buildx LOCAL, sur le disque persistant de l'executeur, et
           # plus via le cache GitHub Actions : chaque build en restaurait et
@@ -283,54 +302,25 @@ jobs:
           fi
 
       - name: Image summary
+        env:
+          CANDIDAT: ${{ needs.preflight.outputs.ghcr_image }}@${{ steps.build.outputs.digest }}
+          TAGS: ${{ steps.meta.outputs.tags }}
         run: |
-          echo "::notice::Digest : ${{ steps.build.outputs.digest }}"
-          echo "::notice::GHCR  : ${{ needs.preflight.outputs.ghcr_image }}"
-          if [ "${{ needs.preflight.outputs.hub_enabled }}" = "true" ]; then
-            echo "::notice::Docker Hub : ${{ needs.preflight.outputs.hub_image }}"
-          fi
-          echo ""
-          echo "Tags publies :"
-          echo "${{ steps.meta.outputs.tags }}"
-          echo ""
-          echo "Pour pull (GHCR, primaire) :"
-          echo "  docker pull ${{ needs.preflight.outputs.ghcr_image }}:latest"
-
-      # =====================================================================
-      # Livraison : temps 2, a la main sur le serveur (cf. #753)
-      #
-      # Ce workflow ne deploie deliberement RIEN : pas de cle SSH dans
-      # GitHub, pas d'acces entrant vers humanix-prod-01. Il se contente de
-      # rappeler la commande exacte a lancer sur la machine, pour que
-      # l'artefact valide ici soit celui qui part en prod (et pas un rebuild
-      # local — cause racine de la divergence prod/main du pentest du 7 mai).
-      # =====================================================================
-      - name: Rappel de livraison (aucun deploiement automatique)
-        run: |
-          if [[ "${{ github.ref }}" == refs/tags/v* ]]; then
-            ENVIRONNEMENT="prod"
-            TAG="${GITHUB_REF_NAME}"
-          else
-            ENVIRONNEMENT="demo"
-            TAG="edge"
-          fi
+          echo "::notice::Image poussee sans tag : ${CANDIDAT}"
           {
-            echo "## Livraison (temps 2, manuel)"
+            echo "## Image construite, pas encore publiee"
             echo ""
-            echo "Image publiee. Son essai tourne dans le job suivant, 'Smoke test"
-            echo "pulled image' : attendre qu'il soit vert avant de livrer. Rien"
-            echo "n'a ete deploye : la livraison se fait a la main sur"
-            echo "\`humanix-prod-01\`."
+            echo "Elle est au registre sous sa seule empreinte :"
             echo ""
-            echo '```bash'
-            echo "./scripts/deploy.sh ${ENVIRONNEMENT} ${TAG}"
+            echo "\`${CANDIDAT}\`"
+            echo ""
+            echo "Le job 'Smoke test pulled image' l'essaie. S'il est vert, le job"
+            echo "'Publier les tags' pose :"
+            echo ""
             echo '```'
-            echo ""
-            echo "Commit livre : \`${GITHUB_SHA}\`"
-            echo ""
-            echo "Detail de la procedure : \`docs/DEPLOYMENT_RUNBOOK.md\` section G-bis."
+            echo "${TAGS:-(aucun tag pour ce declenchement)}"
+            echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
-          echo "::notice::Livraison manuelle : ./scripts/deploy.sh ${ENVIRONNEMENT} ${TAG}"
 
   # ===========================================================================
   # Essai de l'image publiee (depuis GHCR, registre primaire)
@@ -351,11 +341,16 @@ jobs:
   # L'IMAGE EST DESIGNEE PAR SON EMPREINTE, pas par un tag. `edge` et `latest`
   # bougent : deux publications rapprochees feraient essayer a l'une l'image
   # de l'autre. On essaie ce que CE run a construit.
+  #
+  # RIEN N'EST TAGUE AVANT CE JOB (2026-11-20). L'image n'existe encore au
+  # registre que sous son empreinte, et `promote` attend que cet essai soit
+  # vert. D'ou l'absence de condition `if:` : un declenchement manuel est
+  # essaye comme les autres. Un job saute ferait sauter `promote`, donc ne
+  # publierait rien, mais autant ne pas laisser de chemin sans essai.
   # ===========================================================================
   smoke-test:
     name: Smoke test pulled image
     needs: [preflight, publish]
-    if: startsWith(github.ref, 'refs/tags/v') || github.ref == 'refs/heads/main'
     runs-on: self-hosted
     # Mesure en local le 2026-11-19 : 100 s pour l'essai lui-meme, dont 80
     # d'import de l'observatoire qui echoue faute de reseau. S'y ajoutent le
@@ -405,7 +400,121 @@ jobs:
         run: docker image prune -af --filter "until=24h" 2>/dev/null || true
 
   # ===========================================================================
-  # Scan de vulnerabilites de l'image publiee (Trivy) - #755
+  # Pose des tags : seulement apres l'essai
+  #
+  # C'est ICI, et nulle part ailleurs dans ce workflow, qu'un tag est pose.
+  # Le job depend de `smoke-test` : si l'essai echoue, est annule ou saute, il
+  # ne tourne pas, et `edge`, `latest` ou la version restent ou ils etaient.
+  # Ne pas lui donner de condition du genre `if: always()`, qui le ferait
+  # tourner apres un essai rouge.
+  #
+  # Les tags sont poses sur l'empreinte que `publish` a poussee et que
+  # `smoke-test` a essayee : rien n'est reconstruit. Le script verifie ensuite,
+  # tag par tag, que le registre rend bien cette empreinte.
+  #
+  # RELANCER : apres un essai rouge pour une raison passagere, « Re-run failed
+  # jobs » rejoue l'essai puis ce job sur la MEME image, sans reconstruire.
+  #
+  # LE SCAN TRIVY NE RETIENT PAS LES TAGS. Il tourne a cote, comme avant : il
+  # met le run en rouge sur une faille corrigeable, sans empecher la
+  # publication. Le brancher ici (`needs: [..., trivy-scan]`) est un choix de
+  # politique, pas une precaution technique : le jour ou une faille sort dans
+  # l'image de base, plus rien ne se publierait avant la montee ou
+  # l'acceptation datee.
+  # ===========================================================================
+  promote:
+    name: Publier les tags (apres l'essai)
+    needs: [preflight, publish, smoke-test]
+    runs-on: self-hosted
+    timeout-minutes: 10
+    env:
+      CANDIDAT: ${{ needs.preflight.outputs.ghcr_image }}@${{ needs.publish.outputs.digest }}
+    steps:
+      - name: Checkout (pour scripts/publier-tags.sh)
+        uses: actions/checkout@v6
+        with:
+          submodules: false
+
+      - name: Login to GHCR
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # === Login Docker Hub (optionnel) ===
+      - name: Login to Docker Hub
+        if: needs.preflight.outputs.hub_enabled == 'true'
+        uses: docker/login-action@v4
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Poser les tags sur l'image essayee
+        env:
+          TAGS: ${{ needs.publish.outputs.tags }}
+          HUB_ENABLED: ${{ needs.preflight.outputs.hub_enabled }}
+          DH_USER: ${{ secrets.DOCKERHUB_USERNAME }}
+          HUB_OVERRIDE: ${{ vars.DOCKER_IMAGE_NAME_HUB }}
+        run: |
+          # Docker Hub, s'il est actif, recoit les memes tags : le script les
+          # reporte sur MIROIR. Meme calcul du nom que dans preflight.
+          MIROIR=""
+          if [ "$HUB_ENABLED" = "true" ]; then
+            MIROIR="${HUB_OVERRIDE:-${DH_USER}/humanix-academie}"
+          fi
+          export MIROIR
+          ./scripts/publier-tags.sh "$CANDIDAT"
+
+      # =====================================================================
+      # Livraison : temps 2, a la main sur le serveur (cf. #753)
+      #
+      # Ce workflow ne deploie deliberement RIEN : pas de cle SSH dans
+      # GitHub, pas d'acces entrant vers humanix-prod-01. Et l'image publiee
+      # ici n'est PAS ce qui part en demo ou en prod : elle est construite
+      # sans content-pro, pour les personnes qui s'auto-hebergent. La demo et
+      # la prod sont livrees depuis le clone git, par scripts/deploy.sh, qui
+      # prend une reference git et non un tag d'image.
+      # =====================================================================
+      - name: Resume et rappel de livraison (aucun deploiement automatique)
+        env:
+          TAGS: ${{ needs.publish.outputs.tags }}
+        run: |
+          if [[ "${GITHUB_REF}" == refs/tags/v* ]]; then
+            COMMANDE="./scripts/deploy.sh prod ${GITHUB_REF_NAME}"
+          else
+            COMMANDE="./scripts/deploy.sh demo"
+          fi
+          {
+            echo "## Image essayee, puis publiee"
+            echo ""
+            echo "\`${CANDIDAT}\`"
+            echo ""
+            echo "Elle a demarre sur une base vierge et servi avant de recevoir"
+            echo "ses tags :"
+            echo ""
+            echo '```'
+            echo "${TAGS:-(aucun tag pour ce declenchement)}"
+            echo '```'
+            echo ""
+            echo "## Livraison (temps 2, manuel)"
+            echo ""
+            echo "Rien n'a ete deploye. La demo et la prod ne tournent pas sur"
+            echo "cette image, construite sans content-pro : elles se livrent a la"
+            echo "main sur \`humanix-prod-01\`, depuis le clone git."
+            echo ""
+            echo '```bash'
+            echo "${COMMANDE}"
+            echo '```'
+            echo ""
+            echo "Commit de ce run : \`${GITHUB_SHA}\`"
+            echo ""
+            echo "Detail de la procedure : \`docs/DEPLOYMENT_RUNBOOK.md\` section G-bis."
+          } >> "$GITHUB_STEP_SUMMARY"
+          echo "::notice::Livraison manuelle : ${COMMANDE}"
+
+  # ===========================================================================
+  # Scan de vulnerabilites de l'image poussee (Trivy) - #755
   #
   # POURQUOI : ce workflow produisait deja un SBOM SPDX... que personne ne
   # scannait. Un SBOM non scanne ne protege de rien : il liste les composants
@@ -422,6 +531,15 @@ jobs:
   # la signaler est utile, bloquer toutes les publications dessus ne l'est
   # pas. Les findings partent aussi dans l'onglet Security (SARIF), a cote
   # de CodeQL.
+  #
+  # QUELLE IMAGE (2026-11-20) : celle que CE run a poussee, tiree par son
+  # empreinte, et non plus `edge` ou `latest`. Ces tags ne sont poses
+  # qu'apres l'essai, par `promote` : ici ils designeraient encore l'image
+  # d'avant. Trivy la lit dans le moteur local sous un tag de travail, pose
+  # apres le tirage et retire a la fin, jamais pousse. Il est dans le meme
+  # depot pour que les alertes de l'onglet Security gardent leur emplacement.
+  #
+  # Ce job ne retient pas les tags (cf. `promote`).
   # ===========================================================================
   trivy-scan:
     name: Scan vulnerabilites image (Trivy)
@@ -429,21 +547,17 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/v') || github.ref == 'refs/heads/main'
     runs-on: self-hosted
     timeout-minutes: 20
+    env:
+      IMAGE: ${{ needs.preflight.outputs.ghcr_image }}@${{ needs.publish.outputs.digest }}
+      # Tag de travail, local a l'executeur. Suffixe par le run : deux
+      # publications peuvent tourner en meme temps sur le meme moteur.
+      CIBLE: ${{ needs.preflight.outputs.ghcr_image }}:scan-${{ github.run_id }}-${{ github.run_attempt }}
     steps:
       # Necessaire pour .trivyignore.yaml (acceptations de risque datees).
       - name: Checkout (pour .trivyignore.yaml)
         uses: actions/checkout@v6
         with:
           submodules: false
-
-      - name: Determine tag to scan
-        id: tag
-        run: |
-          if [[ "${{ github.ref }}" == refs/tags/v* ]]; then
-            echo "tag=latest" >> "$GITHUB_OUTPUT"
-          else
-            echo "tag=edge" >> "$GITHUB_OUTPUT"
-          fi
 
       - name: Login to GHCR (pour pull)
         uses: docker/login-action@v4
@@ -452,8 +566,18 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Pull image a scanner
-        run: docker pull ${{ needs.preflight.outputs.ghcr_image }}:${{ steps.tag.outputs.tag }}
+      - name: Pull image a scanner (par empreinte)
+        run: |
+          # Sans empreinte, on scannerait une autre image que celle de ce run.
+          case "$IMAGE" in
+            *@sha256:*) ;;
+            *)
+              echo "::error::empreinte absente, image non identifiee : $IMAGE"
+              exit 1
+              ;;
+          esac
+          docker pull "$IMAGE"
+          docker tag "$IMAGE" "$CIBLE"
 
       # Rapport lisible dans les logs : TOUTES les severites, y compris les
       # non-corrigeables, pour garder la visibilite sans bloquer dessus.
@@ -467,7 +591,7 @@ jobs:
               --severity MEDIUM,HIGH,CRITICAL \
               --format table \
               --timeout 15m \
-              "${{ needs.preflight.outputs.ghcr_image }}:${{ steps.tag.outputs.tag }}" \
+              "$CIBLE" \
             || echo "::warning::Trivy (rapport informatif) s'est termine en erreur"
 
       - name: Export SARIF (onglet Security)
@@ -483,7 +607,7 @@ jobs:
               --format sarif \
               --output /out/trivy-results.sarif \
               --timeout 15m \
-              "${{ needs.preflight.outputs.ghcr_image }}:${{ steps.tag.outputs.tag }}"
+              "$CIBLE"
 
       - name: Upload SARIF
         if: always() && hashFiles('trivy-results.sarif') != ''
@@ -514,8 +638,10 @@ jobs:
               --exit-code 1 \
               --format table \
               --timeout 15m \
-              "${{ needs.preflight.outputs.ghcr_image }}:${{ steps.tag.outputs.tag }}"
+              "$CIBLE"
 
       - name: Cleanup
         if: always()
-        run: rm -f trivy-results.sarif
+        run: |
+          rm -f trivy-results.sarif
+          docker rmi "$CIBLE" >/dev/null 2>&1 || true
