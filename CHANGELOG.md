@@ -6,6 +6,172 @@ Toutes les évolutions notables du produit, classées par version. Conforme
 
 ---
 
+## [1.17.0] - 2026-11-20 🔒 Le compose d'auto-hébergement ne porte plus de secret, et une image n'est taguée qu'après avoir démarré
+
+Seize commits depuis la 1.16.2. Le premier motif de cette version est un
+correctif de sécurité pour les instances auto-hébergées : le
+`docker-compose.yml` du dépôt imposait au conteneur un secret de session
+public, quel que soit le contenu du `.env`. **C'est aussi une rupture pour
+ces instances : il leur faut un `.env` avec `AUTH_SECRET` et
+`POSTGRES_PASSWORD` avant de relancer, et la marche à suivre est dans
+[docs/upgrade.md](docs/upgrade.md).** Le service hébergé n'est pas concerné.
+Avec lui : l'abonnement annuel n'est plus prélevé plus cher qu'affiché,
+PostgreSQL se renouvelle enfin, Node passe en 24.22.3, et l'image publiée est
+démarrée pour de bon avant de recevoir ses tags.
+
+### Security
+
+#### 🔒 Le compose d'auto-hébergement imposait un secret de session public
+
+Le `docker-compose.yml` du dépôt écrivait en dur `AUTH_SECRET`, `CRON_SECRET`
+et le mot de passe de la base, avec des valeurs de démonstration, et son
+service `app` ne lisait pas le `.env`. Ce que le guide d'installation faisait
+poser dans ce fichier n'arrivait donc pas dans le conteneur : une instance
+signait ses sessions avec la valeur de démonstration, lisible par tout le
+monde dans ce dépôt, alors que son `.env` en contenait une bonne. Rien ne s'y
+opposait au démarrage.
+
+Toute personne connaissant cette valeur pouvait se fabriquer une session sur
+une telle instance, y compris d'administration, sans mot de passe. Le
+`CRON_SECRET` de démonstration permettait, lui, de déclencher de l'extérieur
+les tâches planifiées. Sont concernées les instances lancées avec le compose
+du dépôt, ou avec un compose qui en garde ces valeurs, **depuis la 1.0.0**.
+La démo et la production du service hébergé ont leurs propres secrets et ne
+passent pas par ce fichier.
+
+Ce qui change :
+
+- **Le compose lit le `.env`** et ne contient plus aucune valeur pour
+  `AUTH_SECRET`, `CRON_SECRET` ni le mot de passe de la base. `docker compose`
+  refuse de lancer la pile tant que `AUTH_SECRET` et `POSTGRES_PASSWORD`
+  manquent, avec un message qui dit quoi faire.
+- **Le conteneur refuse de démarrer avec un secret d'exemple**, quelle que
+  soit la façon de le lancer : `AUTH_SECRET` vide, de moins de 16 caractères
+  ou égal à une valeur publiée dans ce dépôt, `CRON_SECRET` égal à celle de
+  l'ancien compose. Comparaison exacte, aucune exception pour le mode
+  démonstration, et la valeur d'un secret n'est jamais affichée.
+- **La documentation dit ce qui se passe vraiment** : l'étape 2 du guide
+  d'installation, `docs/configuration.md`, et une section de
+  `docs/upgrade.md` qui explique comment savoir si une instance tournait avec
+  le secret de démonstration, comment mettre à jour, ce que change un nouvel
+  `AUTH_SECRET`, et quoi vérifier ensuite.
+
+Une instance qui a tourné avec le secret de démonstration doit en générer un
+nouveau, ce qui déconnecte tout le monde, puis passer en revue son journal
+d'audit. 19 tests lancent le vrai point d'entrée, et l'essai de l'image
+publiée passe avec la garde. (#1026)
+
+#### Autres correctifs de sécurité
+
+- **Node 24.22.3 dans l'image.** La version de sécurité du 11 novembre
+  corrige seize CVE, dont sept de gravité haute, et met à jour l'analyseur
+  HTTP (llhttp 9.4.4) et le client `fetch` embarqué (undici 7.30.2). Aucune
+  des sept failles hautes n'est atteignable ici : elles visent un serveur
+  HTTP/2 ou TLS tenu par Node, et l'application sert en HTTP/1.1 en clair
+  derrière HAProxy. Rien ne signalait cette version, ni Dependabot, ni Trivy,
+  ni `npm audit`. (#1025)
+- **`effect` 3.22.4, par override.** GHSA-7589-6fvf-x4pw (CVE-2026-121707,
+  gravité haute) : un déni de service par expression régulière dans
+  `Schema.TemplateLiteral`. `effect` n'arrive que par Prisma, qui l'épingle à
+  une version exacte et ne s'en sert que pour valider notre propre
+  `prisma.config.ts`, sans appeler la fonction en cause. Ni la ligne 6 de
+  Prisma ni sa dernière 7 ne sortent de la plage de l'avis : d'où
+  l'override. (#1028)
+- **Connecteur MCP : `hono` 4.13.17 et `@hono/node-server` 2.1.6.** Sept
+  avis, six de gravité moyenne et un de gravité basse. Les deux paquets ne
+  servent qu'au transport HTTP du SDK, et le connecteur ne parle qu'en
+  stdio : il n'était pas concerné. (#1018)
+- **PostgreSQL 16.16 pour l'image d'auto-hébergement**, qui épinglait encore
+  la 16.15. (#1021)
+
+### Added
+
+- **Renouveler PostgreSQL.** La base suivait le tag mouvant
+  `postgres:16-alpine`, que rien ne retirait : ni la livraison, ni une tâche
+  planifiée, ni un redémarrage de l'hôte. Constaté le 15 novembre : la démo et
+  la production en 16.13, avec trois versions de sécurité de retard.
+  `scripts/update-postgres.sh` renouvelle l'image d'une pile et recrée la
+  pile entière, parce que sous podman-compose la base ne se remplace pas
+  seule. Ses garde-fous passent tous avant le premier arrêt, il refuse un
+  changement de version majeure, prend un instantané chiffré en production,
+  puis vérifie l'image, le volume, la version du serveur et `/api/health`.
+  44 scénarios lancent le vrai script. (#1019)
+
+### Changed
+
+- **L'image publiée est essayée pour de bon, puis taguée.** Le job d'essai du
+  workflow de publication était vert depuis sa création, le 23 mai, sans que
+  le conteneur ait répondu une seule fois : une base factice, une variable
+  que rien ne lisait, et une boucle d'attente sans branche d'échec. Il
+  démarre maintenant l'image sur une base vierge, dans un réseau sans sortie,
+  et exige `/api/health` à 200, une préparation sans étape en échec et une
+  page d'accueil qui répond. Et les tags ne partent plus avant lui : l'image
+  est poussée sous sa seule empreinte, essayée, et un job dédié pose ensuite
+  `edge`, `latest` et les tags de version sur cette empreinte, puis les
+  relit. Une image qui ne démarre pas reste au registre sans tag. (#1027,
+  #1031, #1032)
+
+### Fixed
+
+- **L'abonnement annuel était prélevé plus cher qu'affiché, et le site disait
+  HT.** La grille, le simulateur de `/tarifs` et la page de souscription
+  annoncent l'annuel Pro à 2,50 € par utilisateur et par mois (-17 %), et
+  l'annuel Starter à 15 € par mois (-21 %). Le montant transmis au
+  prestataire de paiement appliquait une remise de 10 % : 2 592 € au lieu de
+  2 400 € pour 80 sièges en Pro, 228 € au lieu de 180 € en Starter. Les prix
+  sont TTC depuis le 20 août, mais le simulateur, le configurateur et
+  `/admin/billing` écrivaient encore « HT ». Les prix viennent désormais
+  d'une seule table (`lib/prix.ts`), qu'affichage et prélèvement lisent tous
+  les deux, et un test compare siège par siège ce que la grille affiche à ce
+  qui est prélevé. Le mensuel ne change pas. Non vérifié : un paiement réel,
+  le montant transmis est tenu par les tests. (#1030)
+- **Le serveur vocal Piper répondait 500 à toute synthèse**, depuis son
+  premier commit : il passait le mauvais objet à la bibliothèque. Rien ne le
+  signalait, son contrôle de santé ne fait que répondre, et l'application
+  passe par Voxtral dès qu'une clé Mistral existe. Seul le mode
+  `TTS_PROVIDER=piper`, l'option d'auto-hébergement, était touché. (#1020)
+- **L'image PostgreSQL d'auto-hébergement démarre quel que soit l'umask de
+  la machine qui la construit.** Son script d'initialisation reprenait les
+  droits du checkout : construit depuis un dépôt cloné avec un umask qui
+  retire la lecture aux autres, il devenait illisible pour l'utilisateur
+  `postgres`, et la base s'arrêtait avant d'être créée. Trouvé par le premier
+  vrai passage de l'essai de l'image publiée. (#1029)
+
+### Exploitation
+
+Aucun changement de schéma. **Instances auto-hébergées : lire
+[docs/upgrade.md](docs/upgrade.md) avant de mettre à jour**, section
+« Novembre 2026 ». Sans `AUTH_SECRET` ni `POSTGRES_PASSWORD` dans le `.env`,
+la pile ne se lance plus, et `POSTGRES_PASSWORD` doit reprendre le mot de
+passe actuel de la base, pas un nouveau.
+
+Côté service hébergé, rien à changer sur l'hôte : la démo et la production
+ont des secrets propres, que la garde laisse passer, et PostgreSQL y est en
+16.16 depuis le 15 novembre. Les tags `latest` et de version de l'image
+n'apparaissent désormais qu'une fois l'essai passé.
+
+### Dépendances
+
+- `@simplewebauthn/server` 14.1.0, `isomorphic-dompurify` 4.7.0, qui amène
+  jsdom 31, et nodemailer 10.4.0. (#1023)
+- Outils de développement : Tailwind et `@tailwindcss/postcss` 4.3.5.
+  (#1022)
+- Image de base Python du serveur vocal. (#1015)
+
+### Connu
+
+- **picomatch** : l'avis GHSA-fc5q-39xc-vjpf (CVE-2026-112366, gravité
+  haute) couvre toutes les versions publiées, sans correctif amont. picomatch
+  n'est ici qu'une dépendance de développement, absente de l'image, qui ne
+  reçoit que les motifs de nos fichiers de configuration. Acceptation datée
+  dans `.trivyignore.yaml`, qui expire le 15 décembre. (#1024)
+- **vite 8.3.6** reste dans la plage de l'avis GHSA-p4f5-76q4-ffq7, comme en
+  1.16.2 : le produit n'utilise vite que par vitest, sans serveur exposé, et
+  vite ne fait pas partie de l'image.
+- **Le compose d'auto-hébergement livre encore HAProxy 2.9**, une branche que
+  son éditeur ne maintient plus. Le passage à la 3.2 est prêt et suivra dans
+  la prochaine version.
+
 ## [1.16.2] - 2026-11-12 📦 Deux montées de sécurité, et un Dependabot qui attend sept jours
 
 Quatre commits depuis la 1.16.1, aucun changement de code applicatif. Next et
