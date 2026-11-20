@@ -77,13 +77,18 @@ PME et ETI, pas comme un PDF décoratif. Trois leviers d'adoption :
   seconde + API B2B avec webhooks signés HMAC-SHA256 pour les courtiers
   et souscripteurs. Cible : réduction de prime cyber de 15 à 40 % selon
   le pourcentage de l'effectif certifié.
-- **Preuve de conformité NIS2** - obligation légale dirigeants depuis
-  octobre 2024 (sanctions jusqu'à 10 M€ ou 2 % CA mondial). Export
-  OSCAL v1.1.2 directement intégrable dans CISO Assistant, audit trail
-  intégral opposable.
-- **Démarche d'agrément ANSSI** - Humanix Académie postule à devenir
-  _le « Pix de la cybersécurité »_ côté sensibilisation, avec un dossier
-  formel d'agrément lancé en 2026. Reconnaissance officielle visée 2027.
+- **Preuve de conformité NIS2** - la directive prévoit la formation de
+  la direction et la sensibilisation du personnel, avec des sanctions
+  pouvant aller jusqu'à 10 M€ ou 2 % du CA mondial pour les entités
+  essentielles. En France, ces obligations ne s'appliqueront qu'une fois
+  la loi de transposition adoptée et entrée en vigueur : le certificat
+  sert à s'y préparer. Export OSCAL v1.1.2 directement intégrable dans
+  CISO Assistant, audit trail intégral opposable.
+- **Reconnaissance publique, un objectif** - Humanix Académie vise à
+  devenir _le « Pix de la cybersécurité »_ côté sensibilisation. À ce
+  jour, aucun label ni agrément public ne couvre ce type de plateforme
+  et aucune démarche formelle n'est engagée auprès de l'ANSSI : nous le
+  disons tel quel.
 
 Chaque apprenant peut, **optionnellement**, renseigner ses prénom et nom réels
 dans `/profil/infos` pour que le PDF soit émis à son état civil plutôt qu'à son

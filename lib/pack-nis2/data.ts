@@ -41,7 +41,7 @@ export function policyDocument(v: PackNis2Variables): Document {
       {
         heading: "1. Objet",
         paragraphs: [
-          `La présente politique fixe les engagements de ${v.tenantName} en matière de sensibilisation à la cybersécurité de l'ensemble de ses collaborateurs, conformément aux exigences de l'article 21 de la directive (UE) 2022/2555 du 14 décembre 2022 dite NIS2 (transposée en droit français par la loi de Résilience des Entités essentielles, dite loi REN, adoptée en 2025) et du RGPD article 32.`,
+          `La présente politique fixe les engagements de ${v.tenantName} en matière de sensibilisation à la cybersécurité de l'ensemble de ses collaborateurs, conformément aux exigences de l'article 21 de la directive (UE) 2022/2555 du 14 décembre 2022 dite NIS2 et du RGPD article 32. Tant que la loi française de transposition de cette directive n'est pas entrée en vigueur, cet engagement est pris par anticipation.`,
         ],
       },
       {
@@ -109,7 +109,7 @@ export function incidentDocument(v: PackNis2Variables): Document {
       {
         heading: "Délais réglementaires à connaître",
         paragraphs: [
-          "Pour les entités essentielles ou importantes au sens NIS2 :",
+          "Pour les entités essentielles ou importantes au sens NIS2 (délais prévus par la directive, qui s'imposeront en France à l'entrée en vigueur de la loi de transposition) :",
         ],
         bullets: [
           "Pré-notification au CSIRT national : sous 24 heures après prise de connaissance",

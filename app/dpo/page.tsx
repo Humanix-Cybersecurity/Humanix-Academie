@@ -12,7 +12,8 @@
 //     deleguer la sensibilisation cyber sans craindre que l'outil lui-même
 //     soit un trou.
 //   - Position commerciale : le DPO est souvent le declencheur d'achat dans
-//     les PME post-NIS2. Il faut lui donner un point d'entree qui parle son
+//     les PME qui anticipent NIS2 (directive pas encore transposee en France,
+//     cf. docs/COMPLIANCE.md). Il faut lui donner un point d'entree qui parle son
 //     langage.
 //
 // CONTENU :
@@ -225,7 +226,7 @@ export default function DpoLandingPage() {
             id="usecase-title"
             className="font-display text-2xl sm:text-3xl font-extrabold text-primary-500 dark:text-accent-300 mb-4 leading-tight"
           >
-            DPO de PME, 80 personnes, post-NIS2.
+            DPO de PME, 80 personnes, à l'approche de NIS2.
           </h2>
           <div className="space-y-4 text-base text-gray-700 dark:text-gray-200 leading-relaxed">
             <p>
@@ -233,10 +234,10 @@ export default function DpoLandingPage() {
                 La situation :
               </strong>{" "}
               tu es DPO mutualise (3 jours/semaine), tu pilotes la conformité de
-              plusieurs PME francaises. NIS2 est arrivee, tes dirigeants te
-              demandent de prouver que les collaborateurs sont sensibilises a la
-              cyber. Tu cherches une plateforme qui ne te rajoute pas elle-même
-              une dette RGPD.
+              plusieurs PME francaises. NIS2 arrive en droit français, et leurs
+              directions te demandent déjà de prouver que les collaborateurs
+              sont sensibilisés à la cyber. Tu cherches une plateforme qui ne te
+              rajoute pas elle-même une dette RGPD.
             </p>
             <p>
               <strong className="text-primary-500 dark:text-accent-300">

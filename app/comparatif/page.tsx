@@ -1266,8 +1266,8 @@ export default function ComparatifPage() {
               </strong>{" "}
               (US, $136M levés en moins de 2 ans, premier investissement cyber
               d'OpenAI) ne joue pas dans la même catégorie tarifaire ni
-              réglementaire. Pour une organisation française soumise à NIS2 ou
-              DORA, le Cloud Act sur leur stack OpenAI/AWS US reste un signal
+              réglementaire. Pour une organisation française concernée par NIS2
+              ou DORA, le Cloud Act sur leur stack OpenAI/AWS US reste un signal
               rouge. On offre une alternative AI-native souveraine : Mistral
               (Paris) + Piper TTS (local) + Scaleway (Paris) - la <em>seule</em>{" "}
               stack 100 % FR/UE pour les attaques voice deepfake.
@@ -1282,8 +1282,8 @@ export default function ComparatifPage() {
               humain plutôt que d'un support tier-3 anglophone, est le bon
               arbitrage. Pour une ETI multi-pays avec besoins SSO/SCIM lourds,
               les acteurs historiques restent plus adaptés. Pour une
-              organisation soumise à NIS2/DORA qui veut garder ses preuves dans
-              l'UE, on est seuls sur ce créneau combiné cyber + humain +
+              organisation concernée par NIS2/DORA qui veut garder ses preuves
+              dans l'UE, on est seuls sur ce créneau combiné cyber + humain +
               souverain.
             </p>
           </div>

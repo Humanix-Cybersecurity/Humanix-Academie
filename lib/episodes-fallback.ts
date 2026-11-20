@@ -229,7 +229,7 @@ const CATEGORIE_PROFILS: Record<
         label: "On verra plus tard, on n'a jamais été contrôlés.",
         outcome: "bad",
         feedback:
-          "Les sanctions NIS2 vont jusqu'à 10 M€ ou 2 % du CA mondial. Et un incident peut déclencher un audit a posteriori.",
+          "NIS2 prévoit des sanctions jusqu'à 10 M€ ou 2 % du CA mondial, et un incident pourra déclencher un contrôle a posteriori. La loi française n'est pas encore en vigueur : c'est maintenant qu'on s'y prépare.",
         points: 0,
       },
       {

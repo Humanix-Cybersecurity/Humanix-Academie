@@ -234,18 +234,18 @@ export default function DafLandingPage() {
             id="usecase-title"
             className="font-display text-2xl sm:text-3xl font-extrabold text-primary-500 dark:text-accent-300 mb-4 leading-tight"
           >
-            DAF de PME, 80 personnes, post-NIS2.
+            DAF de PME, 80 personnes, à l'approche de NIS2.
           </h2>
           <div className="space-y-4 text-base text-gray-700 dark:text-gray-200 leading-relaxed">
             <p>
               <strong className="text-primary-500 dark:text-accent-300">
                 La situation :
               </strong>{" "}
-              tu es DAF d'une PME française. NIS2 est entrée en application en
-              octobre 2024, ton dirigeant te demande de prouver que les
-              collaborateurs sont sensibilisés. Ton commissaire aux comptes te
-              questionne sur le risque cyber chiffré. Ton assureur veut une
-              preuve de formation continue avant la prochaine cotation.
+              tu es DAF d'une PME française. NIS2 arrive en droit français, et
+              ta direction te demande déjà de prouver que les collaborateurs
+              sont sensibilisés. Ton commissaire aux comptes te questionne sur
+              le risque cyber chiffré. Ton assureur veut une preuve de formation
+              continue avant la prochaine cotation.
             </p>
             <p>
               <strong className="text-primary-500 dark:text-accent-300">

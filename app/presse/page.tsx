@@ -90,7 +90,7 @@ const QUOTES = [
 const FAQ_JOURNALISTES = [
   {
     q: "Pourquoi passer en open source maintenant ?",
-    a: "Trois raisons convergentes : NIS2 entrée en application en octobre 2024 met les organisations sous pression, le retour de Trump 2 et les tensions géopolitiques rendent la souveraineté numérique européenne stratégique, et le modèle SaaS pur place Humanix en concurrence directe avec KnowBe4 et consorts sur leur terrain. L'open source retourne la situation.",
+    a: "Trois raisons convergentes : la directive NIS2, que la France est en train de transposer, met les organisations sous pression, le retour de Trump 2 et les tensions géopolitiques rendent la souveraineté numérique européenne stratégique, et le modèle SaaS pur place Humanix en concurrence directe avec KnowBe4 et consorts sur leur terrain. L'open source retourne la situation.",
   },
   {
     q: "Comment Humanix gagne sa vie si le code est gratuit ?",

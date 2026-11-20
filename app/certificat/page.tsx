@@ -10,8 +10,10 @@
 // Trois leviers d'adoption :
 //   1. ASSURANCE CYBER : convaincre AXA, Allianz, mutuelles regionales d'accorder
 //      un rabais sur les primes Cyber des PME qui ont X% de salaries certifies.
-//   2. NIS2 : packager le certificat comme preuve de conformite (obligation
-//      legale dirigeants ETI secteurs critiques depuis octobre 2024).
+//   2. NIS2 : packager le certificat comme preuve de conformite. La directive
+//      prevoit la formation de la direction et du personnel ; elle n'est PAS
+//      encore transposee en France (projet de loi en navette, etat du
+//      2026-11-20, cf. docs/COMPLIANCE.md). Ne pas ecrire de date d'application.
 //   3. RECONNAISSANCE PUBLIQUE : objectif « Pix de la cyber ». Aucun agrement
 //      n'existe pour ce type de plateforme (2026-09) : la page le dit tel quel.
 //
@@ -240,12 +242,16 @@ export default function CertificatPage() {
           </h2>
 
           <p className="text-lg text-gray-700 dark:text-gray-200 mb-6 leading-relaxed">
-            Depuis octobre 2024, la directive NIS2 impose aux dirigeants
-            d'entités essentielles et importantes (ETI, certaines PME de
-            secteurs critiques) <strong>une obligation légale</strong> de se
-            former à la cybersécurité et de veiller à la sensibilisation de leur
-            personnel. Sanctions en cas d'audit défaillant : jusqu'à{" "}
-            <strong>10 millions d'euros ou 2 % du CA mondial</strong>.
+            La directive NIS2 prévoit que la direction des entités essentielles
+            et importantes (ETI, certaines PME de secteurs critiques){" "}
+            <strong>se forme à la cybersécurité</strong> et veille à la
+            sensibilisation du personnel. Elle prévoit aussi des sanctions
+            pouvant aller jusqu'à{" "}
+            <strong>10 millions d'euros ou 2 % du CA mondial</strong> pour les
+            entités essentielles. En France, ces obligations ne s'appliqueront
+            qu'une fois la loi de transposition adoptée et entrée en vigueur :
+            d'ici là, le certificat te sert à t'y préparer, et à le montrer à
+            tes clients comme à ton assureur.
           </p>
 
           <div className="grid sm:grid-cols-3 gap-4 mb-8">
@@ -321,7 +327,7 @@ export default function CertificatPage() {
         </section>
 
         {/* ==================================================================
-            4. VOLET 3 - DEMARCHE ANSSI
+            4. VOLET 3 - RECONNAISSANCE PUBLIQUE (aucune demarche ANSSI engagee)
             ================================================================== */}
         <section
           id="anssi"

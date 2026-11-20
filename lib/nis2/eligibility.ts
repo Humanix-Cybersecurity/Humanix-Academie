@@ -6,10 +6,12 @@
 // ou probablement hors perimetre direct).
 //
 // IMPORTANT - posture : c'est une ESTIMATION INDICATIVE, pas un avis
-// juridique. Le perimetre exact depend des decrets sectoriels d'application
-// de la loi du 31 octobre 2024 (n° 2024-1039) et de la situation propre de
-// chaque organisation. Certaines entites sont concernees quelle que soit
-// leur taille. On le dit explicitement dans le resultat et l'UI.
+// juridique. Le perimetre exact dependra de la loi francaise de
+// transposition, pas encore adoptee definitivement (etat du 2026-11-20,
+// cf. docs/COMPLIANCE.md section 2), de ses decrets d'application et de la
+// situation propre de chaque organisation. Certaines entites sont concernees
+// quelle que soit leur taille. On le dit explicitement dans le resultat et
+// l'UI.
 //
 // Logique (simplifiee a partir des criteres NIS2) :
 //   - Annexe I (secteurs hautement critiques) :

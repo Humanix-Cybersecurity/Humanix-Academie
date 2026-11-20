@@ -4,7 +4,10 @@
 // Humanix. Aligne sur le mapping CISO Assistant :
 //   connectors/ciso-assistant-frameworks/mapping-humanix-awareness-to-nis2-directive.yaml
 //
-// Source : Directive (UE) 2022/2555, transposee FR loi 2024-1039 du 31/10/2024.
+// Source : Directive (UE) 2022/2555. Elle n'est PAS encore transposee en
+// droit francais : le projet de loi est en navette (etat du 2026-11-20,
+// cf. docs/COMPLIANCE.md section 2). Ne citer aucune loi francaise ici
+// tant qu'elle n'est pas promulguee.
 
 export type Nis2Article =
   | "21.2.a"
