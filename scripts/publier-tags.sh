@@ -21,10 +21,11 @@
 #
 #   1. controle le candidat et la liste des tags, avant tout appel au
 #      registre ;
-#   2. lit le candidat au registre : il doit s'y trouver, sous l'empreinte
-#      annoncee, et etre un index d'images ;
+#   2. lit le manifeste brut du candidat au registre : il doit s'y trouver,
+#      et etre un index d'images ;
 #   3. pose tous les tags sur le candidat, en une commande ;
-#   4. relit chaque tag au registre : il doit rendre l'empreinte du candidat.
+#   4. relit le manifeste brut de chaque tag : il doit etre, octet pour
+#      octet, celui du candidat. Memes octets, meme empreinte.
 #
 # POURQUOI EXIGER UN INDEX
 #
@@ -35,6 +36,24 @@
 #   images sont toujours des index, la provenance et le SBOM y ajoutent un
 #   manifeste d'attestation. On refuse donc le cas incertain au lieu de
 #   compter sur une option, et l'etape 4 verifie le resultat de toute facon.
+#
+# POURQUOI LE MANIFESTE BRUT, ET PAS `--format`
+#
+#   La premiere version lisait le type et l'empreinte par
+#   `imagetools inspect --format '{{.Manifest.MediaType}} ...'`. Essayee
+#   avec buildx 0.37, elle a echoue au premier passage reel, le 2026-11-20 :
+#   les executeurs ont buildx 0.31, qui n'execute PAS un gabarit commencant
+#   par `{{.Manifest` et rend a la place son affichage par defaut
+#   (util/imagetools/printers.go, `strings.HasPrefix(format, "{{.Manifest")`).
+#   Le script a pris le dernier mot de cet affichage pour une empreinte et a
+#   refuse le candidat. Rien n'avait ete pose : la porte a tenu, mais plus
+#   aucun tag ne bougeait.
+#
+#   `--raw` rend les octets du manifeste tels que le registre les sert, dans
+#   toutes les versions. On n'interprete donc plus aucune mise en forme : un
+#   index a une cle "manifests" et ni "config" ni "layers", et deux
+#   references designent la meme image quand leurs manifestes sont egaux.
+#   Ne pas revenir a `--format` : le test le refuse.
 #
 # USAGE
 #
@@ -179,27 +198,41 @@ log "candidat : $CANDIDAT"
 log "${#REFERENCES[@]} reference(s) a poser"
 
 # -----------------------------------------------------------------------------
-# 2. Le candidat est-il au registre, tel qu'annonce ?
+# 2. Le candidat est-il au registre, et est-ce un index ?
 # -----------------------------------------------------------------------------
-vu="$(docker buildx imagetools inspect "$CANDIDAT" \
-  --format '{{.Manifest.MediaType}} {{.Manifest.Digest}}')" ||
+
+# Les octets du manifeste, tels que le registre les sert. Jamais `--format` :
+# cf. l'en-tete.
+manifeste_brut() {
+  docker buildx imagetools inspect --raw "$1"
+}
+
+# Un index (ou une liste de manifestes Docker) porte la cle "manifests". Un
+# manifeste d'image porte "config" et "layers", qu'un index n'a pas. L'ordre
+# des cles et la mise en forme varient d'un outil a l'autre : on ne regarde
+# que leur presence.
+est_un_index() {
+  case "$1" in
+    *'"config"'* | *'"layers"'*) return 1 ;;
+  esac
+  case "$1" in
+    *'"manifests"'*) return 0 ;;
+  esac
+  return 1
+}
+
+brut_candidat="$(manifeste_brut "$CANDIDAT")" ||
   { log "ECHEC : le candidat est introuvable au registre. Aucun tag n'a ete pose."; exit 1; }
 
-type_vu="${vu%% *}"
-empreinte_vue="${vu##* }"
-
-if [ "$empreinte_vue" != "sha256:$EMPREINTE" ]; then
-  log "ECHEC : le registre rend $empreinte_vue pour le candidat. Aucun tag n'a ete pose."
+if [ -z "$brut_candidat" ]; then
+  log "ECHEC : le registre rend un manifeste vide pour le candidat. Aucun tag n'a ete pose."
   exit 1
 fi
-case "$type_vu" in
-  application/vnd.oci.image.index.v1+json | application/vnd.docker.distribution.manifest.list.v2+json) ;;
-  *)
-    log "ECHEC : le candidat n'est pas un index d'images ($type_vu)."
-    log "        Le recopier changerait son empreinte. Aucun tag n'a ete pose."
-    exit 1
-    ;;
-esac
+if ! est_un_index "$brut_candidat"; then
+  log "ECHEC : le candidat n'est pas un index d'images."
+  log "        Le recopier changerait son empreinte. Aucun tag n'a ete pose."
+  exit 1
+fi
 
 # -----------------------------------------------------------------------------
 # 3. Les tags, sur le candidat et rien d'autre
@@ -214,14 +247,19 @@ docker buildx imagetools create "${ARGUMENTS[@]}" "$CANDIDAT" ||
 
 # -----------------------------------------------------------------------------
 # 4. Chaque tag designe-t-il le candidat ?
+#
+# Memes octets de manifeste, donc meme empreinte : pas besoin de la calculer,
+# ni de se fier a ce qu'un outil en affiche.
 # -----------------------------------------------------------------------------
 ecarts=0
 for reference in "${REFERENCES[@]}"; do
-  lue="$(docker buildx imagetools inspect "$reference" --format '{{.Manifest.Digest}}')" || lue="illisible"
-  if [ "$lue" = "sha256:$EMPREINTE" ]; then
+  if ! lu="$(manifeste_brut "$reference")"; then
+    log "  ECART : $reference est illisible au registre"
+    ecarts=$((ecarts + 1))
+  elif [ -n "$lu" ] && [ "$lu" = "$brut_candidat" ]; then
     log "  $reference"
   else
-    log "  ECART : $reference rend $lue"
+    log "  ECART : $reference ne rend pas le manifeste du candidat"
     ecarts=$((ecarts + 1))
   fi
 done

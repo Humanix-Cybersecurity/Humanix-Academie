@@ -4,16 +4,22 @@
 // empreinte, puis vérifie qu'ils la désignent. Impossible de parler à un vrai
 // registre dans la suite : on exécute donc le script pour de bon, avec bash,
 // dans un bac à sable où `docker` est une doublure. Elle tient un petit
-// registre dans un fichier (une référence, son type, son empreinte par
-// ligne), journalise chaque appel, et peut refuser ou mal recopier.
+// registre (une référence et le nom de son manifeste par ligne, les
+// manifestes dans des fichiers), journalise chaque appel, et peut refuser ou
+// mal recopier.
 //
 // Ce que ces tests protègent :
-//   - un tag n'est posé que sur le candidat, tel qu'il a été essayé : même
-//     empreinte au registre, et un index, que la commande recopie à
-//     l'identique ;
+//   - un tag n'est posé que sur le candidat, tel qu'il a été essayé : présent
+//     au registre, et un index, que la commande recopie à l'identique ;
 //   - rien n'est demandé au registre tant que le candidat ou la liste des
 //     tags sont douteux ;
-//   - après la pose, chaque tag est relu : un écart fait échouer ;
+//   - après la pose, chaque tag est relu : son manifeste doit être, octet
+//     pour octet, celui du candidat ;
+//   - la lecture ne passe JAMAIS par `--format`. Le buildx 0.31 des
+//     exécuteurs n'exécute pas un gabarit qui commence par `{{.Manifest` : il
+//     rend son affichage par défaut. La première version du script, essayée
+//     avec buildx 0.37, a échoué pour cela à son premier passage réel, le
+//     2026-11-20. La doublure se comporte comme le 0.31 ;
 //   - les outils que le script suppose. Le chemin de chaque essai ne contient
 //     que la doublure et bash : un outil de plus dans le script, et tout tombe
 //     ici plutôt que sur un exécuteur de la CI, qui n'a pas awk ;
@@ -47,16 +53,53 @@ const DEPOT = "ghcr.io/humanix-cybersecurity/humanix-academie";
 const EMPREINTE = "a".repeat(64);
 const AUTRE_EMPREINTE = "b".repeat(64);
 const CANDIDAT = `${DEPOT}@sha256:${EMPREINTE}`;
-const INDEX = "application/vnd.oci.image.index.v1+json";
-const LISTE_DOCKER =
-  "application/vnd.docker.distribution.manifest.list.v2+json";
-const MANIFESTE = "application/vnd.oci.image.manifest.v1+json";
+
+// Des manifestes bruts, tels qu'un registre les sert.
+const descripteur = (chiffre: string, plus = "") =>
+  `{"mediaType":"application/vnd.oci.image.manifest.v1+json","digest":"sha256:${chiffre.repeat(64)}","size":1234${plus}}`;
+
+/** Un index comme BuildKit les écrit : indenté, avec son attestation. */
+const indexDeBuildkit = (image: string, attestation: string) =>
+  [
+    "{",
+    '  "schemaVersion": 2,',
+    '  "mediaType": "application/vnd.oci.image.index.v1+json",',
+    '  "manifests": [',
+    `    ${descripteur(image, ',"platform":{"architecture":"amd64","os":"linux"}')},`,
+    `    ${descripteur(
+      attestation,
+      `,"annotations":{"vnd.docker.reference.digest":"sha256:${image.repeat(64)}","vnd.docker.reference.type":"attestation-manifest"},"platform":{"architecture":"unknown","os":"unknown"}`,
+    )}`,
+    "  ]",
+    "}",
+  ].join("\n");
+
+const MANIFESTES: Record<string, string> = {
+  index: indexDeBuildkit("1", "2"),
+  "autre-index": indexDeBuildkit("3", "4"),
+  // Compact, clés triées : la forme des index des images officielles.
+  "index-compact": `{"manifests":[${descripteur("5")}],"mediaType":"application/vnd.oci.image.index.v1+json","schemaVersion":2}`,
+  "liste-docker": `{"schemaVersion":2,"mediaType":"application/vnd.docker.distribution.manifest.list.v2+json","manifests":[{"mediaType":"application/vnd.docker.distribution.manifest.v2+json","digest":"sha256:${"6".repeat(64)}","size":1234,"platform":{"architecture":"amd64","os":"linux"}}]}`,
+  // Un manifeste d'image : une configuration et des couches, pas de liste.
+  manifeste: [
+    "{",
+    '  "schemaVersion": 2,',
+    '  "mediaType": "application/vnd.oci.image.manifest.v1+json",',
+    `  "config": {"mediaType":"application/vnd.oci.image.config.v1+json","digest":"sha256:${"7".repeat(64)}","size":8546},`,
+    `  "layers": [{"mediaType":"application/vnd.oci.image.layer.v1.tar+gzip","digest":"sha256:${"8".repeat(64)}","size":3626897}]`,
+    "}",
+  ].join("\n"),
+  vide: "",
+};
 
 // Doublure de docker. Uniquement des commandes internes au shell : elle tourne
 // avec le même chemin fermé que le script. Le registre est le fichier
 // $BAC/registre ; pour une référence, la dernière ligne l'emporte, comme un
 // tag qu'on déplace. Écrite sans la forme dollar-accolade, que String.raw
 // prendrait pour une interpolation.
+//
+// `inspect` sans `--raw` répond comme le buildx 0.31 des exécuteurs devant un
+// gabarit en `{{.Manifest` : l'affichage par défaut, quel que soit le gabarit.
 const DOUBLURE_DOCKER = String.raw`#!/bin/sh
 e="$BAC/etat"
 echo "docker $*" >> "$BAC/journal"
@@ -65,32 +108,38 @@ if [ "$1" != "buildx" ] || [ "$2" != "imagetools" ]; then
   exit 64
 fi
 chercher() {
-  type_trouve=""
-  empreinte_trouvee=""
-  while read -r r type empreinte; do
-    if [ "$r" = "$1" ]; then
-      type_trouve="$type"
-      empreinte_trouvee="$empreinte"
-    fi
+  manifeste=""
+  while read -r r nom; do
+    if [ "$r" = "$1" ]; then manifeste="$nom"; fi
   done < "$BAC/registre"
 }
 case "$3" in
   inspect)
-    reference="$4"
-    format="$6"
+    if [ "$4" != "--raw" ]; then
+      echo "Name:      $4"
+      echo "MediaType: application/vnd.oci.image.index.v1+json"
+      echo "Digest:    sha256:0000000000000000000000000000000000000000000000000000000000000000"
+      echo "Manifests:"
+      echo "  Name:        $4"
+      echo "  MediaType:   application/vnd.oci.image.manifest.v1+json"
+      echo "  Platform:    unknown/unknown"
+      echo "  Annotations:"
+      echo "    vnd.docker.reference.type:   attestation-manifest"
+      exit 0
+    fi
+    reference="$5"
     if [ "$reference" != "$CANDIDAT_ATTENDU" ] && [ -f "$e/relecture-echoue" ]; then
       echo "ERROR: registre injoignable" >&2
       exit 1
     fi
     chercher "$reference"
-    if [ -z "$empreinte_trouvee" ]; then
+    if [ -z "$manifeste" ]; then
       echo "ERROR: $reference: not found" >&2
       exit 1
     fi
-    case "$format" in
-      *MediaType*) printf '%s %s' "$type_trouve" "$empreinte_trouvee" ;;
-      *) printf '%s' "$empreinte_trouvee" ;;
-    esac
+    while IFS= read -r ligne || [ -n "$ligne" ]; do
+      printf '%s\n' "$ligne"
+    done < "$BAC/manifestes/$manifeste"
     ;;
   create)
     if [ -f "$e/pose-echoue" ]; then
@@ -103,10 +152,9 @@ case "$3" in
     while [ "$#" -gt 1 ]; do
       if [ "$1" = "--tag" ]; then
         if [ -f "$e/copie-infidele" ]; then
-          read -r autre < "$e/copie-infidele"
-          echo "$2 application/vnd.oci.image.index.v1+json sha256:$autre" >> "$BAC/registre"
+          echo "$2 autre-index" >> "$BAC/registre"
         else
-          echo "$2 $type_trouve $empreinte_trouvee" >> "$BAC/registre"
+          echo "$2 $manifeste" >> "$BAC/registre"
         fi
         shift 2
       else
@@ -119,19 +167,17 @@ exit 0
 `;
 
 type Scenario = {
-  /** Ce que le registre contient au départ : référence, type, empreinte. */
-  registre?: [string, string, string][];
+  /** Ce que le registre contient au départ : référence, nom du manifeste. */
+  registre?: [string, string][];
   /** La pose des tags est refusée par le registre. */
   poseEchoue?: boolean;
-  /** Les tags posés rendent cette empreinte au lieu de celle du candidat. */
-  copieInfidele?: string;
+  /** Les tags posés rendent un autre index que celui du candidat. */
+  copieInfidele?: boolean;
   /** La relecture des tags échoue, le candidat reste lisible. */
   relectureEchoue?: boolean;
 };
 
-const REGISTRE_SAIN: [string, string, string][] = [
-  [CANDIDAT, INDEX, `sha256:${EMPREINTE}`],
-];
+const REGISTRE_SAIN: [string, string][] = [[CANDIDAT, "index"]];
 
 const bacs: string[] = [];
 
@@ -146,7 +192,12 @@ function creerBac(scenario: Scenario): string {
     writeFileSync(join(etat, "relecture-echoue"), "\n");
   }
   if (scenario.copieInfidele) {
-    writeFileSync(join(etat, "copie-infidele"), `${scenario.copieInfidele}\n`);
+    writeFileSync(join(etat, "copie-infidele"), "\n");
+  }
+  const manifestes = join(bac, "manifestes");
+  mkdirSync(manifestes);
+  for (const [nom, contenu] of Object.entries(MANIFESTES)) {
+    writeFileSync(join(manifestes, nom), contenu);
   }
   writeFileSync(
     join(bac, "registre"),
@@ -182,7 +233,7 @@ type Resultat = {
   sortie: string;
   /** Un appel de la doublure par ligne, dans l'ordre. */
   journal: string[];
-  /** Ce que le registre rend pour une référence à la fin, ou "" si absente. */
+  /** Le manifeste qu'une référence désigne à la fin, ou "" si absente. */
   auRegistre: (reference: string) => string;
 };
 
@@ -219,7 +270,7 @@ function lancer(
       .split("\n")
       .filter(Boolean),
     auRegistre: (reference) =>
-      registre.filter(([r0]) => r0 === reference).at(-1)?.[2] ?? "",
+      registre.filter(([r0]) => r0 === reference).at(-1)?.[1] ?? "",
   };
 }
 
@@ -246,19 +297,33 @@ describe.skipIf(!BASH_DISPONIBLE)(
       expect(poses(r)).toEqual([
         `docker buildx imagetools create --tag ${DEPOT}:edge --tag ${DEPOT}:main-5a25a92 ${CANDIDAT}`,
       ]);
-      expect(r.auRegistre(`${DEPOT}:edge`)).toBe(`sha256:${EMPREINTE}`);
-      expect(r.auRegistre(`${DEPOT}:main-5a25a92`)).toBe(`sha256:${EMPREINTE}`);
+      expect(r.auRegistre(`${DEPOT}:edge`)).toBe("index");
+      expect(r.auRegistre(`${DEPOT}:main-5a25a92`)).toBe("index");
     });
 
     it("lit le candidat avant de poser, et chaque tag après", () => {
       const r = lancer({}, `${DEPOT}:edge\n${DEPOT}:main-5a25a92`);
 
-      expect(r.journal.map((l) => l.split(" ").slice(3, 5).join(" "))).toEqual([
-        `inspect ${CANDIDAT}`,
-        `create --tag`,
-        `inspect ${DEPOT}:edge`,
-        `inspect ${DEPOT}:main-5a25a92`,
+      expect(r.journal.map((l) => l.split(" ").slice(3, 6).join(" "))).toEqual([
+        `inspect --raw ${CANDIDAT}`,
+        `create --tag ${DEPOT}:edge`,
+        `inspect --raw ${DEPOT}:edge`,
+        `inspect --raw ${DEPOT}:main-5a25a92`,
       ]);
+    });
+
+    it("ne lit jamais par --format, que le buildx des exécuteurs n'exécute pas", () => {
+      const r = lancer({}, `${DEPOT}:edge\n${DEPOT}:main-5a25a92`);
+
+      expect(r.code).toBe(0);
+      expect(lectures(r)).toHaveLength(3);
+      for (const lecture of lectures(r)) {
+        expect(lecture).toMatch(/^docker buildx imagetools inspect --raw \S+$/);
+      }
+      expect(r.journal.join("\n")).not.toContain("--format");
+      expect(readFileSync(SCRIPT, "utf8")).not.toMatch(
+        /^[^#\n]*imagetools inspect[^\n]*--format/m,
+      );
     });
 
     it("pose les quatre tags d'une release en une seule commande", () => {
@@ -270,7 +335,7 @@ describe.skipIf(!BASH_DISPONIBLE)(
       expect(r.code).toBe(0);
       expect(poses(r)).toHaveLength(1);
       for (const tag of tags) {
-        expect(r.auRegistre(tag)).toBe(`sha256:${EMPREINTE}`);
+        expect(r.auRegistre(tag)).toBe("index");
       }
       expect(r.sortie).toContain("TAGS POSES : 4 reference(s)");
     });
@@ -286,31 +351,30 @@ describe.skipIf(!BASH_DISPONIBLE)(
         `docker buildx imagetools create --tag ${DEPOT}:edge --tag ${DEPOT}:main-5a25a92 ` +
           `--tag ${miroir}:edge --tag ${miroir}:main-5a25a92 ${CANDIDAT}`,
       ]);
-      expect(r.auRegistre(`${miroir}:edge`)).toBe(`sha256:${EMPREINTE}`);
+      expect(r.auRegistre(`${miroir}:edge`)).toBe("index");
       expect(r.sortie).toContain("TAGS POSES : 4 reference(s)");
     });
 
     it("accepte un registre désigné avec son port", () => {
       const depot = "127.0.0.1:5000/humanix-essai";
       const candidat = `${depot}@sha256:${EMPREINTE}`;
-      const r = lancer(
-        { registre: [[candidat, INDEX, `sha256:${EMPREINTE}`]] },
-        `${depot}:edge`,
-        [candidat],
-      );
+      const r = lancer({ registre: [[candidat, "index"]] }, `${depot}:edge`, [
+        candidat,
+      ]);
 
       expect(r.code).toBe(0);
-      expect(r.auRegistre(`${depot}:edge`)).toBe(`sha256:${EMPREINTE}`);
+      expect(r.auRegistre(`${depot}:edge`)).toBe("index");
     });
 
-    it("accepte une liste de manifestes au format Docker", () => {
-      const r = lancer(
-        { registre: [[CANDIDAT, LISTE_DOCKER, `sha256:${EMPREINTE}`]] },
-        `${DEPOT}:edge`,
-      );
+    it.each([
+      ["une liste de manifestes au format Docker", "liste-docker"],
+      ["un index compact aux clés triées", "index-compact"],
+    ])("accepte %s", (_nom, manifeste) => {
+      const r = lancer({ registre: [[CANDIDAT, manifeste]] }, `${DEPOT}:edge`);
 
       expect(r.code).toBe(0);
       expect(poses(r)).toHaveLength(1);
+      expect(r.auRegistre(`${DEPOT}:edge`)).toBe(manifeste);
     });
 
     it("nettoie la liste : lignes vides, espaces, retours chariot, doublons", () => {
@@ -352,25 +416,21 @@ describe.skipIf(!BASH_DISPONIBLE)(
       expect(poses(r)).toEqual([]);
     });
 
-    it("échoue sans rien poser quand le registre rend une autre empreinte", () => {
-      const r = lancer(
-        { registre: [[CANDIDAT, INDEX, `sha256:${AUTRE_EMPREINTE}`]] },
-        `${DEPOT}:edge`,
-      );
+    it("échoue sans rien poser quand le registre rend un manifeste vide", () => {
+      const r = lancer({ registre: [[CANDIDAT, "vide"]] }, `${DEPOT}:edge`);
 
-      expect(r.sortie).toContain(`le registre rend sha256:${AUTRE_EMPREINTE}`);
+      expect(r.sortie).toContain("manifeste vide pour le candidat");
       expect(r.code).toBe(1);
       expect(poses(r)).toEqual([]);
     });
 
     it("refuse un candidat qui n'est pas un index : sa copie changerait d'empreinte", () => {
       const r = lancer(
-        { registre: [[CANDIDAT, MANIFESTE, `sha256:${EMPREINTE}`]] },
+        { registre: [[CANDIDAT, "manifeste"]] },
         `${DEPOT}:edge`,
       );
 
       expect(r.sortie).toContain("n'est pas un index d'images");
-      expect(r.sortie).toContain(MANIFESTE);
       expect(r.code).toBe(1);
       expect(poses(r)).toEqual([]);
     });
@@ -388,14 +448,14 @@ describe.skipIf(!BASH_DISPONIBLE)(
       expect(lectures(r)).toHaveLength(1);
     });
 
-    it("échoue quand un tag ne rend pas l'empreinte du candidat", () => {
+    it("échoue quand un tag ne rend pas le manifeste du candidat", () => {
       const r = lancer(
-        { copieInfidele: AUTRE_EMPREINTE },
+        { copieInfidele: true },
         `${DEPOT}:edge\n${DEPOT}:main-5a25a92`,
       );
 
       expect(r.sortie).toContain(
-        `ECART : ${DEPOT}:edge rend sha256:${AUTRE_EMPREINTE}`,
+        `ECART : ${DEPOT}:edge ne rend pas le manifeste du candidat`,
       );
       expect(r.sortie).toContain(
         "2 reference(s) ne designent pas l'image essayee",
@@ -407,7 +467,9 @@ describe.skipIf(!BASH_DISPONIBLE)(
     it("échoue quand un tag ne peut pas être relu", () => {
       const r = lancer({ relectureEchoue: true }, `${DEPOT}:edge`);
 
-      expect(r.sortie).toContain(`ECART : ${DEPOT}:edge rend illisible`);
+      expect(r.sortie).toContain(
+        `ECART : ${DEPOT}:edge est illisible au registre`,
+      );
       expect(r.sortie).not.toContain("TAGS POSES");
       expect(r.code).toBe(1);
     });
