@@ -105,23 +105,50 @@ cd humanix-academie
 cp .env.example .env
 ```
 
-Édite `.env` avec ton éditeur préféré et renseigne au minimum :
+Le compose lit ce fichier : tout ce que tu y poses arrive dans le conteneur
+de l'application. Deux valeurs sont à générer, et la stack refuse de démarrer
+tant qu'elles manquent :
+
+```bash
+openssl rand -base64 32   # pour AUTH_SECRET
+openssl rand -hex 24      # pour POSTGRES_PASSWORD
+```
+
+Édite ensuite `.env` avec ton éditeur préféré et renseigne au minimum :
 
 ```env
-# Identité de ton instance (URL publique HTTPS recommandée en prod)
+# Secret de signature des sessions : la première valeur générée ci-dessus
+AUTH_SECRET=
+
+# Mot de passe de la base que crée le compose : la seconde valeur générée
+POSTGRES_PASSWORD=
+
+# Identité de ton instance (URL publique HTTPS), deux fois la même
+AUTH_URL=https://academie.tonentreprise.fr
 NEXT_PUBLIC_APP_URL=https://academie.tonentreprise.fr
 
-# Base de données (Docker Compose la fournit en interne)
-DATABASE_URL=postgresql://humanix:CHANGEME@postgres:5432/humanix?schema=public
+# Premier compte d'administration, créé au premier démarrage
+BOOTSTRAP_ADMIN_EMAIL=toi@tonentreprise.fr
 
-# Secret de signature des sessions (32+ caractères aléatoires)
-# Génère-le avec : openssl rand -base64 32
-AUTH_SECRET=remplace-moi-par-un-secret-genere
-
-# Email transactionnel (magic link, notifications)
-SCALEWAY_TEM_TOKEN=re_xxxxxxxxxxxxxxxxxxxxx
-SMTP_FROM=noreply@tonentreprise.fr
+# Email transactionnel (lien de connexion, notifications)
+SCALEWAY_TEM_TOKEN=
+SCALEWAY_TEM_PROJECT_ID=
+EMAIL_FROM=noreply@tonentreprise.fr
 ```
+
+Trois choses à savoir :
+
+- **`AUTH_SECRET` ne se recopie pas d'un exemple.** Qui le connaît peut se
+  fabriquer la session de n'importe quel compte. Le conteneur refuse de
+  démarrer s'il est vide, s'il fait moins de 16 caractères, ou s'il vaut l'une
+  des valeurs d'exemple que ce dépôt a publiées.
+- **`DATABASE_URL` n'est pas à remplir ici.** Le compose construit lui-même
+  l'URL de connexion à partir de `POSTGRES_PASSWORD`.
+- **`POSTGRES_PASSWORD` n'est lu qu'à la création de la base.** Pour le changer
+  ensuite, voir [upgrade.md](./upgrade.md).
+
+Tu mets à jour une instance qui tourne déjà ? Jusqu'en novembre 2026 le
+compose ne lisait pas ce fichier : lis d'abord [upgrade.md](./upgrade.md).
 
 Pour la liste complète des variables, voir [configuration.md](./configuration.md).
 
@@ -139,13 +166,17 @@ Cela lance trois services :
 
 ### Étape 4 - Initialise la base de données
 
+Le schéma, le catalogue et le premier compte d'administration ne demandent
+aucune commande : le conteneur `app` s'en charge à chaque démarrage. Suis-le
+dans son journal, jusqu'à la ligne « Pret. Ouvre ... » :
+
 ```bash
-# Applique les migrations
-docker compose exec app npx prisma migrate deploy
+docker compose logs -f app
+```
 
-# Seed initial (1 tenant demo + 1 admin)
-docker compose exec app npx prisma db seed
+Une seule étape reste manuelle, une fois ce premier démarrage terminé :
 
+```bash
 # Applique les REVOKE chirurgicaux pour le rôle Postgres read-only
 # (Sprint sécurité 2 - defense en profondeur Least Privilege)
 docker compose exec postgres psql -U humanix -d humanix \
@@ -161,15 +192,18 @@ docker compose exec postgres psql -U humanix -d humanix \
 
 Ouvre `https://academie.tonentreprise.fr` (ou `http://localhost:3000` en local).
 
-Identifiants admin par défaut :
+Le premier compte d'administration est celui de `BOOTSTRAP_ADMIN_EMAIL`
+(étape 2). Il n'y a pas d'identifiants par défaut : sur la page `/connexion`,
+demande un lien de connexion pour cette adresse. Sans envoi de mail configuré,
+pose aussi `BOOTSTRAP_ADMIN_PASSWORD` avant le premier démarrage, pour une
+première connexion par mot de passe. Le journal du démarrage dit ce qui a été
+créé :
 
 ```bash
-docker compose logs app | grep "Initial admin"
-# Tu verras : Initial admin: admin@example.com / mot-de-passe-temporaire
+docker compose logs app | grep "bootstrap-admin"
 ```
 
-**Connecte-toi, change immédiatement le mot de passe**, puis crée tes
-utilisateurs réels via `/admin/utilisateurs`.
+Crée ensuite les comptes de ton équipe via `/admin/utilisateurs`.
 
 ---
 

@@ -246,20 +246,61 @@ ensure_hosts_entry() {
 # -----------------------------------------------------------------------------
 # 5. .env dev minimal
 # -----------------------------------------------------------------------------
+#
+# Le compose lit ce fichier pour de bon depuis novembre 2026. Avant, il
+# ecrivait AUTH_SECRET et le mot de passe de la base en dur : le secret genere
+# ici n'atteignait pas le conteneur, et la base locale etait creee avec le mot
+# de passe `humanix_demo`.
+#
+# Un .env cree par une version anterieure de ce script n'a donc pas de
+# POSTGRES_PASSWORD, que le compose exige maintenant. On ne l'ajoute pas a la
+# place de la personne : le bon mot de passe depend de ce qu'elle veut faire de
+# sa base locale, et ce fichier lui appartient.
+verifier_env_existant() {
+  local env_file="$1"
+  # Une valeur vide (POSTGRES_PASSWORD="") ne suffit pas : le compose la refuse.
+  if grep -qE '^POSTGRES_PASSWORD="?[^"[:space:]]' "$env_file"; then
+    return
+  fi
+  err ".env existe, mais sans POSTGRES_PASSWORD : le compose en a besoin."
+  cat >&2 <<EOF
+
+  Ce .env date d'avant que le compose lise le mot de passe de la base.
+
+  ${C_BOLD}Pour garder ta base locale${C_RESET} : elle a ete creee avec l'ancien mot de
+  passe en dur. Ajoute cette ligne a .env, puis relance ce script :
+
+    POSTGRES_PASSWORD="humanix_demo"
+
+  ${C_BOLD}Pour repartir d'une base neuve${C_RESET}, avec un mot de passe genere : ajoute
+  d'abord la ligne ci-dessus, puis :
+
+    ./scripts/start.sh --reset
+    rm .env
+    ./scripts/start.sh
+
+EOF
+  exit 1
+}
+
 ensure_env_dev() {
   local env_file="$ROOT_DIR/.env"
   if [[ -f "$env_file" ]]; then
     ok ".env existe deja (preserve)"
+    verifier_env_existant "$env_file"
     return
   fi
   log "Creation .env dev minimal..."
-  local secret
+  local secret mdp_base
   secret="$(openssl rand -base64 32)"
+  # En hexadecimal : le compose le place dans l'URL de connexion a la base.
+  mdp_base="$(openssl rand -hex 24)"
   cat > "$env_file" <<EOF
 # .env auto-genere par scripts/start.sh ($(date -Iseconds))
 # Pour la prod, copie .env.example et personnalise.
 
-DATABASE_URL="postgresql://humanix:humanix_demo@postgres:5432/humanix?schema=public"
+# Lu par le compose au premier demarrage de la base, puis a chaque connexion.
+POSTGRES_PASSWORD="$mdp_base"
 AUTH_SECRET="$secret"
 AUTH_URL="https://$HOSTNAME_DEV"
 AUTH_TRUST_HOST="true"

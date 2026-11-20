@@ -163,8 +163,10 @@ git clone https://github.com/Humanix-Cybersecurity/Humanix-Academie.git
 cd humanix-academie
 
 cp .env.example .env
-# Édite .env : DATABASE_URL, AUTH_SECRET, AUTH_URL, etc.
-# AUTH_SECRET solide :  openssl rand -base64 32
+# Édite .env : AUTH_SECRET, POSTGRES_PASSWORD, AUTH_URL, etc.
+# AUTH_SECRET :        openssl rand -base64 32
+# POSTGRES_PASSWORD :  openssl rand -hex 24
+# La stack refuse de démarrer tant que ces deux valeurs manquent.
 
 docker compose up -d
 ```
