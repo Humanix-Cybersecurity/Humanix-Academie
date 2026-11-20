@@ -22,6 +22,7 @@
 
 import Link from "next/link";
 import HexBackdrop from "@/components/HexBackdrop";
+import { remiseAnnuellePourcent } from "@/lib/prix";
 import { submitDemandeAbonnement } from "./actions";
 
 export const metadata = {
@@ -332,7 +333,10 @@ export default async function DemandeAbonnementPage({
                     />
                     <span className="text-sm">
                       Annuel{" "}
-                      <span className="text-emerald-600 text-xs">(-10 %)</span>
+                      <span className="text-emerald-600 text-xs">
+                        (−{remiseAnnuellePourcent("pro")} % en Pro, −
+                        {remiseAnnuellePourcent("starter")} % en Starter)
+                      </span>
                     </span>
                   </label>
                 </div>

@@ -26,11 +26,11 @@ import { getSeatUsage, formatSeatUsage } from "@/lib/seats";
 import {
   PLAN_LABEL,
   PLAN_EMOJI,
-  PLAN_PRICE_EUR_MONTHLY,
   nextPlan,
   isPaidPlan,
   type PlanId,
 } from "@/lib/plans";
+import { libellePrixPlan } from "@/lib/prix";
 import { MOLLIE_BUYABLE_PLANS } from "@/lib/mollie";
 import PlanUpgradeOptions from "@/components/PlanUpgradeOptions";
 import { db } from "@/lib/db";
@@ -455,9 +455,9 @@ function StateBanner({
   );
 }
 
+// Le prix public du plan, lu dans lib/prix.ts. Cette ligne affichait
+// « Tarif sur devis (Enterprise). » a tout client Pro (elle ne connaissait que
+// les forfaits) et « HT » un prix que la meme page dit TTC plus bas.
 function priceLine(plan: PlanId): string {
-  const m = PLAN_PRICE_EUR_MONTHLY[plan];
-  if (m === null) return "Tarif sur devis (Enterprise).";
-  if (m === 0) return "Gratuit.";
-  return `${m} €/mois HT par tenant.`;
+  return `${libellePrixPlan(plan)}.`;
 }

@@ -193,39 +193,11 @@ export const PLAN_FREE_SEATS: Record<PlanId, number> = {
 };
 
 // =============================================================================
-// PRIX MENSUELS HT (€)
+// PRIX
 // =============================================================================
-// Source de verite des prix affiches sur /tarifs et factures Mollie.
-// Les vrais ID de plans Mollie sont dans .env (MOLLIE_PROFILE_*).
-//
-// `null` = pas de prix forfait (utilise PLAN_PRICE_PER_USER_EUR_MONTHLY a la
-// place) ou sur devis (Enterprise).
-export const PLAN_PRICE_EUR_MONTHLY: Record<PlanId, number | null> = {
-  starter: 19, // Forfait 19EUR/mois quand seats > PLAN_FREE_SEATS.starter (=5)
-  pro: null, // Tarification au siege (cf. PLAN_PRICE_PER_USER_EUR_MONTHLY)
-  enterprise: null, // Sur devis
-};
-
-// Prix annuel (avec ~17% de remise = 2 mois offerts)
-export const PLAN_PRICE_EUR_YEARLY: Record<PlanId, number | null> = {
-  starter: 190, // 19 * 10 (vs 12 mensuel = -17%)
-  pro: null,
-  enterprise: null,
-};
-
-// Tarification au siege (€/user/mois). Utilise pour les plans facture au
-// volume. `null` = plan a forfait fixe ou sur devis.
-export const PLAN_PRICE_PER_USER_EUR_MONTHLY: Record<PlanId, number | null> = {
-  starter: null,
-  pro: 3, // 3EUR/user/mois pour 16-250 sieges
-  enterprise: null,
-};
-
-export const PLAN_PRICE_PER_USER_EUR_YEARLY: Record<PlanId, number | null> = {
-  starter: null,
-  pro: 2.5, // 2.50EUR/user/mois en engagement annuel (~17% remise)
-  enterprise: null,
-};
+// Les prix ne sont pas ici : lib/prix.ts en est la source unique (grille,
+// paiement Mollie, console, devis). Ce module-ci importe la base de donnees ;
+// celui des prix n'importe rien, pour rester utilisable partout.
 
 // =============================================================================
 // COMPARAISONS DE PLAN (helpers commun upgrade/downgrade UI)

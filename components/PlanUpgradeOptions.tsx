@@ -13,14 +13,14 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { PLAN_LABEL, PLAN_EMOJI, PLAN_RANK, type PlanId } from "@/lib/plans";
 import {
-  PLAN_LABEL,
-  PLAN_EMOJI,
-  PLAN_PRICE_EUR_MONTHLY,
-  PLAN_PRICE_PER_USER_EUR_MONTHLY,
-  PLAN_RANK,
-  type PlanId,
-} from "@/lib/plans";
+  formaterPrix,
+  libellePrixPlan,
+  montantEcheanceCentimes,
+  prixMensuelCentimes,
+  remiseAnnuellePourcent,
+} from "@/lib/prix";
 
 type Props = {
   currentPlan: PlanId;
@@ -33,30 +33,17 @@ type Props = {
 // Ordre fixe - aligné sur lib/plans.ts PLAN_RANK.
 const PLAN_ORDER: PlanId[] = ["starter", "pro", "enterprise"];
 
-function priceLine(plan: PlanId): string {
-  const monthly = PLAN_PRICE_EUR_MONTHLY[plan];
-  const perUser = PLAN_PRICE_PER_USER_EUR_MONTHLY[plan];
-  if (monthly !== null && monthly !== undefined && monthly > 0) {
-    return `${monthly} €/mois HT · forfait`;
-  }
-  if (perUser !== null && perUser !== undefined) {
-    return `${perUser} €/utilisateur/mois HT`;
-  }
-  if (plan === "enterprise") return "Tarif sur devis";
-  return "Gratuit";
-}
-
 export default function PlanUpgradeOptions({
   currentPlan,
   buyablePlans,
 }: Props) {
   const [busyPlan, setBusyPlan] = useState<PlanId | null>(null);
   const [error, setError] = useState<string | null>(null);
-  // Pro requiert un nombre de sieges pour calculer le montant Mollie
-  // (3 EUR/siege/mois). Default 16 = palier minimum Pro (cf. /tarifs).
+  // Pro requiert un nombre de sieges pour calculer le montant Mollie.
+  // Default 16 = palier minimum Pro (cf. /tarifs).
   const [proSeats, setProSeats] = useState<number>(16);
-  // Cycle de facturation (annuel = -10 %). Default = annuel pour booster
-  // l'engagement, l'utilisateur peut switch en cliquant.
+  // Cycle de facturation. Default = annuel pour booster l'engagement,
+  // l'utilisateur peut switch en cliquant.
   const [billingCycle, setBillingCycle] = useState<"monthly" | "annual">(
     "annual",
   );
@@ -64,6 +51,13 @@ export default function PlanUpgradeOptions({
   const upgrades = PLAN_ORDER.filter(
     (p) => PLAN_RANK[p] > PLAN_RANK[currentPlan],
   );
+
+  // Tous les chiffres du configurateur Pro sortent de lib/prix.ts, la table
+  // que POST /api/payments/checkout transmet a Mollie : le total affiche ici
+  // est le montant de la premiere echeance, au centime.
+  const proSeatCents = prixMensuelCentimes("pro", billingCycle, 1);
+  const proTotalCents = montantEcheanceCentimes("pro", billingCycle, proSeats);
+  const proAnnualDiscount = remiseAnnuellePourcent("pro");
 
   if (upgrades.length === 0) {
     return (
@@ -134,7 +128,7 @@ export default function PlanUpgradeOptions({
                   {PLAN_EMOJI[plan]} {PLAN_LABEL[plan]}
                 </h3>
                 <p className="text-sm text-gray-600 dark:text-gray-300">
-                  {priceLine(plan)}
+                  {libellePrixPlan(plan)}
                 </p>
               </div>
               <div className="flex flex-col gap-2 items-end">
@@ -190,7 +184,9 @@ export default function PlanUpgradeOptions({
                     className="block w-full rounded-xl border-2 border-gray-200 dark:border-slate-700 p-2 focus:border-accent-500 focus:outline-none text-sm bg-white dark:bg-slate-900"
                   />
                   <p className="text-xs text-gray-500 mt-1">
-                    16 à 250 sièges · 3 €/siège/mois
+                    16 à 250 sièges
+                    {proSeatCents !== null &&
+                      ` · ${formaterPrix(proSeatCents)} €/siège/mois TTC`}
                   </p>
                 </div>
                 <div>
@@ -219,20 +215,28 @@ export default function PlanUpgradeOptions({
                         className="accent-accent-500"
                       />
                       <span className="text-xs">
-                        Annuel <span className="text-emerald-600">−10 %</span>
+                        Annuel
+                        {proAnnualDiscount !== null && (
+                          <>
+                            {" "}
+                            <span className="text-emerald-600">
+                              −{proAnnualDiscount} %
+                            </span>
+                          </>
+                        )}
                       </span>
                     </label>
                   </div>
-                  <p className="text-xs text-gray-500 mt-1">
-                    Total :{" "}
-                    <strong>
-                      {billingCycle === "annual"
-                        ? (proSeats * 3 * 12 * 0.9).toFixed(0)
-                        : (proSeats * 3).toFixed(0)}
-                      &nbsp;€ HT
-                    </strong>{" "}
-                    {billingCycle === "annual" ? "/ an" : "/ mois"}
-                  </p>
+                  {proTotalCents !== null && (
+                    <p className="text-xs text-gray-500 mt-1">
+                      Total :{" "}
+                      <strong>
+                        {formaterPrix(proTotalCents)}
+                        &nbsp;€ TTC
+                      </strong>{" "}
+                      {billingCycle === "annual" ? "/ an" : "/ mois"}
+                    </p>
+                  )}
                 </div>
               </div>
             )}

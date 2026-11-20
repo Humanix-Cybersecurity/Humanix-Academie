@@ -4,6 +4,10 @@
 // (pricing, plan validation, status mapping) qui ne font pas d'appel
 // reseau au SDK Mollie. Les flows checkout/webhook sont testes via les
 // tests d'integration (TODO post-launch).
+//
+// Les montants ci-dessous sont ceux de la grille (lib/prix.ts). L'egalite
+// entre le prix affiche et le prix preleve, sur toute la plage de sieges,
+// est tenue par lib/prix-affiche-preleve.test.ts.
 
 import { describe, expect, it } from "vitest";
 import {
@@ -43,9 +47,11 @@ describe("mollieAmountForPlan", () => {
       expect(r.amount.currency).toBe("EUR");
       expect(r.interval).toBe("1 month");
     });
-    it("annual = 228.00 EUR / 12 mois (pas de remise sur starter)", () => {
+    it("annual = 180.00 EUR / 12 mois (15 EUR par mois, comme la grille)", () => {
+      // Valait 228.00 (19 x 12, sans remise) jusqu'au 2026-11-20, alors que
+      // /tarifs affichait 15 EUR par mois en annuel.
       const r = mollieAmountForPlan("starter", "annual", 1);
-      expect(r.amount.value).toBe("228.00");
+      expect(r.amount.value).toBe("180.00");
       expect(r.interval).toBe("12 months");
     });
     it("description compatible Mollie (<= 22 chars)", () => {
@@ -54,14 +60,17 @@ describe("mollieAmountForPlan", () => {
     });
   });
 
-  describe("plan pro (3 EUR/siege/mois, -10% annuel)", () => {
+  describe("plan pro (3 EUR/siege/mois, 2,50 EUR en annuel)", () => {
     it("monthly 25 sieges = 75.00 EUR", () => {
       const r = mollieAmountForPlan("pro", "monthly", 25);
       expect(r.amount.value).toBe("75.00");
     });
-    it("annual 25 sieges = 75 * 12 * 0.9 = 810.00 EUR", () => {
+    it("annual 25 sieges = 25 * 2,50 * 12 = 750.00 EUR", () => {
+      // Valait 810.00 (-10 % sur 3 EUR) jusqu'au 2026-11-20, alors que la
+      // grille affichait 2,50 EUR par utilisateur et par mois (-17 %).
       const r = mollieAmountForPlan("pro", "annual", 25);
-      expect(r.amount.value).toBe("810.00");
+      expect(r.amount.value).toBe("750.00");
+      expect(r.interval).toBe("12 months");
     });
     it("monthly 100 sieges = 300.00 EUR", () => {
       const r = mollieAmountForPlan("pro", "monthly", 100);
