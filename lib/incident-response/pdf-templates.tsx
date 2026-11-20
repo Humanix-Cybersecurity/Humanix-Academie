@@ -268,9 +268,11 @@ export function NotificationAnssiDoc({
 
         <View style={styles.warningBox}>
           <Text>
-            La directive NIS2 impose : (a) une alerte précoce sous 24h, (b) une
+            La directive NIS2 prévoit : (a) une alerte précoce sous 24h, (b) une
             notification d'incident sous 72h, (c) un rapport final sous 1 mois.
-            Ce document peut être joint à votre déclaration.
+            En France, ces délais s'imposeront aux entités concernées à l'entrée
+            en vigueur de la loi de transposition. Ce document peut être joint à
+            votre déclaration.
           </Text>
         </View>
 

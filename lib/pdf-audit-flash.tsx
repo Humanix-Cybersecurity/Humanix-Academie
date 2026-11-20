@@ -315,12 +315,14 @@ export function AuditFlashReport({
               ATTENTION NIS2 - Votre entreprise est probablement concernée
             </Text>
             <Text style={styles.nis2Text}>
-              La directive NIS2, transposée en France, impose des obligations de
-              sécurité et de notification d'incident sous 24h. Compte tenu de
-              votre taille et / ou de votre secteur, vous êtes a priori dans le
-              périmètre. Sanctions potentielles : jusqu'à 10 M€ ou 2 % du CA
-              mondial. Nous recommandons une vérification rapide de votre
-              statut.
+              La directive NIS2 prévoit des obligations de sécurité et une
+              alerte sous 24h en cas d'incident important. Compte tenu de votre
+              taille et / ou de votre secteur, vous êtes a priori dans le
+              périmètre. Sanctions prévues : jusqu'à 10 M€ ou 2 % du CA mondial
+              pour les entités essentielles. En France, ces obligations ne
+              s'appliqueront qu'une fois la loi de transposition entrée en
+              vigueur. Nous recommandons de vérifier votre statut et de vous y
+              préparer dès maintenant.
             </Text>
           </View>
         )}

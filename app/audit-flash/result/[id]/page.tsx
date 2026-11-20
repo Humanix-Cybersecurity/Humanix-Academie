@@ -151,10 +151,13 @@ export default async function AuditResultPage({
               ⚠ Attention NIS2 : votre entreprise est probablement concernée
             </h2>
             <p className="text-sm text-amber-900 dark:text-amber-100">
-              La directive NIS2 impose des obligations de cybersécurité et de
-              notification d'incident sous 24h. Compte tenu de votre taille
-              et/ou secteur, vous êtes a priori dans le périmètre. Sanctions
-              potentielles : jusqu'à 10 M€ ou 2 % du CA mondial.
+              La directive NIS2 prévoit des obligations de cybersécurité et une
+              alerte sous 24h en cas d'incident important. Compte tenu de votre
+              taille et/ou secteur, vous êtes a priori dans le périmètre.
+              Sanctions prévues : jusqu'à 10 M€ ou 2 % du CA mondial pour les
+              entités essentielles. En France, ces obligations ne s'appliqueront
+              qu'une fois la loi de transposition entrée en vigueur : c'est le
+              bon moment pour vérifier votre statut et vous y préparer.
             </p>
           </section>
         )}

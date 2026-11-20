@@ -175,8 +175,13 @@ Articles couverts :
 ## Sources légales
 
 - **Directive (UE) 2022/2555** du 14 décembre 2022 (NIS2)
-- **Loi française n° 2024-1039 du 31 octobre 2024** transposition NIS2
-- **ANSSI**, guide "Mesures de cyber-sécurité NIS2" du 15 janvier 2025
+- **Transposition française : pas encore adoptée.** Aucune loi française ne
+  transpose NIS2 à ce jour. L'état de la procédure, ses sources et la règle
+  d'écriture qui en découle sont tenus dans
+  [COMPLIANCE.md, section 2](./COMPLIANCE.md#2-nis2). Ne citer ni numéro de
+  loi ni date d'application tant que la loi n'est pas promulguée.
+- **ANSSI**, Référentiel Cyber France (ReCyF), version de travail 2.5 du
+  17 mars 2026 : https://messervices.cyber.gouv.fr/nis2
 - **ANSSI**, panorama de la menace 2024
 
 ---

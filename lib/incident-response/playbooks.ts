@@ -95,7 +95,7 @@ const COMMON_H72: PlaybookAction[] = [
     category: "notification",
     title: "Notifier l'ANSSI si vous êtes sous NIS2",
     description:
-      "Notification précoce sous 24h, notification d'incident sous 72h. Téléservice : https://www.cert.ssi.gouv.fr/incident/. Concerne : OSE, FSN, et entités essentielles/importantes NIS2.",
+      "Délais prévus par NIS2 : alerte précoce sous 24h, notification d'incident sous 72h. Téléservice : https://www.cert.ssi.gouv.fr/incident/. Concerne : OSE, FSN et, à l'entrée en vigueur de la loi de transposition, entités essentielles et importantes NIS2.",
     documentSlug: "notification-anssi",
   },
   {

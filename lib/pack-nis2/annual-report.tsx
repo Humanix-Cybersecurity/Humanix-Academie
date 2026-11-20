@@ -442,8 +442,9 @@ export function AnnualReportPdf({ data }: { data: AnnualReportData }) {
         </Text>
         <Text style={styles.p}>Je confirme également :</Text>
         <Text style={styles.bullet}>
-          - Avoir suivi la formation cybersécurité obligatoire des dirigeants
-          (art. 20 NIS2) dans les 24 derniers mois ;
+          - Avoir suivi, dans les 24 derniers mois, la formation à la
+          cybersécurité que l&apos;article 20 de la directive NIS2 prévoit pour
+          les organes de direction ;
         </Text>
         <Text style={styles.bullet}>
           - Que le rapport sera transmis au CSIRT compétent (ANSSI en France)

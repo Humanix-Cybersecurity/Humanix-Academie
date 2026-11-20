@@ -239,10 +239,12 @@ export function PackNis2Pdf(props: { variables: PackNis2Variables }) {
           >
             Ce pack documentaire couvre les exigences de l'article 21 (mesures
             de gestion des risques) et de l'article 23 (notification d'incident)
-            de la directive NIS2, transposée en France. Les documents sont
-            rédigés pour être signables tels quels par un dirigeant non-juriste,
-            à adapter marginalement à votre contexte. Ils ne se substituent pas
-            à un audit réglementaire formel mais constituent un socle
+            de la directive NIS2. Tant que la loi française de transposition
+            n'est pas entrée en vigueur, ces exigences ne s'imposent pas encore
+            en France : ce pack sert à s'y préparer. Les documents sont rédigés
+            pour être signables tels quels par un dirigeant non-juriste, à
+            adapter marginalement à votre contexte. Ils ne se substituent pas à
+            un audit réglementaire formel mais constituent un socle
             organisationnel solide.
           </Text>
         </View>

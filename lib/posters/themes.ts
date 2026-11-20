@@ -209,10 +209,10 @@ export const POSTER_THEMES: Record<number, PosterTheme> = {
     actions: [
       "Faire l'audit flash NIS2 sur humanix-cybersecurity.fr/audit-flash",
       "Si concerné : nommer un référent cyber et documenter les mesures",
-      "En cas d'incident significatif : notification CSIRT-FR sous 24h obligatoire",
+      "Préparer à froid l'alerte à l'ANSSI, prévue sous 24h en cas d'incident important",
     ],
     factOrQuote:
-      "« Sanctions NIS2 : jusqu'à 10 M€ ou 2% du CA mondial. Mieux vaut prévenir. »",
+      "« NIS2 prévoit des sanctions jusqu'à 10 M€ ou 2 % du CA mondial. Mieux vaut s'y préparer avant la loi française. »",
   },
   12: {
     month: 12,

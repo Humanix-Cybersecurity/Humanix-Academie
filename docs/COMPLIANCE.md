@@ -75,6 +75,31 @@ sur mesure) et mettre à jour `/confidentialite`.
 
 ## 2. NIS2
 
+> **État de la transposition, vérifié le 20 novembre 2026.** La directive (UE)
+> 2022/2555 n'est pas encore transposée en droit français. Le projet de loi
+> relatif à la résilience des infrastructures critiques et au renforcement de
+> la cybersécurité, déposé au Sénat le 15 octobre 2024 (procédure accélérée), a
+> été adopté par le Sénat le 12 mars 2025 (texte n° 78), puis par l'Assemblée
+> nationale le 17 novembre 2026 (texte n° 366), qui l'a modifié. Restent la
+> commission mixte paritaire, le vote du texte commun, la promulgation et les
+> décrets d'application. L'échéance européenne de transposition était le
+> 17 octobre 2024 : c'est elle que l'on prend souvent, à tort, pour une date
+> d'entrée en application en France.
+>
+> Sources :
+> [dossier législatif du Sénat](https://www.senat.fr/dossier-legislatif/pjl24-033.html),
+> [dossier de l'Assemblée nationale](https://www.assemblee-nationale.fr/dyn/17/dossiers/DLR5L17N50731),
+> [page NIS 2 de l'ANSSI](https://messervices.cyber.gouv.fr/nis2) (« La
+> transposition de la directive NIS 2 en France est en cours »).
+>
+> **Règle d'écriture tant que la loi n'est pas promulguée** : on écrit ce que
+> la directive _prévoit_, jamais ce qu'elle « impose depuis » une date. Aucune
+> loi française, aucun numéro, aucune date d'application. Le jour de la
+> promulgation, revérifier le dossier du Sénat, mettre ce bloc à jour, puis
+> reprendre les textes qui portent la réserve :
+> `git grep -n -i -E "transpos|loi française|NIS2 arrive"` les liste, ici comme
+> dans le dépôt du contenu pro.
+
 | Exigence                                                           | Couverture                                                                                                                                      |
 | ------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------- |
 | Sensibilisation des employés                                       | Cœur métier de la plate-forme - 25+ saisons MDX (phishing, MFA, ransomware, fraude au président, IA générative, deepfakes, DPO quotidien, etc.) |

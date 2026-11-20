@@ -117,14 +117,14 @@ export const AUDIT_QUESTIONS: AuditQuestion[] = [
     category: "conformite",
     text: "Disposez-vous d'un plan de réponse à incident écrit (qui contacter, dans quel ordre, sous combien d'heures) ?",
     weight: 3,
-    hint: "NIS2 impose 24h pour notifier l'ANSSI en cas d'incident significatif.",
+    hint: "NIS2 prévoit une alerte à l'ANSSI sous 24h en cas d'incident important.",
   },
   {
     id: "nis2_aware",
     category: "conformite",
-    text: "Savez-vous si votre entreprise est concernée par la directive NIS2 (entrée en vigueur en France) ?",
+    text: "Savez-vous si votre entreprise entre dans le périmètre de la directive NIS2 ?",
     weight: 2,
-    hint: "NIS2 concerne ~15 000 entités en France, dont de nombreuses PME (santé, énergie, eau, transport, sous-traitants…).",
+    hint: "Selon l'ANSSI, NIS2 concernera plusieurs milliers d'entités en France, dans 18 secteurs, dont de nombreuses PME (santé, énergie, eau, transport, sous-traitants…).",
   },
   {
     id: "cyber_insurance",

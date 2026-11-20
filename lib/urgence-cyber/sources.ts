@@ -64,7 +64,7 @@ export const SOURCES: Source[] = [
     name: "EUR-Lex - NIS2 Directive",
     url: "https://eur-lex.europa.eu/eli/dir/2022/2555",
     description:
-      "Texte officiel de la directive NIS2, en vigueur depuis le 17 octobre 2024 (transposition en droit francais en cours).",
+      "Texte officiel de la directive NIS2. Les États avaient jusqu'au 17 octobre 2024 pour la transposer ; en France, la loi de transposition est encore en cours d'adoption.",
     category: "europe",
   },
   {
