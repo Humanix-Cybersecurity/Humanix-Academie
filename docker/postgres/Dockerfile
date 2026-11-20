@@ -53,7 +53,18 @@ LABEL org.opencontainers.image.vendor="Humanix-Cybersecurity SASU"
 # Les scripts SQL dans /docker-entrypoint-initdb.d/ sont executes
 # automatiquement par l'entrypoint officiel postgres au PREMIER boot
 # (creation de la base initiale).
-COPY initdb/ /docker-entrypoint-initdb.d/
+#
+# --chmod=755 : les droits ne doivent pas dependre de la machine qui
+# construit. Sans lui, COPY reprend ceux du contexte, donc l'umask du
+# checkout, et les fichiers arrivent a root alors que l'entrypoint lance
+# les scripts en tant que `postgres`. Sur nos executeurs de CI le script
+# arrivait executable mais illisible pour cet utilisateur :
+#   /bin/bash: /docker-entrypoint-initdb.d/01-create-readonly-role.sh:
+#   Permission denied
+# et PostgreSQL s'arretait avant la fin de l'initialisation. Constate le
+# 2026-11-20, au premier vrai passage de l'essai de l'image publiee.
+# Un umask 077 donne le meme arret, avec un autre message.
+COPY --chmod=755 initdb/ /docker-entrypoint-initdb.d/
 
 # Healthcheck enrichi : verifie que la base ET le role readonly sont
 # disponibles. Si le role n'a pas ete cree (echec init), on remonte
