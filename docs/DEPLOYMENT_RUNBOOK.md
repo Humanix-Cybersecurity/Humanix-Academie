@@ -177,6 +177,14 @@ smoke-teste et publie l'image OSS sur GHCR avec provenance SLSA + SBOM :
 | `:latest` + `:1.2.3`, `:1.2`, `:1` | sur un tag git `v*.*.*`  | self-hosters, version stable    |
 | `:main-<sha7>`                     | à chaque push sur `main` | rejouer un build précis         |
 
+Les tags ne sont posés **qu'après l'essai** : l'image part d'abord au registre
+sous sa seule empreinte, le job « Smoke test pulled image » la démarre sur une
+base vierge, et le job « Publier les tags » ne tourne que s'il est vert. Une
+image qui ne démarre pas reste au registre sans tag : personne ne la reçoit par
+`:edge` ou `:latest`, et la version n'existe pas tant que l'essai n'est pas
+passé. Après un échec passager, « Re-run failed jobs » rejoue l'essai puis la
+pose des tags sur la même image, sans reconstruire.
+
 Ces tags servent la **distribution OSS**. La démo et la production, elles, sont
 livrées depuis le clone git avec `content-pro` (temps 2 ci-dessous).
 
