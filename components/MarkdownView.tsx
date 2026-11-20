@@ -3,7 +3,12 @@
 // renderInline() gere : liens [texte](url) avec whitelist anti-XSS,
 // gras **texte**, italique *texte* / _texte_, code `inline`.
 import Link from "next/link";
-import { parseMarkdown, renderInline, type InlineToken } from "@/lib/markdown";
+import {
+  parseMarkdown,
+  renderInline,
+  type InlineToken,
+  type MdBlock,
+} from "@/lib/markdown";
 
 export default function MarkdownView({
   content,
@@ -17,121 +22,113 @@ export default function MarkdownView({
     <div
       className={`prose-humanix space-y-4 leading-relaxed ${className ?? ""}`}
     >
-      {blocks.map((b, i) => {
-        switch (b.type) {
-          case "h1":
-            return (
-              <h1
-                key={i}
-                className="text-2xl sm:text-3xl font-extrabold text-primary-500 mt-6 mb-2"
-              >
-                {Inline(b.text)}
-              </h1>
-            );
-          case "h2":
-            return (
-              <h2
-                key={i}
-                className="text-xl sm:text-2xl font-bold text-primary-500 mt-5 mb-2"
-              >
-                {Inline(b.text)}
-              </h2>
-            );
-          case "h3":
-            return (
-              <h3
-                key={i}
-                className="text-lg font-bold text-accent-500 mt-4 mb-1"
-              >
-                {Inline(b.text)}
-              </h3>
-            );
-          case "p":
-            return (
-              <p key={i} className="text-gray-800 dark:text-gray-100">
-                {Inline(b.text)}
-              </p>
-            );
-          case "ul":
-            return (
-              <ul
-                key={i}
-                className="list-disc pl-6 space-y-1 text-gray-800 dark:text-gray-100"
-              >
-                {b.items.map((it, j) => (
-                  <li key={j}>{Inline(it)}</li>
-                ))}
-              </ul>
-            );
-          case "ol":
-            return (
-              <ol
-                key={i}
-                className="list-decimal pl-6 space-y-1 text-gray-800 dark:text-gray-100"
-              >
-                {b.items.map((it, j) => (
-                  <li key={j}>{Inline(it)}</li>
-                ))}
-              </ol>
-            );
-          case "quote":
-            return (
-              <blockquote
-                key={i}
-                className="border-l-4 border-accent-500 pl-4 italic text-gray-600 dark:text-gray-300 bg-primary-50 dark:bg-primary-950/30 py-2 rounded-r-xl"
-              >
-                {Inline(b.text)}
-              </blockquote>
-            );
-          case "table":
-            return (
-              <div
-                key={i}
-                className="overflow-x-auto rounded-2xl border border-gray-200 dark:border-slate-700 my-2"
-              >
-                <table className="w-full text-sm border-collapse">
-                  <caption className="sr-only">
-                    Tableau de donnees du contenu markdown
-                  </caption>
-                  <thead className="bg-primary-50 dark:bg-slate-800/60">
-                    <tr>
-                      {b.headers.map((h, j) => (
-                        <th
-                          key={j}
-                          scope="col"
-                          className="text-left p-3 font-bold text-primary-500 dark:text-accent-300 border-b-2 border-primary-200 dark:border-slate-700"
-                        >
-                          {Inline(h)}
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {b.rows.map((row, ri) => (
-                      <tr
-                        key={ri}
-                        className="border-b border-gray-100 dark:border-slate-800 last:border-0 hover:bg-primary-50/30 dark:hover:bg-slate-800/30"
-                      >
-                        {row.map((cell, ci) => (
-                          <td
-                            key={ci}
-                            className="p-3 text-gray-800 dark:text-gray-200 align-top"
-                          >
-                            {Inline(cell)}
-                          </td>
-                        ))}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            );
-          default:
-            return null;
-        }
-      })}
+      {blocks.map((b, i) => (
+        <Block key={i} block={b} />
+      ))}
     </div>
   );
+}
+
+// Un bloc. Une citation contient elle-meme des blocs (paragraphes, listes) :
+// Block se rappelle alors avec `inQuote`. Dans une citation, paragraphes et
+// listes heritent de la couleur et de l'italique du <blockquote> au lieu de
+// reposer la couleur du texte courant.
+function Block({
+  block: b,
+  inQuote = false,
+}: {
+  block: MdBlock;
+  inQuote?: boolean;
+}) {
+  const tone = inQuote ? "" : " text-gray-800 dark:text-gray-100";
+  switch (b.type) {
+    case "h1":
+      return (
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-primary-500 mt-6 mb-2">
+          {Inline(b.text)}
+        </h1>
+      );
+    case "h2":
+      return (
+        <h2 className="text-xl sm:text-2xl font-bold text-primary-500 mt-5 mb-2">
+          {Inline(b.text)}
+        </h2>
+      );
+    case "h3":
+      return (
+        <h3 className="text-lg font-bold text-accent-500 mt-4 mb-1">
+          {Inline(b.text)}
+        </h3>
+      );
+    case "p":
+      return <p className={tone.trim() || undefined}>{Inline(b.text)}</p>;
+    case "ul":
+      return (
+        <ul className={`list-disc pl-6 space-y-1${tone}`}>
+          {b.items.map((it, j) => (
+            <li key={j}>{Inline(it)}</li>
+          ))}
+        </ul>
+      );
+    case "ol":
+      return (
+        <ol start={b.start} className={`list-decimal pl-6 space-y-1${tone}`}>
+          {b.items.map((it, j) => (
+            <li key={j}>{Inline(it)}</li>
+          ))}
+        </ol>
+      );
+    case "quote":
+      return (
+        <blockquote className="border-l-4 border-accent-500 pl-4 italic text-gray-600 dark:text-gray-300 bg-primary-50 dark:bg-primary-950/30 py-2 rounded-r-xl space-y-2">
+          {b.blocks.map((inner, j) => (
+            <Block key={j} block={inner} inQuote />
+          ))}
+        </blockquote>
+      );
+    case "table":
+      return (
+        <div className="overflow-x-auto rounded-2xl border border-gray-200 dark:border-slate-700 my-2">
+          <table className="w-full text-sm border-collapse">
+            <caption className="sr-only">
+              Tableau de donnees du contenu markdown
+            </caption>
+            <thead className="bg-primary-50 dark:bg-slate-800/60">
+              <tr>
+                {b.headers.map((h, j) => (
+                  <th
+                    key={j}
+                    scope="col"
+                    className="text-left p-3 font-bold text-primary-500 dark:text-accent-300 border-b-2 border-primary-200 dark:border-slate-700"
+                  >
+                    {Inline(h)}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {b.rows.map((row, ri) => (
+                <tr
+                  key={ri}
+                  className="border-b border-gray-100 dark:border-slate-800 last:border-0 hover:bg-primary-50/30 dark:hover:bg-slate-800/30"
+                >
+                  {row.map((cell, ci) => (
+                    <td
+                      key={ci}
+                      className="p-3 text-gray-800 dark:text-gray-200 align-top"
+                    >
+                      {Inline(cell)}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      );
+    default:
+      return null;
+  }
 }
 
 function Inline(text: string) {
