@@ -1,11 +1,14 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Determine si un episode du catalogue dispose d'un contenu MDX redige
-// (par opposition au fallback generique de buildFallbackContent).
+// Determine si un episode du catalogue COMMERCIAL dispose d'un contenu MDX
+// redige (par opposition au fallback generique de buildFallbackContent).
 //
-// Sert a afficher un badge "Expert" sur la liste des episodes :
-// celui qui a un MDX a un scenario detaille rediger par un expert.
-// Les autres restent jouables via le fallback structure (cf.
-// app/apprendre/[saison]/[episode]/page.tsx).
+// Sert a la note de transparence de /comparatif, qui parle du catalogue
+// commercial quel que soit le mode de l'instance : on ne lit donc ici que
+// content/saisons.
+//
+// Le compteur "Expert" des cartes de /apprendre, lui, ne passe plus par ce
+// fichier : il interroge le chargeur (listEpisodes de lib/episodes.ts), qui
+// sait ce que le lecteur servira reellement, saisons de demo comprises.
 import fs from "node:fs";
 import path from "node:path";
 

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Loader des episodes : MDX dans /content/saisons/*
+// Loader des episodes : MDX dans /content/saisons/* et /content/saisons-demo/*
 // Le frontmatter decrit le scenario, les choix, le debrief, le quiz.
 import fs from "node:fs";
 import path from "node:path";
@@ -37,92 +37,148 @@ export type EpisodeContent = {
 };
 
 // =============================================================================
-// Open Core : 2 sources de contenu possibles, dans cet ordre de priorite :
+// Open Core : 2 sources de contenu, consultees dans cet ordre de priorite :
 //   1. content/saisons/        catalogue commercial complet (repo prive,
 //                              monte en submodule ou copie au deploy en prod).
 //                              Disponible UNIQUEMENT chez les operateurs sous
 //                              contrat avec Humanix Cybersecurity, ou chez
 //                              les forks qui ont developpe leur propre contenu.
-//   2. content/saisons-demo/   2 saisons CC BY-SA generiques, livrees dans le
+//   2. content/saisons-demo/   5 saisons CC BY-SA generiques, livrees dans le
 //                              repo public AGPL. Permettent a un fork OSS pur
 //                              d'avoir une plateforme fonctionnelle out-of-the-box.
 //
-// Le code resout dynamiquement la source : si content/saisons/ contient au
-// moins une saison, on l'utilise. Sinon, on bascule sur content/saisons-demo/.
-// Aucune variable d'env requise - auto-detection par presence de contenu.
+// Le chargeur cherche CHAQUE MODULE dans le catalogue commercial puis, s'il
+// n'y est pas, dans les saisons de demo. Aucune variable d'env requise :
+// une racine absente ou vide est simplement sautee (fork OSS pur, submodule
+// pas encore initialise).
 //
-// Mode DEMO (DEMO_MODE=true) : on force content/saisons-demo/ meme si le
-// catalog commercial est present sur le disque (symlink content-pro/).
+// POURQUOI MODULE PAR MODULE, ET PLUS UNE RACINE POUR TOUTE L'INSTANCE
+//
+//   Le chargeur choisissait UNE racine : le catalogue commercial des qu'il
+//   contenait une saison, la demo sinon. Or une base peut porter les saisons
+//   de demo A COTE du catalogue commercial : le semis est additif, il ne
+//   retire jamais une saison (cf. lib/catalog-seeder.ts). C'est le cas de la
+//   production depuis juin 2026, et de toute instance semee avant l'arrivee
+//   de son contenu.
+//
+//   Constate le 2026-11-20 : ces 5 saisons y sont publiees, donc proposees
+//   sur /apprendre, et le produit y renvoie lui-meme (remediation phishing :
+//   lib/phishing/repeat-offenders.ts ; exposition : lib/exposure/). Leurs
+//   MDX etaient dans l'image, mais jamais lus : les 28 modules s'affichaient
+//   en contenu generique (lib/episodes-fallback.ts), les memes trois choix
+//   partout, sous un bandeau qui annonce un texte redige pour "bientot".
+//
+// Mode DEMO (DEMO_MODE=true) : on ne lit QUE content/saisons-demo/, meme si
+// le catalog commercial est present sur le disque (symlink content-pro/).
 // La demo publique doit refleter l'experience OSS pure et ne PAS exposer
 // le contenu premium en MDX brut via l'URL /apprendre/<saison>/<episode>.
 //
 // Cf. docs/OPEN_CORE.md pour l'architecture detaillee.
 // =============================================================================
-const CONTENT_ROOT_PRO = path.join(process.cwd(), "content", "saisons");
-const CONTENT_ROOT_DEMO = path.join(process.cwd(), "content", "saisons-demo");
-const IS_DEMO_MODE = process.env.DEMO_MODE === "true";
+
+// Evalues a chaque appel, et non a l'import : les tests deplacent le
+// repertoire courant et changent DEMO_MODE (meme choix que
+// lib/content-availability.ts).
+function commercialRoot(): string {
+  return path.join(process.cwd(), "content", "saisons");
+}
+
+function demoRoot(): string {
+  return path.join(process.cwd(), "content", "saisons-demo");
+}
+
+function isDemoMode(): boolean {
+  return process.env.DEMO_MODE === "true";
+}
+
+function isDirectory(dir: string): boolean {
+  try {
+    return fs.statSync(dir).isDirectory();
+  } catch {
+    return false;
+  }
+}
 
 /**
- * Resout le repertoire racine du contenu MDX. Privilegie le catalogue
- * commercial si present, sinon retombe sur les saisons demo OSS.
- *
- * En mode DEMO, on force le fallback sur saisons-demo meme si le
- * catalog commercial est present (cf. en-tete de fichier).
- *
- * @returns le path absolu du dossier de contenu actif, ou null si aucun
- *   contenu n'est disponible (cas erreur d'installation).
+ * Un slug designe UN dossier ou UN fichier, jamais un chemin. Les slugs
+ * viennent de la base (saisons du catalogue, saisons propres a un espace)
+ * ou d'une URL : on refuse tout ce qui ferait sortir de la racine de contenu.
  */
-function resolveContentRoot(): string | null {
-  // En mode DEMO, on saute directement au fallback OSS.
-  if (IS_DEMO_MODE) {
-    if (fs.existsSync(CONTENT_ROOT_DEMO)) return CONTENT_ROOT_DEMO;
-    return null;
+function isPathSegment(slug: string): boolean {
+  if (slug === "" || slug === "." || slug === "..") return false;
+  return !["/", "\\", "\0"].some((forbidden) => slug.includes(forbidden));
+}
+
+/**
+ * Racines de contenu a consulter, par ordre de priorite.
+ *
+ *   - mode DEMO : les saisons de demo, et elles seules ;
+ *   - sinon : le catalogue commercial, puis les saisons de demo pour ce
+ *     qu'il ne contient pas.
+ *
+ * @returns les dossiers qui existent ; liste vide si aucun contenu n'est
+ *   installe. L'app retourne alors des listes vides et l'UI degrade
+ *   gracieusement (cf. components/learner/LearnerEmptyState.tsx).
+ */
+function resolveContentRoots(): string[] {
+  const candidates = isDemoMode()
+    ? [demoRoot()]
+    : [commercialRoot(), demoRoot()];
+  return candidates.filter(isDirectory);
+}
+
+/**
+ * Chemin du MDX d'un module, dans la premiere racine qui le contient.
+ */
+function findEpisodeFile(
+  saisonSlug: string,
+  episodeSlug: string,
+): string | null {
+  if (!isPathSegment(saisonSlug) || !isPathSegment(episodeSlug)) return null;
+  for (const root of resolveContentRoots()) {
+    const file = path.join(root, saisonSlug, `${episodeSlug}.mdx`);
+    if (fs.existsSync(file)) return file;
   }
-  // 1. Catalogue commercial complet : on verifie qu'il existe ET contient
-  //    au moins une saison (sous-dossier). Un dossier vide = on bascule
-  //    sur la demo (cas d'un submodule pas encore initialise).
-  if (fs.existsSync(CONTENT_ROOT_PRO)) {
-    const entries = fs
-      .readdirSync(CONTENT_ROOT_PRO, { withFileTypes: true })
-      .filter((d) => d.isDirectory());
-    if (entries.length > 0) return CONTENT_ROOT_PRO;
-  }
-  // 2. Fallback Open Core : saisons demo CC BY-SA.
-  if (fs.existsSync(CONTENT_ROOT_DEMO)) return CONTENT_ROOT_DEMO;
-  // 3. Aucun contenu : l'app retourne des listes vides. La UI degrade
-  //    gracieusement (cf. components/learner/LearnerEmptyState.tsx).
   return null;
 }
 
+/**
+ * Saisons qui ont un dossier de contenu, toutes racines actives confondues.
+ */
 export function listSaisons(): string[] {
-  const root = resolveContentRoot();
-  if (!root) return [];
-  return fs
-    .readdirSync(root, { withFileTypes: true })
-    .filter((d) => d.isDirectory())
-    .map((d) => d.name);
+  const slugs = new Set<string>();
+  for (const root of resolveContentRoots()) {
+    for (const entry of fs.readdirSync(root, { withFileTypes: true })) {
+      if (entry.isDirectory()) slugs.add(entry.name);
+    }
+  }
+  return [...slugs];
 }
 
+/**
+ * Modules d'une saison qui ont un MDX, c'est-a-dire ceux que loadEpisode()
+ * sert rediges. Les autres modules de la saison s'affichent en contenu
+ * generique.
+ */
 export function listEpisodes(saisonSlug: string): string[] {
-  const root = resolveContentRoot();
-  if (!root) return [];
-  const dir = path.join(root, saisonSlug);
-  if (!fs.existsSync(dir)) return [];
-  return fs
-    .readdirSync(dir)
-    .filter((f) => f.endsWith(".mdx"))
-    .map((f) => f.replace(/\.mdx$/, ""))
-    .sort();
+  if (!isPathSegment(saisonSlug)) return [];
+  const slugs = new Set<string>();
+  for (const root of resolveContentRoots()) {
+    const dir = path.join(root, saisonSlug);
+    if (!isDirectory(dir)) continue;
+    for (const file of fs.readdirSync(dir)) {
+      if (file.endsWith(".mdx")) slugs.add(file.replace(/\.mdx$/, ""));
+    }
+  }
+  return [...slugs].sort();
 }
 
 export function loadEpisode(
   saisonSlug: string,
   episodeSlug: string,
 ): EpisodeContent | null {
-  const root = resolveContentRoot();
-  if (!root) return null;
-  const file = path.join(root, saisonSlug, `${episodeSlug}.mdx`);
-  if (!fs.existsSync(file)) return null;
+  const file = findEpisodeFile(saisonSlug, episodeSlug);
+  if (!file) return null;
   const raw = fs.readFileSync(file, "utf-8");
   const { data, content } = matter(raw);
   // Le frontmatter MDX est de qualite variable : certains episodes n'ont pas
