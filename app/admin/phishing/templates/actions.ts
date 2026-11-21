@@ -227,7 +227,7 @@ export async function saveRedTeamAsTemplate(
         slug,
         name: `[Red Team] ${name}`,
         description:
-          "Scenario genere par IA Mistral via /admin/phishing/redteam",
+          "Scénario généré par IA Mistral via /admin/phishing/redteam",
         emoji: "🎯",
         difficulty: "medium",
         channel: "EMAIL",

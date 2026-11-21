@@ -297,7 +297,7 @@ const CATEGORIE_PROFILS: Record<
       },
     ],
     debrief:
-      "La règle universelle de la cyber : VERIFIER avant d'agir, SIGNALER à l'IT en cas de doute, NE PAS PARTAGER une info sensible sans validation.",
+      "La règle universelle de la cyber : VÉRIFIER avant d'agir, SIGNALER à l'IT en cas de doute, NE PAS PARTAGER une info sensible sans validation.",
     quizQuestion: (t) => `Concernant "${t}", quel est le bon réflexe ?`,
     quizCorrect:
       "Vérifier l'origine, agir avec prudence, signaler à l'IT si doute",

@@ -368,7 +368,7 @@ export async function fireWebhook(
           where: { id: w.id },
           data: {
             failureCount: { increment: 1 },
-            lastError: "URL refusee (SSRF guard)",
+            lastError: "URL refusée (SSRF guard)",
             lastFiredAt: new Date(),
           },
         });
@@ -448,7 +448,7 @@ export async function testWebhook(webhookId: string): Promise<{
   if (!w) return { ok: false, error: "Webhook introuvable" };
 
   if (!isSafeWebhookUrl(w.url))
-    return { ok: false, error: "URL refusee (SSRF)" };
+    return { ok: false, error: "URL refusée (SSRF)" };
 
   const tenant = await db.tenant.findUnique({
     where: { id: w.tenantId },

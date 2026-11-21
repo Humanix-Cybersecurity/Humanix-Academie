@@ -233,7 +233,7 @@ export default function AtRiskUsersTable({
       <div className="overflow-x-auto rounded-xl border border-gray-200 dark:border-slate-700">
         <table className="w-full text-sm">
           <caption className="sr-only">
-            Utilisateurs identifies comme a risque cyber
+            Utilisateurs identifiés comme à risque cyber
           </caption>
           <thead className="bg-gray-50 dark:bg-slate-800/40">
             <tr>

@@ -22,7 +22,7 @@ const KQL_NON_COMPLIANT = `HumanixCompliance_CL
 | project TimeGenerated, TenantName_s, Framework_s, ControlRef_s, ControlName_s
 | sort by TimeGenerated desc`;
 
-const KQL_ALERT = `// Analytics Rule pour declencher un Incident Sentinel
+const KQL_ALERT = `// Analytics Rule pour déclencher un Incident Sentinel
 HumanixCompliance_CL
 | where Status_s == "non_compliant" and Score_d < 0.5
 | extend AlertEntity = ControlRef_s
@@ -65,7 +65,7 @@ export default function SentinelIntegrationPage() {
           viewBox="0 0 800 220"
           className="w-full max-w-4xl mx-auto"
           role="img"
-          aria-label="Schema : Humanix Académie pousse via Logs Ingestion API vers le Data Collection Endpoint Azure, qui transfere via la Data Collection Rule vers la table custom HumanixCompliance_CL, lue par le workbook Sentinel."
+          aria-label="Schéma : Humanix Académie pousse via Logs Ingestion API vers le Data Collection Endpoint Azure, qui transfère via la Data Collection Rule vers la table custom HumanixCompliance_CL, lue par le workbook Sentinel."
         >
           <defs>
             <linearGradient id="g-humanix" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -249,7 +249,7 @@ export default function SentinelIntegrationPage() {
           </text>
 
           <text x="400" y="195" textAnchor="middle" fontSize="11" fill="#555">
-            Auth : OAuth2 client_credentials (Azure AD App Registration) · Role
+            Auth : OAuth2 client_credentials (Azure AD App Registration) · Rôle
             : Monitoring Metrics Publisher
           </text>
         </svg>

@@ -170,7 +170,7 @@ export async function testTenantSmtp(
       data: {
         isVerified: false,
         lastVerifiedAt: new Date(),
-        lastError: `Dechiffrement password : ${msg}`,
+        lastError: `Déchiffrement password : ${msg}`,
       },
     });
     return { ok: false, reason: "smtp_decrypt_failed", details: msg };

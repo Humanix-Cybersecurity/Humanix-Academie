@@ -117,7 +117,7 @@ export default function ApiDocPage() {
           path="/api/v1/progress"
           tag="Progress"
           summary="Avancement des utilisateurs"
-          description="Rows Progress (un par paire user/episode). Idéal pour exports vers HRIS, BI, SIEM."
+          description="Rows Progress (un par paire user/épisode). Idéal pour exports vers HRIS, BI, SIEM."
           curl={`curl -X GET "${PUBLIC_URL}/api/v1/progress?since=2026-04-01T00:00:00Z" \\
   -H "Authorization: Bearer hxa_xxxxxxxxxxxx"`}
           response={`{

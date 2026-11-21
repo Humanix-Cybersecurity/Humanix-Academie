@@ -46,9 +46,9 @@ export const SAISON_PALETTES: Array<{
 export type SaisonPalette = (typeof SAISON_PALETTES)[number];
 
 export const CITATIONS = [
-  "La maitrise cyber, ce n'est pas un sommet - c'est un chemin. Cinq minutes par semaine suffisent.",
-  "Tu n'as pas a être expert. Tu as juste a être averti une seconde avant le clic.",
-  "Le meilleur reflexe cyber, c'est de prendre 30 secondes avant d'agir. Tu en es déjà capable.",
-  "Apprendre la cyber, c'est apprendre a se faire confiance. Hex t'accompagne, pas le contraire.",
+  "La maîtrise cyber, ce n'est pas un sommet - c'est un chemin. Cinq minutes par semaine suffisent.",
+  "Tu n'as pas à être expert. Tu as juste à être averti une seconde avant le clic.",
+  "Le meilleur réflexe cyber, c'est de prendre 30 secondes avant d'agir. Tu en es déjà capable.",
+  "Apprendre la cyber, c'est apprendre à se faire confiance. Hex t'accompagne, pas le contraire.",
   "Chaque module fait baisser le risque pour toi, ton équipe, ta famille. Sans drame.",
 ];

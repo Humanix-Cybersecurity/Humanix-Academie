@@ -54,8 +54,8 @@ export const POSTER_THEMES: Record<number, PosterTheme> = {
     accentColor: "#F59E0B",
     hook: "78% des arnaques sentimentales en ligne ont lieu entre janvier et avril. Les escrocs visent solitude et urgence.",
     actions: [
-      "Une demande d'argent en ligne ? STOP. Verification audio/vidéo obligatoire.",
-      "Un nouveau contact LinkedIn avec photo trop parfaite ? Verifier sa cohérence (poste, parcours, autres contacts).",
+      "Une demande d'argent en ligne ? STOP. Vérification audio/vidéo obligatoire.",
+      "Un nouveau contact LinkedIn avec photo trop parfaite ? Vérifier sa cohérence (poste, parcours, autres contacts).",
       "Ne JAMAIS partager de selfie ou document d'identité avec une rencontre numérique.",
     ],
     factOrQuote:

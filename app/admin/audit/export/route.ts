@@ -9,12 +9,12 @@ import { auditLog, AuditActions } from "@/lib/audit";
 export async function GET() {
   const session = await auth();
   if (!session?.user) {
-    return NextResponse.json({ error: "Non authentifie." }, { status: 401 });
+    return NextResponse.json({ error: "Non authentifié." }, { status: 401 });
   }
   const role = session.user.role;
   if (role !== "ADMIN" && role !== "RSSI" && role !== "SUPERADMIN") {
     return NextResponse.json(
-      { error: "Reserve aux administrateurs." },
+      { error: "Réservé aux administrateurs." },
       { status: 403 },
     );
   }

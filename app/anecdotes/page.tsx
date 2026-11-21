@@ -106,11 +106,11 @@ export default async function AnecdotesArchivePage() {
             className="text-lg sm:text-xl text-gray-700 dark:text-gray-200 max-w-2xl mx-auto leading-relaxed animate-slide-up"
             style={{ animationDelay: "220ms" }}
           >
-            Chaque lundi matin, dans ta boite mail :{" "}
-            <strong>1 incident cyber reel</strong>,{" "}
-            <strong>1 lecon en 3 lignes</strong>, et{" "}
-            <strong>1 mini-action</strong> a faire dans la semaine. Sans peur,
-            sans hyperbole - juste l'experience qui se transmet.
+            Chaque lundi matin, dans ta boîte mail :{" "}
+            <strong>1 incident cyber réel</strong>,{" "}
+            <strong>1 leçon en 3 lignes</strong>, et{" "}
+            <strong>1 mini-action</strong> à faire dans la semaine. Sans peur,
+            sans hyperbole - juste l'expérience qui se transmet.
           </p>
         </header>
       </HexBackdrop>

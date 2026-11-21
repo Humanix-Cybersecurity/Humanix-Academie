@@ -95,7 +95,7 @@ export default async function SaisonPage({
           <div className="mt-6">
             <div className="flex items-center justify-between text-xs text-gray-600 dark:text-gray-300 mb-1">
               <span>
-                <strong>{done}</strong> / {total} episodes terminés
+                <strong>{done}</strong> / {total} épisodes terminés
               </span>
               <span className="font-bold text-primary-500 dark:text-accent-300">
                 {pct}%
@@ -134,11 +134,11 @@ export default async function SaisonPage({
       {/* Liste des episodes */}
       <section className="max-w-3xl mx-auto px-4 pb-16 mt-6">
         <h2 className="font-display text-xl font-extrabold text-primary-500 dark:text-accent-300 mb-4">
-          Episodes
+          Épisodes
         </h2>
         {total === 0 ? (
           <div className="rounded-2xl border-2 border-dashed border-gray-300 dark:border-slate-700 p-6 text-center text-sm text-gray-600 dark:text-gray-300">
-            Cette saison n&apos;a pas encore d&apos;episode publié.
+            Cette saison n&apos;a pas encore d&apos;épisode publié.
           </div>
         ) : (
           <ul className="space-y-2">

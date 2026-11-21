@@ -15,10 +15,10 @@ export const ACTION_EMOJI: Record<string, string> = {
 };
 
 export const ACTION_LABEL: Record<string, string> = {
-  DATA_ACCESSED: "Acces aux données personnelles",
+  DATA_ACCESSED: "Accès aux données personnelles",
   DATA_EXPORTED: "Export de données (article 20)",
   DATA_ERASURE_REQUESTED: "Demande d'effacement (article 17)",
-  DATA_ERASURE_COMPLETED: "Effacement effectue",
+  DATA_ERASURE_COMPLETED: "Effacement effectué",
   CONSENT_GIVEN: "Consentement donne",
   CONSENT_WITHDRAWN: "Consentement retire",
 };

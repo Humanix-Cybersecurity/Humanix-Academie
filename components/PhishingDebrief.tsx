@@ -54,7 +54,7 @@ export default function PhishingDebrief({ token }: { token: string }) {
     <div className="rounded-2xl border-2 border-accent-200 dark:border-accent-900/50 bg-gradient-to-br from-accent-50 to-white dark:from-accent-950/30 dark:to-slate-900 p-5 mb-6">
       <p className="text-xs uppercase tracking-widest font-bold text-accent-700 dark:text-accent-300 mb-3 flex items-center gap-2">
         <span aria-hidden="true">🦊</span>
-        Debrief personnalise par Hex
+        Debrief personnalisé par Hex
       </p>
       {state.kind === "loading" ? (
         <div className="space-y-2 animate-pulse">
@@ -63,7 +63,7 @@ export default function PhishingDebrief({ token }: { token: string }) {
           <div className="h-3 bg-accent-100 dark:bg-accent-900/40 rounded w-10/12" />
           <div className="h-3 bg-accent-100 dark:bg-accent-900/40 rounded w-9/12" />
           <p className="text-xs text-accent-700/70 dark:text-accent-300/70 italic mt-3">
-            Hex prepare un debrief adapte a ton historique...
+            Hex prépare un debrief adapté à ton historique...
           </p>
         </div>
       ) : (

@@ -79,7 +79,7 @@ export default function LearnerHero({
                 <SoftStat
                   emoji="⚡"
                   value={totalXP.toString()}
-                  label="XP gagnes"
+                  label="XP gagnés"
                 />
                 <SoftStat emoji="🪙" value={coins.toString()} label="Coins" />
                 <SoftStat

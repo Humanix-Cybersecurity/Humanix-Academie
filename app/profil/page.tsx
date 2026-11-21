@@ -575,8 +575,8 @@ export default async function ProfilPage({
             <div className="card overflow-x-auto">
               <table className="w-full text-sm">
                 <caption className="sr-only">
-                  Historique de votre progression pedagogique : episodes
-                  completes, saison d'origine, score quiz, date d'achèvement
+                  Historique de votre progression pédagogique : épisodes
+                  complétés, saison d'origine, score quiz, date d'achèvement
                 </caption>
                 <thead className="text-left text-gray-500 dark:text-gray-400 border-b-2 border-gray-200 dark:border-slate-700">
                   <tr>
@@ -657,8 +657,8 @@ export default async function ProfilPage({
                             }`}
                             title={
                               perfect
-                                ? "Refaire l'episode (par exemple pour le montrer a un collegue)"
-                                : `Ameliorer ton score actuel (${score} XP)`
+                                ? "Refaire l'épisode (par exemple pour le montrer à un collègue)"
+                                : `Améliorer ton score actuel (${score} XP)`
                             }
                           >
                             {perfect ? (

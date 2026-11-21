@@ -91,7 +91,7 @@ function Block({
         <div className="overflow-x-auto rounded-2xl border border-gray-200 dark:border-slate-700 my-2">
           <table className="w-full text-sm border-collapse">
             <caption className="sr-only">
-              Tableau de donnees du contenu markdown
+              Tableau de données du contenu markdown
             </caption>
             <thead className="bg-primary-50 dark:bg-slate-800/60">
               <tr>

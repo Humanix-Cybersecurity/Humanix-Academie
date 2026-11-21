@@ -60,7 +60,7 @@ const PROMESSES = [
       ring: "border-rose-200 dark:border-rose-900/40",
       accent: "text-rose-700 dark:text-rose-300",
     },
-    body: "La fraude au président coûte en moyenne 200 k€ à une PME française. Le deepfake video amplifie : 25 M$ chez Arup en janvier 2024. Trois saisons MDX expert + un protocole de re-validation 3 niveaux livré clé-en-main.",
+    body: "La fraude au président coûte en moyenne 200 k€ à une PME française. Le deepfake vidéo amplifie : 25 M$ chez Arup en janvier 2024. Trois saisons MDX expert + un protocole de re-validation 3 niveaux livré clé-en-main.",
     cta: {
       label: "Voir saison fraude-président",
       href: "/apprendre/fraude-president/01-mecanisme",
@@ -328,7 +328,7 @@ export default function DafLandingPage() {
             />
             <Number
               value="250 k€"
-              label="coût médian d'un ransomware (paiement + paralysie + remediation)"
+              label="coût médian d'un ransomware (paiement + paralysie + remédiation)"
               source="Cybermalveillance 2024"
             />
             <Number
@@ -338,7 +338,7 @@ export default function DafLandingPage() {
             />
             <Number
               value="25 M$"
-              label="perte Arup Hong Kong (janvier 2024) par deepfake video en visio"
+              label="perte Arup Hong Kong (janvier 2024) par deepfake vidéo en visio"
               source="Cas d'école mondial"
             />
             <Number

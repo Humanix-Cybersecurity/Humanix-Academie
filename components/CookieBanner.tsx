@@ -167,7 +167,7 @@ export default function CookieBanner() {
             <strong>Plausible Analytics</strong> (souverain UE, RGPD-by-design,
             sans cookies tiers, sans profilage). Vos données ne sortent pas
             d'Europe. Vous pouvez accepter ou refuser - votre choix est
-            modifiable a tout moment depuis{" "}
+            modifiable à tout moment depuis{" "}
             <Link
               href="/confidentialite"
               className="text-accent-700 dark:text-accent-300 underline-offset-4 hover:underline font-semibold"

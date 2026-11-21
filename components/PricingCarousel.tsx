@@ -415,7 +415,7 @@ function CtaButton({
     if (isLoggedIn) {
       return (
         <span className="text-xs text-gray-500 italic px-3 py-2">
-          Inferieur a votre plan
+          Inférieur à votre plan
         </span>
       );
     }

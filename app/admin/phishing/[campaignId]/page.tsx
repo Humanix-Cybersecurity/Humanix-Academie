@@ -169,13 +169,13 @@ export default async function CampaignDetailPage({
       {variantStats && campaign.variantBSlug && (
         <AdminSection title="🧪 Comparaison A/B">
           <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
-            Cette campagne a envoye 2 templates en parallele. Le badge{" "}
+            Cette campagne a envoyé 2 templates en parallèle. Le badge{" "}
             <span className="text-rose-600 font-bold">Plus piegeant</span>{" "}
             identifie le template qui a fait plus cliquer / soumettre (le
             template qui converti le mieux est le PIRE cas pour l&apos;
             apprenant). Le badge{" "}
             <span className="text-emerald-600 font-bold">Mieux</span> identifie
-            le template qui a fait plus signaler (vrai reflexe cyber).
+            le template qui a fait plus signaler (vrai réflexe cyber).
           </p>
           <VariantComparisonSection
             stats={variantStats}
@@ -514,7 +514,7 @@ function VariantCard({
         {title}
       </h3>
       <dl className="grid grid-cols-2 gap-y-1 text-sm">
-        <dt className="text-gray-500 dark:text-gray-400">Envoyes</dt>
+        <dt className="text-gray-500 dark:text-gray-400">Envoyés</dt>
         <dd className="tabular-nums text-right">{stat.sent}</dd>
         <dt className="text-gray-500 dark:text-gray-400">Ouverts</dt>
         <dd className="tabular-nums text-right">
@@ -530,7 +530,7 @@ function VariantCard({
           {stat.submitted} ({stat.submitRate}%)
           {badge(stat.submitRate, compareTo.submitRate, "lower-is-better")}
         </dd>
-        <dt className="text-gray-500 dark:text-gray-400">Signales</dt>
+        <dt className="text-gray-500 dark:text-gray-400">Signalés</dt>
         <dd className="tabular-nums text-right text-emerald-700 dark:text-emerald-300">
           {stat.reported} ({stat.reportRate}%)
           {badge(stat.reportRate, compareTo.reportRate, "higher-is-better")}

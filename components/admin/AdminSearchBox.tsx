@@ -353,7 +353,7 @@ const TARGETS: Target[] = [
   },
   {
     href: "/profil/securite",
-    label: "Securite (2FA, mots de passe)",
+    label: "Sécurité (2FA, mots de passe)",
     hint: "/profil/securite",
     keywords: ["2fa", "mfa", "passkey", "securite", "totp"],
     icon: "🔒",

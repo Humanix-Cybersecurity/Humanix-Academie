@@ -73,7 +73,7 @@ export default function LearnerHeroCompact({
           <div
             className="h-full rounded-full bg-gradient-to-r from-accent-400 to-accent-600 transition-all duration-700"
             style={{ width: `${Math.max(2, pct)}%` }}
-            aria-label={`${pct}% du parcours complete`}
+            aria-label={`${pct}% du parcours complété`}
           />
         </div>
         <div className="flex items-center justify-between mt-1 text-xs text-gray-500 dark:text-gray-400">

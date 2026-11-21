@@ -179,7 +179,7 @@ export default function LaunchQuishingForm({
           >
             Nom du Wi-Fi (SSID) affiché sur l&apos;affiche
             <span className="ml-2 text-xs font-normal text-gray-500">
-              (facultatif - defaut : {DEFAULT_WIFI_SSID})
+              (facultatif - défaut : {DEFAULT_WIFI_SSID})
             </span>
           </label>
           <input

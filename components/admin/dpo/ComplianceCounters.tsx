@@ -30,7 +30,7 @@ const ITEMS: Array<{
   {
     key: "DATA_ACCESSED",
     emoji: "👁",
-    label: "Acces aux données",
+    label: "Accès aux données",
     tone: "info",
   },
   {
@@ -48,19 +48,19 @@ const ITEMS: Array<{
   {
     key: "DATA_ERASURE_COMPLETED",
     emoji: "✅",
-    label: "Effacements termines",
+    label: "Effacements terminés",
     tone: "success",
   },
   {
     key: "CONSENT_GIVEN",
     emoji: "✓",
-    label: "Consentements donnes",
+    label: "Consentements donnés",
     tone: "success",
   },
   {
     key: "CONSENT_WITHDRAWN",
     emoji: "✗",
-    label: "Consentements retires",
+    label: "Consentements retirés",
     tone: "warning",
   },
 ];

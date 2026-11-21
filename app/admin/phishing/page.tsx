@@ -176,7 +176,7 @@ export default async function AdminPhishingPage() {
           <div className="rounded-xl border border-violet-200 dark:border-violet-800 bg-gradient-to-br from-violet-50 to-white dark:from-violet-950/30 dark:to-slate-900 p-4 flex items-center justify-between gap-4 flex-wrap">
             <div>
               <p className="text-xs uppercase tracking-widest font-bold text-violet-700 dark:text-violet-300 mb-1">
-                🎯 Vulnerabilites IA par apprenant
+                🎯 Vulnérabilités IA par apprenant
               </p>
               <p className="text-sm text-gray-700 dark:text-gray-300">
                 Profil narratif Mistral pour identifier qui pousser, qui
@@ -205,7 +205,7 @@ export default async function AdminPhishingPage() {
               href="/admin/phishing/lists"
               className="btn-secondary text-sm whitespace-nowrap"
             >
-              Gerer →
+              Gérer →
             </a>
           </div>
         </div>
@@ -217,7 +217,7 @@ export default async function AdminPhishingPage() {
               ✉️ Templates email custom
             </p>
             <p className="text-sm text-gray-700 dark:text-gray-300">
-              Crée tes propres templates ou sauvegarde les scenarios IA Red
+              Crée tes propres templates ou sauvegarde les scénarios IA Red
               Team. Override possible des templates platform-wide.
             </p>
           </div>
@@ -225,7 +225,7 @@ export default async function AdminPhishingPage() {
             href="/admin/phishing/templates"
             className="btn-secondary text-sm whitespace-nowrap"
           >
-            Gerer →
+            Gérer →
           </a>
         </div>
 

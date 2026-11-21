@@ -69,13 +69,13 @@ export type LicenseError =
 
 /** Description humaine d'une erreur, en francais, pour l'UI. */
 export const LICENSE_ERROR_LABEL: Record<LicenseError, string> = {
-  missing: "Aucune licence configuree.",
+  missing: "Aucune licence configurée.",
   malformed: "Format de licence invalide.",
   bad_signature:
-    "Signature invalide. La licence a ete modifiee ou ne provient pas de Humanix.",
-  expired: "Licence expiree. Renouvellement requis.",
-  not_yet_valid: "Licence pas encore valide (date d'emission dans le futur).",
-  domain_mismatch: "Licence emise pour un autre domaine.",
+    "Signature invalide. La licence a été modifiée ou ne provient pas de Humanix.",
+  expired: "Licence expirée. Renouvellement requis.",
+  not_yet_valid: "Licence pas encore valide (date d'émission dans le futur).",
+  domain_mismatch: "Licence émise pour un autre domaine.",
   unsupported_version:
-    "Version de licence non supportee par cette installation.",
+    "Version de licence non supportée par cette installation.",
 };

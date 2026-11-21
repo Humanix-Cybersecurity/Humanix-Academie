@@ -140,7 +140,7 @@ const organizationJsonLd = {
   name: SITE_NAME,
   alternateName: [
     "Humanix Cybersecurity",
-    "Humanix Academie",
+    "Humanix Académie",
     "Académie Humanix",
   ],
   url: SITE_URL_RUNTIME,

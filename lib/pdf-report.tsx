@@ -212,7 +212,7 @@ export function ConformityReport({
             </View>
             <View style={styles.kpi}>
               <Text style={styles.kpiValue}>{stats.averageScore}</Text>
-              <Text style={styles.kpiLabel}>Maitrise cyber / 100</Text>
+              <Text style={styles.kpiLabel}>Maîtrise cyber / 100</Text>
             </View>
           </View>
         </View>

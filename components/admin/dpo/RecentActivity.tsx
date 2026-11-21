@@ -19,7 +19,7 @@ export default function RecentActivity({
   if (entries.length === 0) {
     return (
       <p className="text-sm text-gray-500 dark:text-gray-400 italic">
-        Aucune activite RGPD enregistree.
+        Aucune activité RGPD enregistrée.
       </p>
     );
   }

@@ -48,7 +48,7 @@ export default function CreateListForm() {
           <textarea
             id="list-description"
             name="description"
-            placeholder="Contexte, periode, objectif de la liste..."
+            placeholder="Contexte, période, objectif de la liste..."
             maxLength={500}
             rows={2}
             className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-900 text-sm"
@@ -72,7 +72,7 @@ export default function CreateListForm() {
           />
           <p className="text-xs text-gray-500 mt-1">
             Max 10 000 lignes / 1 Mo. Format : email;name;service (separateur ;
-            ou , auto-detecte)
+            ou , auto-détecté)
           </p>
         </div>
 

@@ -31,7 +31,7 @@ export type CronDefinition = {
 export const CRON_REGISTRY: CronDefinition[] = [
   {
     slug: "rapport-comite-direction",
-    label: "Rapport comite de direction",
+    label: "Rapport comité de direction",
     // Mensuel : 31 jours de tolerance avant d'etre signale « en retard ».
     // Mettre 24 ici afficherait ce cron en rouge 30 jours sur 31 sur
     // /superadmin/system-health, et on apprendrait a ignorer l'ecran.
@@ -41,7 +41,7 @@ export const CRON_REGISTRY: CronDefinition[] = [
     // rompt une obligation -- sinon l'echelle ne veut plus rien dire.
     criticality: "normal",
     description:
-      "Envoie aux ADMIN de chaque tenant un lien vers le rapport de conformite du mois ecoule (jamais en piece jointe).",
+      "Envoie aux ADMIN de chaque tenant un lien vers le rapport de conformité du mois écoulé (jamais en pièce jointe).",
   },
   {
     slug: "risk-snapshot",

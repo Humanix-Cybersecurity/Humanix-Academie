@@ -201,7 +201,7 @@ Pour les **alertes temps réel**, utilisez les **webhooks** (\`/admin/integratio
       get: {
         summary: "Avancement des utilisateurs",
         description:
-          "Retourne les rows Progress (un par paire user/episode). Utilisé pour les exports vers HRIS, SIEM, BI.",
+          "Retourne les rows Progress (un par paire user/épisode). Utilisé pour les exports vers HRIS, SIEM, BI.",
         tags: ["Progress"],
         parameters: [
           {

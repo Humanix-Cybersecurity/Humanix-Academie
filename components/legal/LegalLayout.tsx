@@ -202,7 +202,7 @@ export function LegalTable({
   return (
     <div className="overflow-x-auto -mx-2 sm:mx-0 my-4">
       <table className="w-full text-sm border-collapse">
-        <caption className="sr-only">Tableau de donnees recapitulatif</caption>
+        <caption className="sr-only">Tableau de données récapitulatif</caption>
         <thead>
           <tr className="bg-primary-500 text-white">
             {headers.map((h, i) => (

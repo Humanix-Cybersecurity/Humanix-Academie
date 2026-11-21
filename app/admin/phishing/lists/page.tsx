@@ -73,7 +73,7 @@ export default async function PhishingListsPage() {
       <AdminPageHeader
         title="Listes de destinataires"
         icon="📋"
-        description="Importe des CSV de destinataires pour cibler tes campagnes phishing. Alternative ou complement aux Groupes / services existants."
+        description="Importe des CSV de destinataires pour cibler tes campagnes phishing. Alternative ou complément aux Groupes / services existants."
       />
 
       <AdminSection title="Importer une nouvelle liste">

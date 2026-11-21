@@ -130,8 +130,8 @@ export default async function SmtpConfigPage() {
             >
               OPSEC du phishing simulé →
             </Link>{" "}
-            (8 chantiers, 5 min de lecture). Tu sauras si tu es pret a assumer
-            ou s&apos;il vaut mieux nous deleguer ca.
+            (8 chantiers, 5 min de lecture). Tu sauras si tu es prêt à assumer
+            ou s&apos;il vaut mieux nous déléguer ça.
           </p>
         </div>
       </section>

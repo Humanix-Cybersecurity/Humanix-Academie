@@ -120,7 +120,7 @@ export default function CodirMode(props: CodirModeProps) {
                   {props.tenantName}
                 </h2>
                 <p className="text-sm text-gray-500 mt-1">
-                  {today} - Vue de pilotage executif
+                  {today} - Vue de pilotage exécutif
                 </p>
               </div>
               <button
