@@ -200,7 +200,7 @@ export default async function IncidentPage({
               </p>
               <div className="grid sm:grid-cols-2 gap-3">
                 <a
-                  href="tel:+33000000000"
+                  href="tel:+33661026153"
                   className="inline-flex items-center justify-center gap-2 bg-white text-primary-500 font-bold px-6 py-4 rounded-2xl shadow-md hover:scale-105 transition-transform"
                 >
                   <span aria-hidden="true">📞</span> Appeler maintenant
@@ -212,6 +212,9 @@ export default async function IncidentPage({
                   <span aria-hidden="true">✉</span> Email d'urgence
                 </a>
               </div>
+              <p className="text-sm opacity-90 mt-4 text-center">
+                Téléphone : 06 61 02 61 53
+              </p>
             </div>
           </div>
         </section>

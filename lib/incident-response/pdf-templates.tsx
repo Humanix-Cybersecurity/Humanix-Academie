@@ -262,8 +262,8 @@ export function NotificationAnssiDoc({
           Notification d'incident significatif (NIS2)
         </Text>
         <Text style={styles.meta}>
-          Directive NIS2 - Téléservice ANSSI :
-          https://www.cert.ssi.gouv.fr/incident/
+          Directive NIS2 - Déclaration au CERT-FR :
+          https://cert.cyber.gouv.fr/contact/
         </Text>
 
         <View style={styles.warningBox}>
