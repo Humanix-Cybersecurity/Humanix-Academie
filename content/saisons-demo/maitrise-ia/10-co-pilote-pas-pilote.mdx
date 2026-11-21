@@ -1,0 +1,112 @@
+---
+title: "Co-pilote, pas pilote : workflow avec l'humain final"
+durationMinutes: 6
+persona: "tous"
+objective: "Organiser son travail avec une IA pour qu'une personne garde la décision, la vérification et la responsabilité du résultat"
+xpReward: 60
+scenario: |
+  Camille répond aux réclamations des clients d'une compagnie de cars. Depuis le mois dernier, un assistant IA prépare les réponses : il ne reste qu'à cliquer sur « Envoyer ». Les brouillons sont bons. En trois semaines, Camille n'en a corrigé aucun.
+
+  Ce matin, un client demande le remboursement d'un billet après une annulation tardive. Le brouillon de l'assistant est chaleureux, bien tourné, et promet un remboursement intégral « conformément à nos conditions générales ».
+
+  Quarante messages attendent. Camille croit pourtant se souvenir que les conditions générales prévoient autre chose.
+
+  Que fait Camille ?
+choices:
+  - id: "a"
+    label: "Envoyer : l'assistant ne s'est jamais trompé jusqu'ici"
+    outcome: "bad"
+    feedback: "Trois semaines sans erreur, c'est exactement ce qui endort la vigilance. Et ce que l'assistant écrit au nom de l'entreprise engage l'entreprise."
+    points: -10
+  - id: "b"
+    label: "Envoyer, en ajoutant « réponse générée par une IA » pour dégager sa responsabilité"
+    outcome: "bad"
+    feedback: "La mention informe le client, elle ne dégage personne. En 2024, un tribunal canadien a jugé une compagnie aérienne responsable de ce que son agent conversationnel avait affirmé à un client."
+    points: -10
+  - id: "c"
+    label: "Vérifier les conditions générales, corriger la promesse, puis envoyer"
+    outcome: "good"
+    feedback: "C'est le rôle du pilote : l'IA propose, une personne vérifie ce qui engage, et c'est elle qui décide. Deux minutes ici évitent un litige."
+    points: 30
+  - id: "d"
+    label: "Demander à l'assistant de relire sa propre réponse"
+    outcome: "bad"
+    feedback: "Il peut confirmer son erreur avec la même assurance. La vérification se fait dans le document de référence, pas auprès de l'outil."
+    points: -5
+licence: "CC BY-SA 4.0 - Humanix Académie Community Edition"
+debrief: |
+  Avec une IA générative, la question n'est pas « qui écrit ? » mais « **qui décide, et qui répond du résultat ?** ». La réponse ne change pas : une personne, et l'organisation derrière elle.
+
+  ## Ce qu'une organisation ne peut pas déléguer
+
+  - **Air Canada, 2024.** L'agent conversationnel du site indique à un client qu'il pourra demander après coup un tarif réduit pour deuil. C'est inexact. La compagnie soutient qu'elle n'est pas responsable de ce que dit son agent. Le tribunal répond qu'elle répond de toutes les informations de son site, et la condamne à indemniser le client.
+  - **Australie, 2025.** Le cabinet Deloitte rembourse au gouvernement une partie du prix d'un rapport : il contenait des références inexistantes, et une partie du travail avait été produite avec un outil d'IA générative.
+
+  La CNIL le résume ainsi : en cas de mauvaise utilisation de l'IA par son personnel, c'est l'organisme utilisateur qui engage sa responsabilité.
+
+  ## Le piège du « tout va bien »
+
+  Plus un outil réussit, moins on le relit : c'est le biais d'automatisation (épisode 02). Le Défenseur des droits en tire un signal d'alerte : quand une personne approuve 100 % des propositions d'un système, on peut douter que son intervention soit réelle.
+
+  ## Le déroulé du co-pilote
+
+  1. **Je cadre.** Ce que je veux, pour qui, avec quelles contraintes. Et ce que je ne confie pas à l'outil (épisode 04).
+  2. **L'IA propose.** Un brouillon, des pistes, une première structure.
+  3. **Je vérifie ce qui engage** : les faits, les chiffres, les promesses, les dates, les noms. Relire le style ne suffit pas.
+  4. **Je décide et je signe.** Si je ne sais pas dire pourquoi la réponse est juste, elle n'est pas prête.
+
+  ## Trois exemples, par métier
+
+  - **Relation client.** L'IA rédige le brouillon. Je vérifie les conditions, les montants et les délais avant d'envoyer.
+  - **Gestion et comptabilité.** L'IA classe et résume. Je contrôle chaque chiffre sur la pièce d'origine.
+  - **Encadrement.** L'IA prépare une trame d'entretien. L'appréciation portée sur une personne reste la mienne.
+
+  ## Trois niveaux, selon l'enjeu
+
+  | Enjeu | Exemples | Place de l'IA |
+  |---|---|---|
+  | Faible | Reformuler, traduire un brouillon, chercher des idées | Elle propose, je relis |
+  | Engageant | Réponse à un client, devis, compte rendu diffusé | Elle propose, je vérifie chaque fait |
+  | Décision sur une personne | Recrutement, sanction, refus d'un droit | Elle ne décide jamais seule |
+
+  Sur ce dernier niveau, le RGPD donne à chaque personne le droit de ne pas faire l'objet d'une décision fondée exclusivement sur un traitement automatisé, lorsque cette décision l'affecte de manière significative.
+
+  > **Sources** : Moffatt v. Air Canada, 2024 BCCRT 149, décision du 14 février 2024. The Guardian, 6 octobre 2025, au sujet de Deloitte. CNIL, questions-réponses sur l'utilisation d'un système d'IA générative, 18 juillet 2024. Défenseur des droits, « Algorithmes, systèmes d'IA et services publics », novembre 2024. RGPD, article 22.
+quiz:
+  - question: "Qui répond de ce qu'un assistant IA écrit à un client ?"
+    choices:
+      - id: "a"
+        label: "L'éditeur de l'assistant"
+        correct: false
+      - id: "b"
+        label: "Personne : c'est une machine"
+        correct: false
+      - id: "c"
+        label: "L'organisation qui l'utilise"
+        correct: true
+    explanation: "Pour le client, l'assistant parle au nom de l'entreprise. Un tribunal l'a rappelé à une compagnie aérienne en 2024."
+  - question: "Que faut-il vérifier en priorité dans un brouillon produit par l'IA ?"
+    choices:
+      - id: "a"
+        label: "Ce qui engage : faits, chiffres, promesses, dates"
+        correct: true
+      - id: "b"
+        label: "Le style et les formules de politesse"
+        correct: false
+      - id: "c"
+        label: "La longueur du texte"
+        correct: false
+    explanation: "Un style agréable se voit tout de suite. Une promesse inexacte ne se voit qu'en retournant au document de référence."
+  - question: "Depuis des semaines, tu valides toutes les propositions de l'outil sans rien corriger. Qu'en penser ?"
+    choices:
+      - id: "a"
+        label: "L'outil est devenu parfait"
+        correct: false
+      - id: "b"
+        label: "C'est un signal : le contrôle est peut-être devenu une formalité"
+        correct: true
+      - id: "c"
+        label: "Il faut désactiver l'outil"
+        correct: false
+    explanation: "Tout approuver ne prouve pas que tout est juste. Reprends la vérification sur ce qui engage, au moins sur une partie des réponses."
+---

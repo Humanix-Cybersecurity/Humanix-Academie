@@ -24,7 +24,7 @@ Ce document liste de manière transparente **ce qui est ouvert** et **ce qui req
 ### Sensibilisation
 
 - ✅ Player de modules MDX avec scénarios + quiz + debrief
-- ✅ 5 saisons démo (19 modules) sous `content/saisons-demo/` (reconnaître le phishing, mots de passe, mobile essentiels, maîtrise de l'IA, exposition numérique)
+- ✅ 5 saisons démo (28 modules) sous `content/saisons-demo/` (reconnaître le phishing, mots de passe, mobile essentiels, maîtrise de l'IA, exposition numérique)
 - ✅ Mécanique de progression XP / streak / level
 - ✅ Cyber-Anecdote du Lundi (newsletter pédagogique)
 - ✅ Cyber-Réflexe / réponse à incident
@@ -177,7 +177,7 @@ Une base peut porter les saisons de démo à côté du catalogue commercial (le 
 Au seeding, le log indique la source :
 
 - `Catalogue (commercial) : 80 saisons / 476 episodes` → contenu privé chargé
-- `Catalogue (demo) : 5 saisons / 19 episodes` → fork OSS sans le contenu privé
+- `Catalogue (demo) : 5 saisons / 28 episodes` → fork OSS sans le contenu privé
 
 ### Workflow opérateur (Humanix Cybersecurity)
 
@@ -293,7 +293,7 @@ Alternatives au submodule :
 git clone https://github.com/Humanix-Cybersecurity/Humanix-Academie.git fork-test
 cd fork-test
 docker compose up -d
-# → log seed : "Catalogue (demo) : 5 saisons / 19 episodes"
+# → log seed : "Catalogue (demo) : 5 saisons / 28 episodes"
 # → /apprendre affiche les 5 saisons démo
 ```
 

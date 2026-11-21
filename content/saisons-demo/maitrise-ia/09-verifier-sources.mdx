@@ -1,0 +1,106 @@
+---
+title: "Vérifier les sources : la méthode des 3 sources"
+durationMinutes: 5
+persona: "tous"
+objective: "Savoir remonter à l'origine d'une information donnée par une IA, et renoncer à la citer quand elle est introuvable"
+xpReward: 40
+scenario: |
+  Thomas prépare une présentation pour la réunion de direction. Il demande à un assistant IA « un chiffre marquant sur les cyberattaques contre les PME ».
+
+  Réponse immédiate : « Selon une étude de 2025, 62 % des PME victimes d'une cyberattaque ferment dans les six mois », avec un lien.
+
+  Thomas clique. Le lien mène à un article de blog, qui cite « une étude récente » sans la nommer. Le chiffre ferait pourtant une excellente diapositive.
+
+  Que fait Thomas ?
+choices:
+  - id: "a"
+    label: "Il garde le chiffre : il y a un lien, donc c'est sourcé"
+    outcome: "bad"
+    feedback: "Un lien n'est pas une source. Celui-ci mène à un texte qui cite « une étude » sans la nommer : personne ne peut vérifier d'où vient le chiffre."
+    points: -10
+  - id: "b"
+    label: "Il demande à l'assistant de confirmer le chiffre et de donner la référence exacte"
+    outcome: "bad"
+    feedback: "L'assistant peut fournir une référence qui a l'air parfaite et qui n'existe pas. On ne vérifie pas une affirmation auprès de celui qui l'a produite."
+    points: -10
+  - id: "c"
+    label: "Il cherche l'étude d'origine ; s'il ne la trouve pas, il retire le chiffre"
+    outcome: "good"
+    feedback: "C'est la règle : remonter à la source d'origine. Un chiffre introuvable ne se cite pas, même s'il sert bien la démonstration."
+    points: 30
+  - id: "d"
+    label: "Il écrit « plus de la moitié des PME » pour rester prudent"
+    outcome: "bad"
+    feedback: "Arrondir un chiffre invérifiable ne le rend pas vrai. Le flou donne seulement l'apparence de la prudence."
+    points: -5
+licence: "CC BY-SA 4.0 - Humanix Académie Community Edition"
+debrief: |
+  Un assistant IA n'est pas une base de connaissances : il produit un texte plausible, références comprises. Une source qu'il cite s'ouvre et se lit. Elle ne se croit pas sur parole.
+
+  ## Un cas d'école
+
+  En 2023, à New York, deux avocats déposent devant un tribunal fédéral un mémoire préparé avec ChatGPT. Il s'appuie sur six décisions de justice. Aucune n'existe. Le juge leur inflige une amende de 5 000 dollars : c'est l'affaire Mata v. Avianca.
+
+  ## La méthode des trois sources
+
+  Avant de reprendre une information qui compte :
+
+  1. **La source d'origine.** Remonte jusqu'au document cité : l'étude, le texte de loi, le communiqué. Existe-t-il ? Dit-il bien cela ? Un article qui en parle n'est pas la source.
+  2. **Une source indépendante.** Cherche une confirmation qui ne dépend pas de la première. Dix sites qui recopient la même dépêche ne font qu'une seule source.
+  3. **Une source qui contredit.** Cherche activement la nuance ou le démenti : qui conteste cette information, et pourquoi ?
+
+  Si la première étape échoue, inutile d'aller plus loin : l'information ne se cite pas.
+
+  ## Quatre gestes rapides
+
+  Le chercheur Mike Caulfield résume la vérification en quatre gestes, la méthode SIFT : **s'arrêter**, **enquêter sur la source**, **chercher une meilleure couverture**, **remonter à l'origine** d'une affirmation, d'une citation ou d'une image. L'idée s'appelle la lecture latérale : plutôt que de scruter la page, ouvrir d'autres onglets pour voir ce que d'autres en disent. Une étude de l'université Stanford l'a observée chez des personnes dont la vérification est le métier : elles concluent mieux, et plus vite.
+
+  ## Des outils gratuits
+
+  - **Google Fact Check Explorer** : cherche si une affirmation a déjà été vérifiée.
+  - **AFP Factuel** : les vérifications de l'Agence France-Presse.
+  - **TinEye** : retrouve les autres publications d'une image.
+  - **Wayback Machine** : affiche les versions passées d'une page web.
+  - **InVID-WeVerify** : une extension de navigateur pour examiner images et vidéos.
+
+  **À retenir :** pas de source d'origine, pas de citation. Et « l'IA me l'a dit » n'est jamais une source.
+
+  > **Sources** : Mata v. Avianca, tribunal fédéral du district sud de New York, décision du 22 juin 2023. Mike Caulfield, « SIFT (The Four Moves) », 2019. Wineburg et McGrew, « Lateral Reading and the Nature of Expertise », Teachers College Record, 2019. CNIL, questions-réponses sur l'utilisation d'un système d'IA générative, 18 juillet 2024.
+quiz:
+  - question: "Un lien accompagne un chiffre donné par un assistant IA. Qu'est-ce que cela prouve ?"
+    choices:
+      - id: "a"
+        label: "Que le chiffre est exact"
+        correct: false
+      - id: "b"
+        label: "Rien, tant qu'on n'a pas ouvert le lien et trouvé le document d'origine"
+        correct: true
+      - id: "c"
+        label: "Que l'assistant a vérifié avant de répondre"
+        correct: false
+    explanation: "Un lien peut mener à une page qui ne dit pas cela, à une reprise sans source, ou nulle part. Il se vérifie comme le reste."
+  - question: "Dix sites reprennent la même dépêche. Combien de sources cela fait-il ?"
+    choices:
+      - id: "a"
+        label: "Dix"
+        correct: false
+      - id: "b"
+        label: "Aucune"
+        correct: false
+      - id: "c"
+        label: "Une seule"
+        correct: true
+    explanation: "Une confirmation ne vaut que si elle est indépendante. Des reprises d'un même texte répètent, elles ne confirment pas."
+  - question: "Tu ne retrouves pas l'étude d'origine. Que fais-tu du chiffre ?"
+    choices:
+      - id: "a"
+        label: "Je ne le cite pas"
+        correct: true
+      - id: "b"
+        label: "Je le cite en l'arrondissant"
+        correct: false
+      - id: "c"
+        label: "Je le cite en précisant « selon une IA »"
+        correct: false
+    explanation: "Un chiffre sans origine ne vaut rien, arrondi ou non. Mieux vaut une présentation avec un chiffre de moins qu'avec un chiffre faux."
+---

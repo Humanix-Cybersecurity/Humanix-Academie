@@ -1,0 +1,107 @@
+---
+title: "Shadow AI : quand l'IT ne sait pas"
+durationMinutes: 6
+persona: "tous"
+objective: "Comprendre pourquoi l'usage non déclaré d'outils d'IA expose l'organisation, et savoir quoi faire quand on en a besoin"
+xpReward: 60
+scenario: |
+  Léa vient de rejoindre l'équipe commerciale d'une PME de négoce. En une semaine, elle découvre que chacun a son astuce :
+
+  - Malik rédige ses propositions avec un assistant IA, sur son compte personnel gratuit ;
+  - Jeanne a installé une extension de navigateur qui « résume les pages », et qui lit donc tout ce qui s'affiche, messagerie comprise ;
+  - un outil de transcription rejoint tout seul les visioconférences avec les clients.
+
+  Personne n'a prévenu l'informatique : « Sinon, ils vont tout bloquer. »
+
+  Ce matin, Léa doit résumer un appel d'offres de quarante pages, avec les prix et les noms des clients. Malik lui glisse : « Colle-le dans mon assistant, tu auras ton résumé en une minute. »
+
+  Que fait Léa ?
+choices:
+  - id: "a"
+    label: "Elle colle le document : tout le monde le fait, et le résumé est urgent"
+    outcome: "bad"
+    feedback: "Que tout le monde le fasse ne change pas la destination du document : les serveurs d'un service que l'entreprise ne maîtrise pas, avec les prix et les noms des clients."
+    points: -10
+  - id: "b"
+    label: "Elle signale à la direction que Malik enfreint les règles"
+    outcome: "bad"
+    feedback: "Désigner un collègue ne règle rien : le besoin reste, et l'usage devient seulement plus discret. Le sujet n'est pas Malik, c'est l'absence d'outil validé et de règle claire."
+    points: -5
+  - id: "c"
+    label: "Elle résume le document elle-même aujourd'hui, et demande à l'informatique quel outil elle peut utiliser pour ce type de travail"
+    outcome: "good"
+    feedback: "C'est le bon réflexe : rien de sensible dans un outil non validé, et un besoin qui remonte aux personnes qui peuvent y répondre. Un usage déclaré peut être encadré ; un usage caché, non."
+    points: 30
+  - id: "d"
+    label: "Elle retire les noms des clients et colle le reste"
+    outcome: "neutral"
+    feedback: "C'est mieux, mais insuffisant : les prix, les volumes et le contexte restent, et suffisent souvent à reconnaître le dossier. Et l'outil n'est toujours pas validé."
+    points: 10
+licence: "CC BY-SA 4.0 - Humanix Académie Community Edition"
+debrief: |
+  Le **shadow AI**, ou IA fantôme, c'est l'usage d'outils d'IA au travail sans que l'organisation le sache. Ce n'est presque jamais de la malveillance : c'est un besoin réel qui n'a pas trouvé de réponse.
+
+  ## Beaucoup de monde le fait
+
+  - Dans une enquête internationale de Microsoft et LinkedIn (2024, 31 000 personnes), **78 %** des personnes qui utilisent l'IA au travail y apportent leurs propres outils.
+  - En France, selon un sondage Ifop de mars 2025, **près d'une personne sur deux** qui utilise l'IA générative au travail et a un responsable hiérarchique ne l'en a pas informé.
+  - Dans une étude mondiale de 2025 (KPMG et université de Melbourne), **48 %** des personnes interrogées disent avoir déjà saisi des informations de leur entreprise dans un outil d'IA public.
+
+  Ce sont des enquêtes déclaratives. La première est commandée par un éditeur d'IA, la deuxième porte sur un petit effectif. Elles donnent un ordre de grandeur, pas une mesure exacte.
+
+  ## Ce que l'organisation ne voit pas
+
+  - **Les données qui sortent.** En mars 2023, selon la presse coréenne, des membres du personnel de Samsung ont saisi dans un assistant grand public le code source de deux programmes internes et le contenu d'une réunion, en moins de vingt jours. Début mai, Samsung confirmait restreindre temporairement l'usage de l'IA générative sur les appareils et les réseaux de l'entreprise.
+  - **Les outils branchés.** Une extension de navigateur, un outil de transcription ou un connecteur de messagerie ne reçoivent pas seulement ce qu'on leur colle : ils lisent tout ce à quoi on leur donne accès.
+  - **Les résultats sans trace.** Un texte non vérifié part chez un client, et personne ne sait d'où il vient.
+
+  ## Pourquoi interdire ne suffit pas
+
+  L'ANSSI recommande de proscrire les outils d'IA générative grand public pour tout usage professionnel impliquant des données sensibles. Mais une interdiction sans solution de rechange déplace l'usage au lieu de le supprimer. La CNIL le dit ainsi : l'informatique fantôme révèle parfois des besoins essentiels que l'organisation n'a pas pourvus.
+
+  ## Ce que tu peux faire
+
+  1. **Dis ce que tu utilises.** Un usage déclaré peut être encadré et sécurisé. Un usage caché ne peut pas l'être.
+  2. **Demande avant d'installer** une extension, un connecteur ou un outil qui rejoint tes réunions.
+  3. **Rien de sensible dans un outil non validé** : données de clients, données personnelles, prix, contrats, mots de passe.
+  4. **Fais remonter le besoin.** « J'ai besoin de résumer de longs documents » est une demande légitime. C'est à l'organisation de fournir un outil et de dire ce qui peut y entrer.
+
+  > **Sources** : Microsoft et LinkedIn, Work Trend Index 2024. Ifop pour Talan, « Les Français et les IA génératives », mars 2025. KPMG et université de Melbourne, « Trust, attitudes and use of artificial intelligence », 2025. Economist (Corée), 30 mars 2023, et TechCrunch, 2 mai 2023, au sujet de Samsung. ANSSI, « Recommandations de sécurité pour un système d'IA générative », avril 2024. CNIL, « Sécurité : définir un cadre pour les utilisateurs », mars 2024.
+quiz:
+  - question: "Qu'appelle-t-on « shadow AI » ?"
+    choices:
+      - id: "a"
+        label: "Une IA utilisée par des pirates"
+        correct: false
+      - id: "b"
+        label: "L'usage d'outils d'IA au travail sans que l'organisation le sache"
+        correct: true
+      - id: "c"
+        label: "Une IA qui fonctionne sans connexion"
+        correct: false
+    explanation: "Le plus souvent, ce n'est pas de la malveillance : c'est un besoin réel, satisfait avec les moyens du bord."
+  - question: "Pourquoi une extension « qui résume les pages » mérite-t-elle une question à l'informatique ?"
+    choices:
+      - id: "a"
+        label: "Parce qu'elle ralentit le navigateur"
+        correct: false
+      - id: "b"
+        label: "Parce qu'elle est forcément payante"
+        correct: false
+      - id: "c"
+        label: "Parce qu'elle lit tout ce qui s'affiche, y compris ce qu'on ne pensait pas lui confier"
+        correct: true
+    explanation: "Un outil branché ne reçoit pas seulement ce qu'on lui colle. Il accède à tout ce qu'on lui a ouvert : pages, messagerie, documents."
+  - question: "Quelle réponse fonctionne le mieux dans une organisation ?"
+    choices:
+      - id: "a"
+        label: "Fournir un outil encadré et dire ce qui peut y entrer"
+        correct: true
+      - id: "b"
+        label: "Interdire tous les outils d'IA"
+        correct: false
+      - id: "c"
+        label: "Laisser chaque personne choisir ses outils"
+        correct: false
+    explanation: "Interdire sans proposer rend l'usage invisible. Laisser faire laisse partir les données. Un outil validé et une règle claire répondent au besoin."
+---

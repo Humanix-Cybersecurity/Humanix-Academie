@@ -372,7 +372,7 @@ cloud managé ou via une licence commerciale.
 | Composant                                                           | Statut                 |
 | ------------------------------------------------------------------- | ---------------------- |
 | Plateforme Next.js 16 (engine, dashboards, API, multi-tenant)       | Open AGPLv3 (ce repo)  |
-| Modules pédagogiques de base (5 saisons démo · 19 MDX experts)      | Open AGPLv3 (ce repo)  |
+| Modules pédagogiques de base (5 saisons démo · 28 MDX experts)      | Open AGPLv3 (ce repo)  |
 | Outil public d'exposition `/exposition` + parcours OSINT (0 PII)    | Open AGPLv3 (ce repo)  |
 | Hub conformité multi-référentiels `/admin/conformite` (7 cadres)    | Open AGPLv3 (ce repo)  |
 | Gamification engine + mascotte Hex                                  | Open AGPLv3 (ce repo)  |
@@ -400,7 +400,7 @@ Au démarrage, l'app détecte automatiquement quelle source de contenu utiliser 
 
 | Tu as cloné ce repo et...                                       | L'app charge                              | Source                                              |
 | --------------------------------------------------------------- | ----------------------------------------- | --------------------------------------------------- |
-| ...tu n'as rien fait                                            | **5 saisons démo CC BY-SA** (19 modules)  | `content/saisons-demo/`                             |
+| ...tu n'as rien fait                                            | **5 saisons démo CC BY-SA** (28 modules)  | `content/saisons-demo/`                             |
 | ...tu as ajouté **tes propres** saisons sous `content/saisons/` | **Ton catalogue**                         | `content/saisons/`                                  |
 | ...tu as souscrit un contrat Humanix Enterprise                 | **80 saisons commerciales** (476 modules) | Repo privé `humanix-content-pro` monté en submodule |
 
