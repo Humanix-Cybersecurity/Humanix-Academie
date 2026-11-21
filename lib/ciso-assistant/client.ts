@@ -236,6 +236,22 @@ export function mapStatusToCiso(humanixStatus: string): string {
  * puis `loadExistingEvidences()` avant `upsertEvidence()`. Le constructeur
  * ne fait pas de requete reseau.
  */
+/**
+ * Cle de rapprochement d'un nom d'objet CISO Assistant : le nom sans ses
+ * accents.
+ *
+ * Les libelles du mapping GRC (lib/mapping-grc.ts) entrent dans le nom des
+ * preuves (`Humanix · <ref> · <nom du controle>`) et des constats
+ * (`[<ref>] <nom du controle>`), et ces objets sont retrouves par leur nom a
+ * chaque synchronisation. Comparer les noms sans leurs accents fait qu'un
+ * objet cree quand un libelle etait ecrit sans accents est RETROUVE quand le
+ * libelle prend ses accents, puis renomme par le PATCH (qui porte le nouveau
+ * nom), au lieu d'etre dedouble chez le client.
+ */
+export function cleDeNom(nom: string): string {
+  return nom.normalize("NFD").replace(/\p{M}/gu, "");
+}
+
 export class CisoAssistantClient {
   private readonly conn: CisoConnectionInput;
   /** Agent undici epingle sur la DERNIERE resolution validee du baseUrl.
@@ -421,8 +437,12 @@ export class CisoAssistantClient {
       results?: Array<{ id: string; name: string }>;
     };
     const list = data.results ?? (Array.isArray(data) ? (data as any) : []);
+    // Indexe par cleDeNom() : voir plus haut, un libelle qui prend ses
+    // accents doit retrouver la preuve creee avant.
     this.existingByName = new Map(
-      list.filter((e: any) => e.name).map((e: any) => [e.name, { id: e.id }]),
+      list
+        .filter((e: any) => typeof e.name === "string" && e.name)
+        .map((e: any) => [cleDeNom(e.name), { id: e.id }]),
     );
     return this.existingByName.size;
   }
@@ -503,7 +523,7 @@ export class CisoAssistantClient {
       }),
     };
 
-    const existing = this.existingByName.get(name);
+    const existing = this.existingByName.get(cleDeNom(name));
     if (existing) {
       const r = await this.request(
         "PATCH",
@@ -524,7 +544,7 @@ export class CisoAssistantClient {
     const r = await this.request("POST", "/api/evidences/", payload);
     if ([200, 201].includes(r.status)) {
       const created = (await r.json()) as { id: string };
-      this.existingByName.set(name, { id: created.id });
+      this.existingByName.set(cleDeNom(name), { id: created.id });
       return { ok: true, action: "POST", id: created.id, controlRef: ref };
     }
     return {
@@ -700,7 +720,12 @@ export class CisoAssistantClient {
     if (list.status === 200) {
       const data = (await list.json()) as any;
       const items = data.results ?? (Array.isArray(data) ? data : []);
-      existing = items.find((f: any) => f.name === name);
+      // Rapprochement sans les accents (cf. cleDeNom) : le PATCH ci-dessous
+      // renomme le constat existant au lieu d'en creer un second.
+      existing = items.find(
+        (f: any) =>
+          typeof f.name === "string" && cleDeNom(f.name) === cleDeNom(name),
+      );
     }
 
     if (existing) {

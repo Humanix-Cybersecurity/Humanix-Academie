@@ -90,13 +90,13 @@ const ISO_27001_2022: FrameworkMapping = {
   controls: [
     {
       ref: "A.5.1",
-      name: "Politiques de securite de l'information",
-      category: "Controles organisationnels",
+      name: "Politiques de sécurité de l'information",
+      category: "Contrôles organisationnels",
       artifacts: [
         {
           type: "policy",
           source: "pack_nis2_pdf",
-          label: "Politique cybersecurite (Pack NIS2)",
+          label: "Politique cybersécurité (Pack NIS2)",
         },
         {
           type: "policy",
@@ -105,34 +105,34 @@ const ISO_27001_2022: FrameworkMapping = {
         },
       ],
       scopeNote:
-        "Humanix fournit la politique generale via le Pack NIS2. Les politiques techniques specifiques restent a la charge du client.",
+        "Humanix fournit la politique générale via le Pack NIS2. Les politiques techniques spécifiques restent à la charge du client.",
     },
     {
       ref: "A.5.24",
-      name: "Planification et preparation des incidents de securite",
-      category: "Controles organisationnels",
+      name: "Planification et préparation des incidents de sécurité",
+      category: "Contrôles organisationnels",
       artifacts: [
         {
           type: "policy",
           source: "incident_procedure",
-          label: "Procedure de reponse a incident (Pack NIS2)",
+          label: "Procédure de réponse à incident (Pack NIS2)",
         },
       ],
     },
     {
       ref: "A.6.3",
-      name: "Sensibilisation, formation et entrainement a la securite",
-      category: "Controles relatifs aux personnes",
+      name: "Sensibilisation, formation et entraînement à la sécurité",
+      category: "Contrôles relatifs aux personnes",
       artifacts: [
         {
           type: "metric",
           source: "tenant_score",
-          label: "Score de maturite cyber humaine du tenant",
+          label: "Score de maturité cyber humaine du tenant",
         },
         {
           type: "metric",
           source: "completion_rate",
-          label: "Taux de completion sensibilisation",
+          label: "Taux de complétion sensibilisation",
         },
         {
           type: "document",
@@ -142,7 +142,7 @@ const ISO_27001_2022: FrameworkMapping = {
         {
           type: "report",
           source: "audit_trail",
-          label: "Rapport sensibilisation periodique",
+          label: "Rapport sensibilisation périodique",
           filter: { type: "episode.completed" },
         },
       ],
@@ -152,20 +152,20 @@ const ISO_27001_2022: FrameworkMapping = {
     },
     {
       ref: "A.6.6",
-      name: "Engagements de confidentialite ou de non-divulgation",
-      category: "Controles relatifs aux personnes",
+      name: "Engagements de confidentialité ou de non-divulgation",
+      category: "Contrôles relatifs aux personnes",
       artifacts: [
         {
           type: "policy",
           source: "dpa_pdf",
-          label: "DPA signe par le client",
+          label: "DPA signé par le client",
         },
       ],
     },
     {
       ref: "A.6.8",
-      name: "Signalement des evenements de securite de l'information",
-      category: "Controles relatifs aux personnes",
+      name: "Signalement des événements de sécurité de l'information",
+      category: "Contrôles relatifs aux personnes",
       artifacts: [
         {
           type: "metric",
@@ -175,7 +175,7 @@ const ISO_27001_2022: FrameworkMapping = {
         {
           type: "event_log",
           source: "audit_trail",
-          label: "Logs evenements signalement",
+          label: "Logs événements signalement",
           filter: { type: "phishing.report" },
         },
       ],
@@ -184,13 +184,13 @@ const ISO_27001_2022: FrameworkMapping = {
     },
     {
       ref: "A.7.7",
-      name: "Bureau et ecran propres",
-      category: "Controles physiques",
+      name: "Bureau et écran propres",
+      category: "Contrôles physiques",
       artifacts: [
         {
           type: "metric",
           source: "marketplace_modules",
-          label: "Module sensibilisation Bureau propre deploye",
+          label: "Module sensibilisation Bureau propre déployé",
           filter: { slug: "bureau-propre" },
         },
       ],
@@ -203,12 +203,12 @@ const ISO_27001_2022: FrameworkMapping = {
     {
       ref: "A.8.7",
       name: "Protection contre les logiciels malveillants",
-      category: "Controles technologiques",
+      category: "Contrôles technologiques",
       artifacts: [
         {
           type: "metric",
           source: "marketplace_modules",
-          label: "Modules malware/ransomware deployes",
+          label: "Modules malware/ransomware déployés",
           filter: { category: "malware" },
         },
       ],
@@ -219,11 +219,11 @@ const ISO_27001_2022: FrameworkMapping = {
   outOfScope: [
     {
       ref: "A.8.1",
-      reason: "Equipements terminaux - hors scope sensibilisation",
+      reason: "Équipements terminaux - hors scope sensibilisation",
     },
     {
       ref: "A.8.16",
-      reason: "Surveillance reseau - outils techniques GRC requis",
+      reason: "Surveillance réseau - outils techniques GRC requis",
     },
     {
       ref: "A.8.23",
@@ -239,18 +239,18 @@ const ISO_27001_2022: FrameworkMapping = {
 const NIS2: FrameworkMapping = {
   ref: "NIS2",
   title: "Directive (UE) 2022/2555 - NIS2",
-  publisher: "Union Europeenne",
+  publisher: "Union Européenne",
   url: "https://eur-lex.europa.eu/eli/dir/2022/2555",
   controls: [
     {
       ref: "art-21-2-a",
-      name: "Politiques relatives a l'analyse des risques et a la securite des SI",
+      name: "Politiques relatives à l'analyse des risques et à la sécurité des SI",
       category: "Mesures de gestion des risques",
       artifacts: [
         {
           type: "policy",
           source: "pack_nis2_pdf",
-          label: "Pack NIS2 - politique cybersecurite",
+          label: "Pack NIS2 - politique cybersécurité",
         },
         { type: "policy", source: "dpa_pdf", label: "DPA art. 28 RGPD" },
       ],
@@ -263,30 +263,30 @@ const NIS2: FrameworkMapping = {
         {
           type: "policy",
           source: "incident_procedure",
-          label: "Procedure incident Pack NIS2",
+          label: "Procédure incident Pack NIS2",
         },
         {
           type: "event_log",
           source: "audit_trail",
-          label: "Logs incidents detectes",
+          label: "Logs incidents détectés",
           filter: { type: "incident.declared" },
         },
       ],
     },
     {
       ref: "art-21-2-g",
-      name: "Pratiques d'hygiene cybernetique de base et formation a la cybersecurite",
+      name: "Pratiques d'hygiène cybernétique de base et formation à la cybersécurité",
       category: "Mesures de gestion des risques",
       artifacts: [
         {
           type: "metric",
           source: "tenant_score",
-          label: "Score de maturite cyber humaine",
+          label: "Score de maturité cyber humaine",
         },
         {
           type: "metric",
           source: "completion_rate",
-          label: "Taux de completion sensibilisation",
+          label: "Taux de complétion sensibilisation",
         },
         {
           type: "document",
@@ -297,11 +297,11 @@ const NIS2: FrameworkMapping = {
       thresholdCompliant: 0.7,
       thresholdPartial: 0.4,
       scopeNote:
-        "Article central pour Humanix - obligation explicite de formation cybersecurite.",
+        "Article central pour Humanix - obligation explicite de formation cybersécurité.",
     },
     {
       ref: "art-21-2-i",
-      name: "Politiques en matiere de ressources humaines / Securite du personnel",
+      name: "Politiques en matière de ressources humaines / Sécurité du personnel",
       category: "Mesures de gestion des risques",
       artifacts: [
         {
@@ -312,7 +312,7 @@ const NIS2: FrameworkMapping = {
         {
           type: "metric",
           source: "completion_rate",
-          label: "Taux de completion onboarding RH",
+          label: "Taux de complétion onboarding RH",
         },
       ],
     },
@@ -324,7 +324,7 @@ const NIS2: FrameworkMapping = {
         {
           type: "policy",
           source: "incident_procedure",
-          label: "Procedure de notification (Pack NIS2)",
+          label: "Procédure de notification (Pack NIS2)",
         },
         {
           type: "event_log",
@@ -339,11 +339,11 @@ const NIS2: FrameworkMapping = {
     {
       ref: "art-21-2-c",
       reason:
-        "Continuite des activites - DRP/BCP technique hors scope sensibilisation",
+        "Continuité des activités - DRP/BCP technique hors scope sensibilisation",
     },
     {
       ref: "art-21-2-d",
-      reason: "Securite chaine d'approvisionnement - outils SCRM tiers",
+      reason: "Sécurité chaîne d'approvisionnement - outils SCRM tiers",
     },
     {
       ref: "art-21-2-h",
@@ -358,13 +358,13 @@ const NIS2: FrameworkMapping = {
 
 const RGPD: FrameworkMapping = {
   ref: "RGPD",
-  title: "Reglement (UE) 2016/679 - Protection des donnees",
-  publisher: "Union Europeenne",
+  title: "Règlement (UE) 2016/679 - Protection des données",
+  publisher: "Union Européenne",
   url: "https://eur-lex.europa.eu/eli/reg/2016/679",
   controls: [
     {
       ref: "art-5",
-      name: "Principes relatifs au traitement des donnees a caractere personnel",
+      name: "Principes relatifs au traitement des données à caractère personnel",
       category: "Principes",
       artifacts: [
         {
@@ -376,13 +376,13 @@ const RGPD: FrameworkMapping = {
     },
     {
       ref: "art-25",
-      name: "Protection des donnees des la conception et par defaut",
+      name: "Protection des données dès la conception et par défaut",
       category: "Obligations responsable de traitement",
       artifacts: [
         {
           type: "document",
           source: "audit_trail",
-          label: "Audit securite public Humanix v1.0",
+          label: "Audit sécurité public Humanix v1.0",
           filter: { type: "evidence.audit_security" },
         },
       ],
@@ -395,61 +395,61 @@ const RGPD: FrameworkMapping = {
         {
           type: "policy",
           source: "dpa_pdf",
-          label: "Contrat de sous-traitance DPA signe",
+          label: "Contrat de sous-traitance DPA signé",
         },
       ],
     },
     {
       ref: "art-30",
-      name: "Registre des activites de traitement",
+      name: "Registre des activités de traitement",
       category: "Documentation",
       artifacts: [
         {
           type: "document",
           source: "registre_traitements_pdf",
-          label: "Registre des traitements - cote responsable + sous-traitant",
+          label: "Registre des traitements - côté responsable + sous-traitant",
         },
       ],
     },
     {
       ref: "art-32",
-      name: "Securite du traitement",
+      name: "Sécurité du traitement",
       category: "Obligations responsable de traitement",
       artifacts: [
         {
           type: "document",
           source: "audit_trail",
-          label: "Rapport audit securite Humanix",
+          label: "Rapport audit sécurité Humanix",
           filter: { type: "evidence.audit_security" },
         },
         {
           type: "metric",
           source: "tenant_score",
-          label: "Score de maturite humaine (couche organisationnelle)",
+          label: "Score de maturité humaine (couche organisationnelle)",
         },
       ],
     },
     {
       ref: "art-33",
-      name: "Notification d'une violation de donnees a caractere personnel",
+      name: "Notification d'une violation de données à caractère personnel",
       category: "Obligations en cas de violation",
       artifacts: [
         {
           type: "policy",
           source: "incident_procedure",
-          label: "Procedure violation 72h (Pack NIS2)",
+          label: "Procédure violation 72h (Pack NIS2)",
         },
       ],
     },
     {
       ref: "art-39",
-      name: "Missions du delegue a la protection des donnees",
+      name: "Missions du délégué à la protection des données",
       category: "DPO",
       artifacts: [
         {
           type: "metric",
           source: "completion_rate",
-          label: "Taux completion module RGPD",
+          label: "Taux complétion module RGPD",
           filter: { category: "rgpd" },
         },
       ],
@@ -486,7 +486,7 @@ const RGPD: FrameworkMapping = {
 // reste du cote client.
 const ANSSI_HG: FrameworkMapping = {
   ref: "ANSSI-HG",
-  title: "ANSSI - Guide d'hygiene informatique (v2, 42 mesures)",
+  title: "ANSSI - Guide d'hygiène informatique (v2, 42 mesures)",
   publisher: "ANSSI",
   url: "https://cyber.gouv.fr/publications/guide-dhygiene-informatique",
   controls: [
@@ -495,42 +495,42 @@ const ANSSI_HG: FrameworkMapping = {
     // -------------------------------------------------------------------------
     {
       ref: "M1",
-      name: "Former les equipes operationnelles a la securite des systemes d'information",
+      name: "Former les équipes opérationnelles à la sécurité des systèmes d'information",
       category: "I. Sensibiliser et former",
       artifacts: [
         {
           type: "metric",
           source: "completion_rate",
-          label: "Taux de completion modules admin/dev/SOC",
+          label: "Taux de complétion modules admin/dev/SOC",
           filter: { audience: "admin_or_dev" },
         },
         {
           type: "metric",
           source: "marketplace_modules",
           label:
-            "Saisons techniques deployees (cyber-dev, securiser-administration-si)",
+            "Saisons techniques déployées (cyber-dev, securiser-administration-si)",
           filter: { audience: "operationnel" },
         },
       ],
       thresholdCompliant: 0.7,
       thresholdPartial: 0.4,
       scopeNote:
-        "Couvre saisons cyber-dev (6 ep), cyber-dirigeants (6 ep), securiser-administration-si (6 ep). Cible le personnel operationnel SI.",
+        "Couvre saisons cyber-dev (6 ep), cyber-dirigeants (6 ep), securiser-administration-si (6 ep). Cible le personnel opérationnel SI.",
     },
     {
       ref: "M2",
-      name: "Sensibiliser les utilisateurs aux bonnes pratiques elementaires de securite informatique",
+      name: "Sensibiliser les utilisateurs aux bonnes pratiques élémentaires de sécurité informatique",
       category: "I. Sensibiliser et former",
       artifacts: [
         {
           type: "metric",
           source: "tenant_score",
-          label: "Score de maturite cyber humaine du tenant",
+          label: "Score de maturité cyber humaine du tenant",
         },
         {
           type: "metric",
           source: "completion_rate",
-          label: "Taux de completion saisons fondamentales",
+          label: "Taux de complétion saisons fondamentales",
         },
         {
           type: "document",
@@ -540,7 +540,7 @@ const ANSSI_HG: FrameworkMapping = {
       ],
       thresholdCompliant: 0.7,
       thresholdPartial: 0.4,
-      scopeNote: `MESURE PHARE HUMANIX. ${CATALOGUE_CHIFFRES.saisons} saisons / ${CATALOGUE_CHIFFRES.modules} modules couvrent l'ensemble des bonnes pratiques (phishing, mots de passe, donnees sensibles, mobilite, etc.).`,
+      scopeNote: `MESURE PHARE HUMANIX. ${CATALOGUE_CHIFFRES.saisons} saisons / ${CATALOGUE_CHIFFRES.modules} modules couvrent l'ensemble des bonnes pratiques (phishing, mots de passe, données sensibles, mobilité, etc.).`,
     },
 
     // -------------------------------------------------------------------------
@@ -548,8 +548,8 @@ const ANSSI_HG: FrameworkMapping = {
     // -------------------------------------------------------------------------
     {
       ref: "M3",
-      name: "Maitriser les risques de l'infogerance",
-      category: "II. Connaitre le SI",
+      name: "Maîtriser les risques de l'infogérance",
+      category: "II. Connaître le SI",
       artifacts: [
         {
           type: "policy",
@@ -559,27 +559,27 @@ const ANSSI_HG: FrameworkMapping = {
         {
           type: "policy",
           source: "pack_nis2_pdf",
-          label: "Pack NIS2 - clauses securite prestataires",
+          label: "Pack NIS2 - clauses sécurité prestataires",
         },
       ],
       scopeNote:
-        "Humanix fournit le DPA et les clauses securite type pour encadrer les prestataires du client.",
+        "Humanix fournit le DPA et les clauses sécurité type pour encadrer les prestataires du client.",
     },
     {
       ref: "M4",
-      name: "Identifier les informations et serveurs les plus sensibles et maintenir un schema du reseau",
-      category: "II. Connaitre le SI",
+      name: "Identifier les informations et serveurs les plus sensibles et maintenir un schéma du réseau",
+      category: "II. Connaître le SI",
       artifacts: [
         {
           type: "metric",
           source: "marketplace_modules",
-          label: "Modules classification donnees sensibles deployes",
+          label: "Modules classification données sensibles déployés",
           filter: { slug: "classification-donnees" },
         },
         {
           type: "metric",
           source: "completion_rate",
-          label: "Taux completion saison donnees-sensibles",
+          label: "Taux complétion saison donnees-sensibles",
           filter: { saison: "donnees-sensibles" },
         },
       ],
@@ -588,8 +588,8 @@ const ANSSI_HG: FrameworkMapping = {
     },
     {
       ref: "M5",
-      name: "Disposer d'une cartographie precise de l'installation informatique et la maintenir a jour",
-      category: "II. Connaitre le SI",
+      name: "Disposer d'une cartographie précise de l'installation informatique et la maintenir à jour",
+      category: "II. Connaître le SI",
       artifacts: [
         {
           type: "document",
@@ -599,61 +599,61 @@ const ANSSI_HG: FrameworkMapping = {
         },
       ],
       scopeNote:
-        "Couvert pour la plateforme Humanix (architecture.md, schema souverain Scaleway). Cote client : hors scope plateforme, mais Humanix sensibilise via saison cyber-dirigeants.",
+        "Couvert pour la plateforme Humanix (architecture.md, schéma souverain Scaleway). Côté client : hors scope plateforme, mais Humanix sensibilise via saison cyber-dirigeants.",
     },
     {
       ref: "M6",
-      name: "Maitriser les flux et acces aux composants tiers (cartographie applicative)",
-      category: "II. Connaitre le SI",
+      name: "Maîtriser les flux et accès aux composants tiers (cartographie applicative)",
+      category: "II. Connaître le SI",
       artifacts: [
         {
           type: "document",
           source: "audit_trail",
-          label: "Inventaire dependances + Stack EOL tracking (interne)",
+          label: "Inventaire dépendances + Stack EOL tracking (interne)",
           filter: { type: "evidence.stack_eol" },
         },
       ],
       scopeNote:
-        "Plateforme Humanix : doc STACK_EOL_TRACKING.md interne (dependances Next.js, Prisma, Node, HAProxy, Scaleway). Client : hors scope plateforme.",
+        "Plateforme Humanix : doc STACK_EOL_TRACKING.md interne (dépendances Next.js, Prisma, Node, HAProxy, Scaleway). Client : hors scope plateforme.",
     },
     {
       ref: "M7",
-      name: "Disposer d'un inventaire exhaustif des comptes privilegies et le maintenir a jour",
-      category: "II. Connaitre le SI",
+      name: "Disposer d'un inventaire exhaustif des comptes privilégiés et le maintenir à jour",
+      category: "II. Connaître le SI",
       artifacts: [
         {
           type: "report",
           source: "audit_trail",
           label:
-            "Inventaire comptes privilegies (/superadmin/admins-by-tenant)",
+            "Inventaire comptes privilégiés (/superadmin/admins-by-tenant)",
           filter: { role: "ADMIN_RSSI_SUPERADMIN" },
         },
         {
           type: "event_log",
           source: "audit_trail",
-          label: "Journal des changements de role + memberships croisees",
+          label: "Journal des changements de rôle + memberships croisées",
           filter: { type: "USER_ROLE_CHANGED" },
         },
       ],
       thresholdCompliant: 0.95,
       scopeNote:
-        "★ COUVERT NATIVEMENT. Page /superadmin/admins-by-tenant liste tous comptes ADMIN/RSSI/SUPERADMIN par tenant + TenantMembership croisees. Export CSV pour audit annuel. Tout changement de role audite (table Event, retention 1 an).",
+        "★ COUVERT NATIVEMENT. Page /superadmin/admins-by-tenant liste tous comptes ADMIN/RSSI/SUPERADMIN par tenant + TenantMembership croisées. Export CSV pour audit annuel. Tout changement de rôle audité (table Event, rétention 1 an).",
     },
     {
       ref: "M8",
-      name: "Rediger des procedures d'arrivee et de depart des utilisateurs (privileges, droits, materiels, secrets)",
-      category: "II. Connaitre le SI",
+      name: "Rédiger des procédures d'arrivée et de départ des utilisateurs (privilèges, droits, matériels, secrets)",
+      category: "II. Connaître le SI",
       artifacts: [
         {
           type: "metric",
           source: "completion_rate",
-          label: "Taux completion saison cyber-rh (onboarding/offboarding)",
+          label: "Taux complétion saison cyber-rh (onboarding/offboarding)",
           filter: { saison: "cyber-rh" },
         },
         {
           type: "metric",
           source: "marketplace_modules",
-          label: "Module depart-entreprise-donnees deploye",
+          label: "Module depart-entreprise-donnees déployé",
           filter: { slug: "06-depart-entreprise-donnees" },
         },
       ],
@@ -662,21 +662,21 @@ const ANSSI_HG: FrameworkMapping = {
     },
     {
       ref: "M9",
-      name: "Limiter le nombre d'acces Internet de l'entreprise au strict necessaire",
-      category: "II. Connaitre le SI",
+      name: "Limiter le nombre d'accès Internet de l'entreprise au strict nécessaire",
+      category: "II. Connaître le SI",
       artifacts: [],
       scopeNote:
-        "Hors scope Humanix : depend de l'architecture reseau client (firewalls, proxy DNS, etc.).",
+        "Hors scope Humanix : dépend de l'architecture réseau client (firewalls, proxy DNS, etc.).",
     },
     {
       ref: "M10",
-      name: "Interdire la connexion d'equipements personnels au systeme d'information de l'entite",
-      category: "II. Connaitre le SI",
+      name: "Interdire la connexion d'équipements personnels au système d'information de l'entité",
+      category: "II. Connaître le SI",
       artifacts: [
         {
           type: "metric",
           source: "completion_rate",
-          label: "Taux completion saison byod-perso-pro",
+          label: "Taux complétion saison byod-perso-pro",
           filter: { saison: "byod-perso-pro" },
         },
       ],
@@ -689,29 +689,29 @@ const ANSSI_HG: FrameworkMapping = {
     // -------------------------------------------------------------------------
     {
       ref: "M11",
-      name: "Identifier chaque individu accedant au systeme par un identifiant nominatif",
-      category: "III. Authentifier et controler les acces",
+      name: "Identifier chaque individu accédant au système par un identifiant nominatif",
+      category: "III. Authentifier et contrôler les accès",
       artifacts: [
         {
           type: "metric",
           source: "tenant_score",
           label:
-            "Comptes nominatifs (User.email unique, pas de comptes partages)",
+            "Comptes nominatifs (User.email unique, pas de comptes partagés)",
         },
       ],
       thresholdCompliant: 1.0,
       scopeNote:
-        "★ COUVERT NATIVEMENT. Schema Prisma : User.email @unique = pas de doublon, pas de compte partage techniquement possible. Chaque action est tracee a un user nominatif (Event.userId).",
+        "★ COUVERT NATIVEMENT. Schéma Prisma : User.email @unique = pas de doublon, pas de compte partagé techniquement possible. Chaque action est tracée à un user nominatif (Event.userId).",
     },
     {
       ref: "M12",
       name: "Attribuer les bons droits sur les ressources sensibles du SI",
-      category: "III. Authentifier et controler les acces",
+      category: "III. Authentifier et contrôler les accès",
       artifacts: [
         {
           type: "metric",
           source: "tenant_score",
-          label: "Hierarchie RBAC respectee (canActOn, role-hierarchy.ts)",
+          label: "Hiérarchie RBAC respectée (canActOn, role-hierarchy.ts)",
         },
         {
           type: "event_log",
@@ -722,35 +722,35 @@ const ANSSI_HG: FrameworkMapping = {
       ],
       thresholdCompliant: 1.0,
       scopeNote:
-        "★ COUVERT NATIVEMENT. lib/role-hierarchy.ts impose : LEARNER < MANAGER < RSSI < ADMIN < SUPERADMIN. Un MANAGER ne peut pas modifier un ADMIN ni un SUPERADMIN. Toute escalade refusee est auditee.",
+        "★ COUVERT NATIVEMENT. lib/role-hierarchy.ts impose : LEARNER < MANAGER < RSSI < ADMIN < SUPERADMIN. Un MANAGER ne peut pas modifier un ADMIN ni un SUPERADMIN. Toute escalade refusée est auditée.",
     },
     {
       ref: "M13",
-      name: "Definir et verifier des regles de choix et de dimensionnement des mots de passe",
-      category: "III. Authentifier et controler les acces",
+      name: "Définir et vérifier des règles de choix et de dimensionnement des mots de passe",
+      category: "III. Authentifier et contrôler les accès",
       artifacts: [
         {
           type: "metric",
           source: "completion_rate",
-          label: "Taux completion modules mots de passe / phrases passe",
+          label: "Taux complétion modules mots de passe / phrases passe",
           filter: { category: "auth" },
         },
         {
           type: "document",
           source: "audit_trail",
-          label: "Politique MDP appliquee cote plateforme (lib/password.ts)",
+          label: "Politique MDP appliquée côté plateforme (lib/password.ts)",
           filter: { type: "evidence.password_policy" },
         },
       ],
       thresholdCompliant: 0.7,
       thresholdPartial: 0.4,
       scopeNote:
-        "Plateforme : lib/password.ts impose min 12 caracteres, derivation scrypt. Pedagogique : modules dedies dans plusieurs saisons.",
+        "Plateforme : lib/password.ts impose min 12 caractères, dérivation scrypt. Pédagogique : modules dédiés dans plusieurs saisons.",
     },
     {
       ref: "M14",
-      name: "Proteger les mots de passe stockes sur les systemes",
-      category: "III. Authentifier et controler les acces",
+      name: "Protéger les mots de passe stockés sur les systèmes",
+      category: "III. Authentifier et contrôler les accès",
       artifacts: [
         {
           type: "document",
@@ -760,33 +760,33 @@ const ANSSI_HG: FrameworkMapping = {
         },
       ],
       scopeNote:
-        "★ COUVERT NATIVEMENT. lib/password.ts utilise scrypt (RFC 7914), parametres conformes recommandations CNIL/ANSSI. Aucun mot de passe en clair, jamais.",
+        "★ COUVERT NATIVEMENT. lib/password.ts utilise scrypt (RFC 7914), paramètres conformes recommandations CNIL/ANSSI. Aucun mot de passe en clair, jamais.",
     },
     {
       ref: "M15",
-      name: "Changer les elements d'authentification par defaut sur les equipements et services",
-      category: "III. Authentifier et controler les acces",
+      name: "Changer les éléments d'authentification par défaut sur les équipements et services",
+      category: "III. Authentifier et contrôler les accès",
       artifacts: [
         {
           type: "metric",
           source: "marketplace_modules",
-          label: "Module sensibilisation mots de passe par defaut deploye",
+          label: "Module sensibilisation mots de passe par défaut déployé",
           filter: { slug: "credentials-default" },
         },
         {
           type: "document",
           source: "audit_trail",
-          label: "Procedure rotation secrets Humanix (interne)",
+          label: "Procédure rotation secrets Humanix (interne)",
           filter: { type: "evidence.secret_rotation" },
         },
       ],
       scopeNote:
-        "Plateforme : rotation AUTH_SECRET / cles signature / DB credentials via procedure interne. Pedagogique : modules dedies.",
+        "Plateforme : rotation AUTH_SECRET / clés signature / DB credentials via procédure interne. Pédagogique : modules dédiés.",
     },
     {
       ref: "M16",
-      name: "Privilegier lorsque c'est possible une authentification forte",
-      category: "III. Authentifier et controler les acces",
+      name: "Privilégier lorsque c'est possible une authentification forte",
+      category: "III. Authentifier et contrôler les accès",
       artifacts: [
         {
           type: "metric",
@@ -796,14 +796,14 @@ const ANSSI_HG: FrameworkMapping = {
         {
           type: "metric",
           source: "completion_rate",
-          label: "Taux completion saison mfa / clefs-securite",
+          label: "Taux complétion saison mfa / clefs-securite",
           filter: { saison: "mfa" },
         },
       ],
       thresholdCompliant: 0.6,
       thresholdPartial: 0.3,
       scopeNote:
-        "★ COUVERT NATIVEMENT. Plateforme Humanix supporte TOTP (RFC 6238) + WebAuthn FIDO2 (lib/webauthn.ts). Step-up obligatoire pour /superadmin (cle hardware exigee).",
+        "★ COUVERT NATIVEMENT. Plateforme Humanix supporte TOTP (RFC 6238) + WebAuthn FIDO2 (lib/webauthn.ts). Step-up obligatoire pour /superadmin (clé hardware exigée).",
     },
 
     // -------------------------------------------------------------------------
@@ -811,30 +811,30 @@ const ANSSI_HG: FrameworkMapping = {
     // -------------------------------------------------------------------------
     {
       ref: "M17",
-      name: "Mettre en place un niveau de securite minimal sur l'ensemble du parc informatique",
-      category: "IV. Securiser les postes",
+      name: "Mettre en place un niveau de sécurité minimal sur l'ensemble du parc informatique",
+      category: "IV. Sécuriser les postes",
       artifacts: [
         {
           type: "metric",
           source: "completion_rate",
-          label: "Taux completion modules hygiene poste",
+          label: "Taux complétion modules hygiène poste",
           filter: { category: "hygiene-poste" },
         },
       ],
       thresholdCompliant: 0.6,
       thresholdPartial: 0.3,
       scopeNote:
-        "Cote sensibilisation utilisateur. Mise en oeuvre technique (durcissement OS, AV, EDR) reste cote client.",
+        "Côté sensibilisation utilisateur. Mise en oeuvre technique (durcissement OS, AV, EDR) reste côté client.",
     },
     {
       ref: "M18",
-      name: "Se proteger des menaces relatives a l'utilisation de supports amovibles",
-      category: "IV. Securiser les postes",
+      name: "Se protéger des menaces relatives à l'utilisation de supports amovibles",
+      category: "IV. Sécuriser les postes",
       artifacts: [
         {
           type: "metric",
           source: "completion_rate",
-          label: "Taux completion saison cles-usb / supports amovibles",
+          label: "Taux complétion saison cles-usb / supports amovibles",
           filter: { category: "supports-amovibles" },
         },
       ],
@@ -843,35 +843,35 @@ const ANSSI_HG: FrameworkMapping = {
     },
     {
       ref: "M19",
-      name: "Utiliser un outil de gestion centralisee pour homogeneiser les politiques de securite",
-      category: "IV. Securiser les postes",
+      name: "Utiliser un outil de gestion centralisée pour homogénéiser les politiques de sécurité",
+      category: "IV. Sécuriser les postes",
       artifacts: [],
       scopeNote:
-        "Hors scope Humanix : depend de l'outillage SI client (MDM, GPO, Ansible, Jamf, etc.).",
+        "Hors scope Humanix : dépend de l'outillage SI client (MDM, GPO, Ansible, Jamf, etc.).",
     },
     {
       ref: "M20",
       name: "Activer et configurer le pare-feu local des postes de travail",
-      category: "IV. Securiser les postes",
+      category: "IV. Sécuriser les postes",
       artifacts: [
         {
           type: "metric",
           source: "marketplace_modules",
-          label: "Module pare-feu local deploye",
+          label: "Module pare-feu local déployé",
           filter: { slug: "pare-feu-local" },
         },
       ],
     },
     {
       ref: "M21",
-      name: "Chiffrer les donnees sensibles, en particulier sur le materiel potentiellement perdable",
-      category: "IV. Securiser les postes",
+      name: "Chiffrer les données sensibles, en particulier sur le matériel potentiellement perdable",
+      category: "IV. Sécuriser les postes",
       artifacts: [
         {
           type: "metric",
           source: "completion_rate",
           label:
-            "Taux completion modules chiffrement disque / FileVault / BitLocker",
+            "Taux complétion modules chiffrement disque / FileVault / BitLocker",
           filter: { category: "chiffrement" },
         },
       ],
@@ -884,27 +884,27 @@ const ANSSI_HG: FrameworkMapping = {
     // -------------------------------------------------------------------------
     {
       ref: "M22",
-      name: "Segmenter le reseau et mettre en place un cloisonnement entre les zones",
-      category: "V. Securiser le reseau",
+      name: "Segmenter le réseau et mettre en place un cloisonnement entre les zones",
+      category: "V. Sécuriser le réseau",
       artifacts: [],
       scopeNote:
-        "Hors scope Humanix : depend de la topologie reseau client (VLANs, micro-segmentation, etc.).",
+        "Hors scope Humanix : dépend de la topologie réseau client (VLANs, micro-segmentation, etc.).",
     },
     {
       ref: "M23",
-      name: "S'assurer de la securite des reseaux d'acces Wi-Fi et de la separation des usages",
-      category: "V. Securiser le reseau",
+      name: "S'assurer de la sécurité des réseaux d'accès Wi-Fi et de la séparation des usages",
+      category: "V. Sécuriser le réseau",
       artifacts: [
         {
           type: "metric",
           source: "completion_rate",
-          label: "Taux completion modules Wi-Fi public + quishing",
+          label: "Taux complétion modules Wi-Fi public + quishing",
           filter: { category: "wifi" },
         },
         {
           type: "event_log",
           source: "audit_trail",
-          label: "Campagnes quishing IA (SSID Wi-Fi personnalise)",
+          label: "Campagnes quishing IA (SSID Wi-Fi personnalisé)",
           filter: { type: "quishing.campaign_completed" },
         },
       ],
@@ -913,13 +913,13 @@ const ANSSI_HG: FrameworkMapping = {
     },
     {
       ref: "M24",
-      name: "Utiliser des protocoles reseaux securises des qu'ils existent",
-      category: "V. Securiser le reseau",
+      name: "Utiliser des protocoles réseaux sécurisés dès qu'ils existent",
+      category: "V. Sécuriser le réseau",
       artifacts: [
         {
           type: "metric",
           source: "marketplace_modules",
-          label: "Modules sensibilisation HTTPS/TLS/SSH deployes",
+          label: "Modules sensibilisation HTTPS/TLS/SSH déployés",
           filter: { category: "protocoles" },
         },
         {
@@ -934,27 +934,27 @@ const ANSSI_HG: FrameworkMapping = {
     },
     {
       ref: "M25",
-      name: "Mettre en place une passerelle d'acces securise a Internet",
-      category: "V. Securiser le reseau",
+      name: "Mettre en place une passerelle d'accès sécurisé à Internet",
+      category: "V. Sécuriser le réseau",
       artifacts: [],
       scopeNote:
-        "Hors scope Humanix : depend du SI client (proxy filtrant, NGFW, etc.).",
+        "Hors scope Humanix : dépend du SI client (proxy filtrant, NGFW, etc.).",
     },
     {
       ref: "M26",
-      name: "Cloisonner les services visibles depuis Internet du reste du systeme",
-      category: "V. Securiser le reseau",
+      name: "Cloisonner les services visibles depuis Internet du reste du système",
+      category: "V. Sécuriser le réseau",
       artifacts: [
         {
           type: "document",
           source: "audit_trail",
           label:
-            "Architecture Humanix : HAProxy bare-metal en frontal, app Next.js cloisonnee Docker",
+            "Architecture Humanix : HAProxy bare-metal en frontal, app Next.js cloisonnée Docker",
           filter: { type: "evidence.network_segmentation" },
         },
       ],
       scopeNote:
-        "Plateforme : reverse-proxy HAProxy en frontal (rate-limit, stick-table), backend Next.js isole. Cote client : hors scope.",
+        "Plateforme : reverse-proxy HAProxy en frontal (rate-limit, stick-table), backend Next.js isolé. Côté client : hors scope.",
     },
 
     // -------------------------------------------------------------------------
@@ -962,14 +962,14 @@ const ANSSI_HG: FrameworkMapping = {
     // -------------------------------------------------------------------------
     {
       ref: "M27",
-      name: "Interdire l'acces a Internet depuis les comptes ou equipements utilises pour l'administration",
-      category: "VI. Securiser l'administration",
+      name: "Interdire l'accès à Internet depuis les comptes ou équipements utilisés pour l'administration",
+      category: "VI. Sécuriser l'administration",
       artifacts: [
         {
           type: "metric",
           source: "completion_rate",
           label:
-            "Taux completion module poste-admin-dedie (saison securiser-administration-si)",
+            "Taux complétion module poste-admin-dedie (saison securiser-administration-si)",
           filter: { slug: "01-poste-admin-dedie" },
         },
       ],
@@ -978,13 +978,13 @@ const ANSSI_HG: FrameworkMapping = {
     },
     {
       ref: "M28",
-      name: "Utiliser un reseau dedie et cloisonne pour l'administration du SI",
-      category: "VI. Securiser l'administration",
+      name: "Utiliser un réseau dédié et cloisonné pour l'administration du SI",
+      category: "VI. Sécuriser l'administration",
       artifacts: [
         {
           type: "metric",
           source: "completion_rate",
-          label: "Taux completion module cloisonnement-reseau-admin",
+          label: "Taux complétion module cloisonnement-reseau-admin",
           filter: { slug: "04-cloisonnement-reseau-admin" },
         },
       ],
@@ -994,26 +994,26 @@ const ANSSI_HG: FrameworkMapping = {
     {
       ref: "M29",
       name: "Limiter au strict besoin les droits d'administration sur les postes de travail",
-      category: "VI. Securiser l'administration",
+      category: "VI. Sécuriser l'administration",
       artifacts: [
         {
           type: "metric",
           source: "completion_rate",
-          label: "Taux completion module audit-comptes-privilegies",
+          label: "Taux complétion module audit-comptes-privilegies",
           filter: { slug: "06-audit-comptes-privilegies" },
         },
         {
           type: "event_log",
           source: "audit_trail",
           label:
-            "Verifications hierarchie RBAC (canActOn, assertCanChangeRole)",
+            "Vérifications hiérarchie RBAC (canActOn, assertCanChangeRole)",
           filter: { type: "RBAC_HIERARCHY_VIOLATION_BLOCKED" },
         },
       ],
       thresholdCompliant: 0.6,
       thresholdPartial: 0.3,
       scopeNote:
-        "Plateforme : hierarchie RBAC stricte (cf. M12). Pedagogique : module dedie.",
+        "Plateforme : hiérarchie RBAC stricte (cf. M12). Pédagogique : module dédié.",
     },
 
     // -------------------------------------------------------------------------
@@ -1021,13 +1021,13 @@ const ANSSI_HG: FrameworkMapping = {
     // -------------------------------------------------------------------------
     {
       ref: "M30",
-      name: "Prendre des mesures de securisation physique des terminaux mobiles",
-      category: "VII. Gerer le nomadisme",
+      name: "Prendre des mesures de sécurisation physique des terminaux mobiles",
+      category: "VII. Gérer le nomadisme",
       artifacts: [
         {
           type: "metric",
           source: "completion_rate",
-          label: "Taux completion saison nomadisme / mobilite",
+          label: "Taux complétion saison nomadisme / mobilité",
           filter: { category: "mobilite" },
         },
       ],
@@ -1036,8 +1036,8 @@ const ANSSI_HG: FrameworkMapping = {
     },
     {
       ref: "M31",
-      name: "Chiffrer les donnees sensibles transmises par voie Internet",
-      category: "VII. Gerer le nomadisme",
+      name: "Chiffrer les données sensibles transmises par voie Internet",
+      category: "VII. Gérer le nomadisme",
       artifacts: [
         {
           type: "metric",
@@ -1049,13 +1049,13 @@ const ANSSI_HG: FrameworkMapping = {
     },
     {
       ref: "M32",
-      name: "Securiser la connexion reseau des postes utilises en situation de nomadisme",
-      category: "VII. Gerer le nomadisme",
+      name: "Sécuriser la connexion réseau des postes utilisés en situation de nomadisme",
+      category: "VII. Gérer le nomadisme",
       artifacts: [
         {
           type: "metric",
           source: "completion_rate",
-          label: "Taux completion modules VPN / Wi-Fi public",
+          label: "Taux complétion modules VPN / Wi-Fi public",
           filter: { category: "teletravail" },
         },
       ],
@@ -1064,13 +1064,13 @@ const ANSSI_HG: FrameworkMapping = {
     },
     {
       ref: "M33",
-      name: "Adopter des politiques de securite dediees aux terminaux mobiles",
-      category: "VII. Gerer le nomadisme",
+      name: "Adopter des politiques de sécurité dédiées aux terminaux mobiles",
+      category: "VII. Gérer le nomadisme",
       artifacts: [
         {
           type: "metric",
           source: "completion_rate",
-          label: "Taux completion saison byod-perso-pro",
+          label: "Taux complétion saison byod-perso-pro",
           filter: { saison: "byod-perso-pro" },
         },
       ],
@@ -1083,30 +1083,30 @@ const ANSSI_HG: FrameworkMapping = {
     // -------------------------------------------------------------------------
     {
       ref: "M34",
-      name: "Definir une politique de mise a jour des composants du SI",
-      category: "VIII. Maintenir le SI a jour",
+      name: "Définir une politique de mise à jour des composants du SI",
+      category: "VIII. Maintenir le SI à jour",
       artifacts: [
         {
           type: "document",
           source: "audit_trail",
           label:
-            "Politique mises a jour Humanix (Dependabot + revue mensuelle)",
+            "Politique mises à jour Humanix (Dependabot + revue mensuelle)",
           filter: { type: "evidence.update_policy" },
         },
         {
           type: "metric",
           source: "marketplace_modules",
-          label: "Module sensibilisation mises a jour utilisateurs",
+          label: "Module sensibilisation mises à jour utilisateurs",
           filter: { slug: "mises-a-jour-poste" },
         },
       ],
       scopeNote:
-        "Plateforme : Dependabot actif, audit npm hebdomadaire, prod patchee max 7j apres CVE critique.",
+        "Plateforme : Dependabot actif, audit npm hebdomadaire, prod patchée max 7j après CVE critique.",
     },
     {
       ref: "M35",
-      name: "Anticiper la fin de la maintenance des logiciels et systemes et limiter les adherences",
-      category: "VIII. Maintenir le SI a jour",
+      name: "Anticiper la fin de la maintenance des logiciels et systèmes et limiter les adhérences",
+      category: "VIII. Maintenir le SI à jour",
       artifacts: [
         {
           type: "document",
@@ -1116,7 +1116,7 @@ const ANSSI_HG: FrameworkMapping = {
         },
       ],
       scopeNote:
-        "Plateforme : doc interne STACK_EOL_TRACKING.md liste pour chaque dependance critique (Node, Postgres, Prisma, Next.js, HAProxy) la version actuelle, la date EOL, et le plan de migration.",
+        "Plateforme : doc interne STACK_EOL_TRACKING.md liste pour chaque dépendance critique (Node, Postgres, Prisma, Next.js, HAProxy) la version actuelle, la date EOL, et le plan de migration.",
     },
 
     // -------------------------------------------------------------------------
@@ -1125,12 +1125,12 @@ const ANSSI_HG: FrameworkMapping = {
     {
       ref: "M36",
       name: "Activer et configurer les journaux des composants les plus importants",
-      category: "IX. Superviser, auditer, reagir",
+      category: "IX. Superviser, auditer, réagir",
       artifacts: [
         {
           type: "event_log",
           source: "audit_trail",
-          label: "Table Event - audit trail tamper-evident (retention 1 an)",
+          label: "Table Event - audit trail tamper-evident (rétention 1 an)",
         },
         {
           type: "document",
@@ -1140,12 +1140,12 @@ const ANSSI_HG: FrameworkMapping = {
         },
       ],
       scopeNote:
-        "★ COUVERT NATIVEMENT. Table Event (~20 types : auth, role change, incident, etc.). Retention 1 an. Filtrable par tenant pour le client.",
+        "★ COUVERT NATIVEMENT. Table Event (~20 types : auth, role change, incident, etc.). Rétention 1 an. Filtrable par tenant pour le client.",
     },
     {
       ref: "M37",
-      name: "Definir et appliquer une politique de sauvegarde des composants critiques",
-      category: "IX. Superviser, auditer, reagir",
+      name: "Définir et appliquer une politique de sauvegarde des composants critiques",
+      category: "IX. Superviser, auditer, réagir",
       artifacts: [
         {
           type: "document",
@@ -1156,12 +1156,12 @@ const ANSSI_HG: FrameworkMapping = {
         },
       ],
       scopeNote:
-        "★ COUVERT NATIVEMENT. Backup auto pg_dump quotidien, chiffrement age (X25519), upload FTPS vers Scaleway, retention 30 jours rolling + 12 mois mensuel. Cf. scripts/backup/.",
+        "★ COUVERT NATIVEMENT. Backup auto pg_dump quotidien, chiffrement age (X25519), upload FTPS vers Scaleway, rétention 30 jours rolling + 12 mois mensuel. Cf. scripts/backup/.",
     },
     {
       ref: "M38",
-      name: "Proceder a des controles et audits de securite reguliers puis appliquer les actions correctives",
-      category: "IX. Superviser, auditer, reagir",
+      name: "Procéder à des contrôles et audits de sécurité réguliers puis appliquer les actions correctives",
+      category: "IX. Superviser, auditer, réagir",
       artifacts: [
         {
           type: "document",
@@ -1172,43 +1172,43 @@ const ANSSI_HG: FrameworkMapping = {
         },
       ],
       scopeNote:
-        "Plateforme : Triple A+ externe (audits automatises continus) + pentest annuel formalise (cf. plan PENTEST_ANNUEL.md interne). Premier pentest Q3 2026.",
+        "Plateforme : Triple A+ externe (audits automatisés continus) + pentest annuel formalisé (cf. plan PENTEST_ANNUEL.md interne). Premier pentest Q3 2026.",
     },
     {
       ref: "M39",
-      name: "Designer un point de contact en securite des systemes d'information et le faire connaitre",
-      category: "IX. Superviser, auditer, reagir",
+      name: "Désigner un point de contact en sécurité des systèmes d'information et le faire connaître",
+      category: "IX. Superviser, auditer, réagir",
       artifacts: [
         {
           type: "policy",
           source: "incident_procedure",
           label:
-            "Point de contact securite : security@humanix-cybersecurity.fr + RSSI Humanix",
+            "Point de contact sécurité : security@humanix-cybersecurity.fr + RSSI Humanix",
         },
       ],
       scopeNote:
-        "★ COUVERT NATIVEMENT. Page /securite expose security@humanix-cybersecurity.fr (publique). RSSI designe (Florian Durano) chez Humanix Cybersecurity SASU.",
+        "★ COUVERT NATIVEMENT. Page /securite expose security@humanix-cybersecurity.fr (publique). RSSI désigné (Florian Durano) chez Humanix Cybersecurity SASU.",
     },
     {
       ref: "M40",
-      name: "Definir une procedure de gestion des incidents de securite",
-      category: "IX. Superviser, auditer, reagir",
+      name: "Définir une procédure de gestion des incidents de sécurité",
+      category: "IX. Superviser, auditer, réagir",
       artifacts: [
         {
           type: "policy",
           source: "incident_procedure",
           label:
-            "Procedure incident Pack NIS2 (notification CNIL 72h + ANSSI 24h/72h/1mois)",
+            "Procédure incident Pack NIS2 (notification CNIL 72h + ANSSI 24h/72h/1mois)",
         },
         {
           type: "event_log",
           source: "audit_trail",
-          label: "Logs incidents declares + notifies",
+          label: "Logs incidents déclarés + notifiés",
           filter: { type: "incident.declared" },
         },
       ],
       scopeNote:
-        "★ COUVERT NATIVEMENT. Procedure unifiee Pack NIS2 couvre RGPD art. 33 (CNIL 72h) + NIS2 art. 23 (ANSSI). PSSI consolidee interne en complement.",
+        "★ COUVERT NATIVEMENT. Procédure unifiée Pack NIS2 couvre RGPD art. 33 (CNIL 72h) + NIS2 art. 23 (ANSSI). PSSI consolidée interne en complément.",
     },
 
     // -------------------------------------------------------------------------
@@ -1216,56 +1216,56 @@ const ANSSI_HG: FrameworkMapping = {
     // -------------------------------------------------------------------------
     {
       ref: "M41",
-      name: "Privilegier l'usage de produits et de services qualifies par l'ANSSI",
+      name: "Privilégier l'usage de produits et de services qualifiés par l'ANSSI",
       category: "X. Pour aller plus loin",
       artifacts: [
         {
           type: "document",
           source: "audit_trail",
-          label: "Demarche de reconnaissance ANSSI Humanix (Q4 2026)",
+          label: "Démarche de reconnaissance ANSSI Humanix (Q4 2026)",
           filter: { type: "evidence.anssi_recognition" },
         },
       ],
       scopeNote:
-        "Humanix est en demarche de reconnaissance ANSSI (objectif visibilite SecNumedu / qualification). Roadmap publique sur /certificat.",
+        "Humanix est en démarche de reconnaissance ANSSI (objectif visibilité SecNumedu / qualification). Roadmap publique sur /certificat.",
     },
     {
       ref: "M42",
-      name: "Mener une demarche de qualification ou certification sur le perimetre le plus pertinent",
+      name: "Mener une démarche de qualification ou certification sur le périmètre le plus pertinent",
       category: "X. Pour aller plus loin",
       artifacts: [
         {
           type: "document",
           source: "audit_trail",
           label:
-            "Roadmap certification ANSSI (dossier Q4 2026, reconnaissance visee 2027)",
+            "Roadmap certification ANSSI (dossier Q4 2026, reconnaissance visée 2027)",
           filter: { type: "evidence.certification_roadmap" },
         },
       ],
       scopeNote:
-        "Humanix : demarche reconnaissance ANSSI engagee. Cote client : Humanix delivre certificats individuels signes Ed25519 verifiables cryptographiquement (preuve incontestable de formation).",
+        "Humanix : démarche reconnaissance ANSSI engagée. Côté client : Humanix délivre certificats individuels signés Ed25519 vérifiables cryptographiquement (preuve incontestable de formation).",
     },
   ],
   outOfScope: [
     {
       ref: "M9",
       reason:
-        "Limitation des acces Internet de l'entite : depend de l'architecture reseau client (firewalls, proxy, NGFW)",
+        "Limitation des accès Internet de l'entité : dépend de l'architecture réseau client (firewalls, proxy, NGFW)",
     },
     {
       ref: "M19",
       reason:
-        "Outil de gestion centralisee du parc : MDM/GPO/Ansible/Jamf cote client",
+        "Outil de gestion centralisée du parc : MDM/GPO/Ansible/Jamf côté client",
     },
     {
       ref: "M22",
       reason:
-        "Segmentation reseau / VLANs : depend de la topologie reseau client",
+        "Segmentation réseau / VLANs : dépend de la topologie réseau client",
     },
     {
       ref: "M25",
       reason:
-        "Passerelle Internet securisee : NGFW / proxy filtrant cote client",
+        "Passerelle Internet sécurisée : NGFW / proxy filtrant côté client",
     },
   ],
 };
@@ -1302,7 +1302,7 @@ const NIST_CSF: FrameworkMapping = {
         {
           type: "metric",
           source: "completion_rate",
-          label: "Completion - admins/managers",
+          label: "Complétion - admins/managers",
           filter: { role: "ADMIN_OR_MANAGER" },
         },
       ],
@@ -1312,7 +1312,7 @@ const NIST_CSF: FrameworkMapping = {
     {
       ref: "ID.* / DE.* / RS.* / RC.*",
       reason:
-        "Mapping NIST detaille prevu en v1.1 - sortie initiale focus sur PR (Protect)",
+        "Mapping NIST détaillé prévu en v1.1 - sortie initiale focus sur PR (Protect)",
     },
   ],
 };
@@ -1330,7 +1330,7 @@ const NIST_CSF: FrameworkMapping = {
 const SAPIN2: FrameworkMapping = {
   ref: "SAPIN2",
   title: "Loi Sapin II - Article 17 (transparence, lutte anti-corruption)",
-  publisher: "Republique francaise",
+  publisher: "République française",
   url: "https://www.legifrance.gouv.fr/loda/id/JORFTEXT000033558528/",
   controls: [
     {
@@ -1346,30 +1346,30 @@ const SAPIN2: FrameworkMapping = {
         {
           type: "report",
           source: "compliance_report",
-          label: "Rapport conformite (cas fraude-president, vishing exec)",
+          label: "Rapport conformité (cas fraude-president, vishing exec)",
         },
       ],
       thresholdCompliant: 0.7,
       thresholdPartial: 0.4,
       scopeNote:
-        "Humanix mappe le volet humain (manipulation, ingenierie sociale, fraude au president). " +
-        "Le volet financier/comptable reste a la charge des outils GRC dedies (CISO Assistant, Eramba).",
+        "Humanix mappe le volet humain (manipulation, ingénierie sociale, fraude au président). " +
+        "Le volet financier/comptable reste à la charge des outils GRC dédiés (CISO Assistant, Eramba).",
     },
     {
       ref: "art-17-II-6",
-      name: "Dispositif de formation des cadres et personnels exposes",
+      name: "Dispositif de formation des cadres et personnels exposés",
       category: "Mesure 6 - Formation (PILIER HUMANIX)",
       artifacts: [
         {
           type: "metric",
           source: "completion_rate",
-          label: "Taux de completion saison fraude-president",
+          label: "Taux de complétion saison fraude-president",
         },
         {
           type: "metric",
           source: "completion_rate",
           label:
-            "Taux de completion modules ingenierie sociale (phishing/vishing)",
+            "Taux de complétion modules ingénierie sociale (phishing/vishing)",
         },
         {
           type: "document",
@@ -1379,7 +1379,7 @@ const SAPIN2: FrameworkMapping = {
         {
           type: "event_log",
           source: "audit_trail",
-          label: "Journal des completions par utilisateur expose",
+          label: "Journal des complétions par utilisateur exposé",
           filter: { type: "module.completed" },
         },
       ],
@@ -1387,42 +1387,42 @@ const SAPIN2: FrameworkMapping = {
       thresholdPartial: 0.5,
       scopeNote:
         "ARTICLE CENTRAL POUR HUMANIX. La saison 'fraude-president' (6 modules : " +
-        "mecanisme, faux virement, changement RIB, deepfake vocal, double validation, " +
-        "cas Pathe) est le coeur du dispositif Sapin II cote sensibilisation. " +
-        "Modules complementaires : phishing cible exec, vishing 'fake CFO'.",
+        "mécanisme, faux virement, changement RIB, deepfake vocal, double validation, " +
+        "cas Pathé) est le coeur du dispositif Sapin II côté sensibilisation. " +
+        "Modules complémentaires : phishing ciblé exec, vishing 'fake CFO'.",
     },
     {
       ref: "art-17-II-7",
-      name: "Regime disciplinaire (preuve de connaissance du regime)",
+      name: "Régime disciplinaire (preuve de connaissance du régime)",
       category: "Mesure 7 - Sanction disciplinaire",
       artifacts: [
         {
           type: "document",
           source: "user_certificates",
           label:
-            "Acceptation tracable de la charte cyber + fraude (timestamp + signature electronique)",
+            "Acceptation traçable de la charte cyber + fraude (timestamp + signature électronique)",
         },
       ],
       scopeNote:
-        "Humanix fournit la trace tamper-proof que l'utilisateur a complete la formation et " +
-        "accepte le code de conduite. Element de preuve devant l'AFA en cas de contestation " +
+        "Humanix fournit la trace tamper-proof que l'utilisateur a complété la formation et " +
+        "accepte le code de conduite. Élément de preuve devant l'AFA en cas de contestation " +
         "de sanction disciplinaire pour fraude.",
     },
     {
       ref: "art-17-II-8",
-      name: "Dispositif de controle et evaluation interne des mesures",
-      category: "Mesure 8 - Controle interne",
+      name: "Dispositif de contrôle et évaluation interne des mesures",
+      category: "Mesure 8 - Contrôle interne",
       artifacts: [
         {
           type: "metric",
           source: "phishing_report_rate",
-          label: "Taux de signalement phishing (= efficacite de la formation)",
+          label: "Taux de signalement phishing (= efficacité de la formation)",
         },
         {
           type: "report",
           source: "compliance_report",
           label:
-            "Rapport tendance trimestriel (evolution du score d'exposition)",
+            "Rapport tendance trimestriel (évolution du score d'exposition)",
         },
       ],
       thresholdCompliant: 0.6,
@@ -1432,20 +1432,20 @@ const SAPIN2: FrameworkMapping = {
   outOfScope: [
     {
       ref: "art-17-II-1",
-      reason: "Code de conduite : redaction juridique, hors scope SAT/HRM",
+      reason: "Code de conduite : rédaction juridique, hors scope SAT/HRM",
     },
     {
       ref: "art-17-II-2",
       reason:
-        "Dispositif d'alerte interne (whistleblowing) : outils dedies (Whispli, etc.)",
+        "Dispositif d'alerte interne (whistleblowing) : outils dédiés (Whispli, etc.)",
     },
     {
       ref: "art-17-II-4",
-      reason: "Procedure d'evaluation des tiers : outils KYC/KYS dedies",
+      reason: "Procédure d'évaluation des tiers : outils KYC/KYS dédiés",
     },
     {
       ref: "art-17-II-5",
-      reason: "Controle comptable : ERP financier (SAP, Sage, etc.)",
+      reason: "Contrôle comptable : ERP financier (SAP, Sage, etc.)",
     },
   ],
 };
@@ -1481,41 +1481,41 @@ const SOC2: FrameworkMapping = {
     // ========================================================================
     {
       ref: "CC1.1",
-      name: "L'entite demontre un engagement envers l'integrite et les valeurs ethiques",
+      name: "L'entité démontre un engagement envers l'intégrité et les valeurs éthiques",
       category: "CC1 - Control Environment",
       artifacts: [
         {
           type: "policy",
           source: "pack_nis2_pdf",
-          label: "Politique de securite & code de conduite (Pack NIS2)",
+          label: "Politique de sécurité & code de conduite (Pack NIS2)",
         },
       ],
       scopeNote:
-        "Couvert par le Pack NIS2 + PSSI interne Humanix. AGPLv3 = ethique de transparence affichee publiquement.",
+        "Couvert par le Pack NIS2 + PSSI interne Humanix. AGPLv3 = éthique de transparence affichée publiquement.",
     },
     {
       ref: "CC1.2",
-      name: "Le conseil exerce une supervision independante",
+      name: "Le conseil exerce une supervision indépendante",
       category: "CC1 - Control Environment",
       artifacts: [],
       scopeNote:
-        "Humanix SASU 1 personne actuellement. Gouvernance formalisee a recruter au-dela de 5 collaborateurs.",
+        "Humanix SASU 1 personne actuellement. Gouvernance formalisée à recruter au-delà de 5 collaborateurs.",
     },
     {
       ref: "CC1.4",
-      name: "L'entite recrute, developpe et retient des collaborateurs competents",
+      name: "L'entité recrute, développe et retient des collaborateurs compétents",
       category: "CC1 - Control Environment",
       artifacts: [
         {
           type: "metric",
           source: "completion_rate",
-          label: "Taux de completion sensibilisation collaborateurs",
+          label: "Taux de complétion sensibilisation collaborateurs",
         },
       ],
       thresholdCompliant: 0.9,
       thresholdPartial: 0.5,
       scopeNote:
-        "Cote client : taux de formation cyber des collaborateurs. Cote Humanix : politique RH d'onboarding/offboarding (PSSI section 4.1).",
+        "Côté client : taux de formation cyber des collaborateurs. Côté Humanix : politique RH d'onboarding/offboarding (PSSI section 4.1).",
     },
 
     // ========================================================================
@@ -1523,7 +1523,7 @@ const SOC2: FrameworkMapping = {
     // ========================================================================
     {
       ref: "CC2.1",
-      name: "L'entite obtient ou genere de l'information pertinente, de qualite, pour supporter le fonctionnement des controles",
+      name: "L'entité obtient ou génère de l'information pertinente, de qualité, pour supporter le fonctionnement des contrôles",
       category: "CC2 - Communication and Information",
       artifacts: [
         {
@@ -1534,21 +1534,21 @@ const SOC2: FrameworkMapping = {
         {
           type: "metric",
           source: "tenant_score",
-          label: "Score de maturite cyber humaine",
+          label: "Score de maturité cyber humaine",
         },
       ],
       scopeNote:
-        "Couvert : audit trail + dashboard tenant en temps reel + exports OSCAL.",
+        "Couvert : audit trail + dashboard tenant en temps réel + exports OSCAL.",
     },
     {
       ref: "CC2.2",
-      name: "L'entite communique en interne l'information necessaire au fonctionnement des controles",
+      name: "L'entité communique en interne l'information nécessaire au fonctionnement des contrôles",
       category: "CC2 - Communication and Information",
       artifacts: [
         {
           type: "policy",
           source: "pack_nis2_pdf",
-          label: "Pack NIS2 - politique cybersecurite",
+          label: "Pack NIS2 - politique cybersécurité",
         },
         {
           type: "metric",
@@ -1561,7 +1561,7 @@ const SOC2: FrameworkMapping = {
     },
     {
       ref: "CC2.3",
-      name: "L'entite communique avec les parties externes les sujets relatifs aux controles internes",
+      name: "L'entité communique avec les parties externes les sujets relatifs aux contrôles internes",
       category: "CC2 - Communication and Information",
       artifacts: [
         {
@@ -1579,7 +1579,7 @@ const SOC2: FrameworkMapping = {
         },
       ],
       scopeNote:
-        "★ COUVERT NATIVEMENT. Trust Center public, security.txt, code AGPLv3 auditable, page conformite 42 mesures ANSSI HG generee dynamiquement.",
+        "★ COUVERT NATIVEMENT. Trust Center public, security.txt, code AGPLv3 auditable, page conformité 42 mesures ANSSI HG générée dynamiquement.",
     },
 
     // ========================================================================
@@ -1587,21 +1587,21 @@ const SOC2: FrameworkMapping = {
     // ========================================================================
     {
       ref: "CC3.1",
-      name: "L'entite specifie ses objectifs avec suffisamment de clarte pour identifier et evaluer les risques",
+      name: "L'entité spécifie ses objectifs avec suffisamment de clarté pour identifier et évaluer les risques",
       category: "CC3 - Risk Assessment",
       artifacts: [
         {
           type: "document",
           source: "audit_trail",
-          label: "PSSI Humanix - section 3 objectifs securite",
+          label: "PSSI Humanix - section 3 objectifs sécurité",
           filter: { type: "evidence.pssi" },
         },
       ],
-      scopeNote: "PSSI interne formalisee, revue annuelle minimum.",
+      scopeNote: "PSSI interne formalisée, revue annuelle minimum.",
     },
     {
       ref: "CC3.2",
-      name: "L'entite identifie les risques et determine comment les gerer",
+      name: "L'entité identifie les risques et détermine comment les gérer",
       category: "CC3 - Risk Assessment",
       artifacts: [
         {
@@ -1613,7 +1613,7 @@ const SOC2: FrameworkMapping = {
         },
       ],
       scopeNote:
-        "Triple approche : conformite reglementaire (ANSSI HG), pentest offensif (PASSI annuel), gestion technique EOL.",
+        "Triple approche : conformité réglementaire (ANSSI HG), pentest offensif (PASSI annuel), gestion technique EOL.",
     },
 
     // ========================================================================
@@ -1621,7 +1621,7 @@ const SOC2: FrameworkMapping = {
     // ========================================================================
     {
       ref: "CC4.1",
-      name: "L'entite selectionne, developpe et execute des evaluations continues et/ou separees",
+      name: "L'entité sélectionne, développe et exécute des évaluations continues et/ou séparées",
       category: "CC4 - Monitoring Activities",
       artifacts: [
         {
@@ -1639,17 +1639,17 @@ const SOC2: FrameworkMapping = {
         },
       ],
       scopeNote:
-        "★ COUVERT NATIVEMENT. Audits automatises continus + pentest annuel formalise (premier Q3 2026).",
+        "★ COUVERT NATIVEMENT. Audits automatisés continus + pentest annuel formalisé (premier Q3 2026).",
     },
     {
       ref: "CC4.2",
-      name: "L'entite evalue et communique les deficiences de controle interne en temps opportun",
+      name: "L'entité évalue et communique les déficiences de contrôle interne en temps opportun",
       category: "CC4 - Monitoring Activities",
       artifacts: [
         {
           type: "event_log",
           source: "audit_trail",
-          label: "Audit trail Event - alertes incidents et changements de role",
+          label: "Audit trail Event - alertes incidents et changements de rôle",
           filter: { type: "incident.declared" },
         },
       ],
@@ -1660,29 +1660,29 @@ const SOC2: FrameworkMapping = {
     // ========================================================================
     {
       ref: "CC5.1",
-      name: "L'entite selectionne et developpe des activites de controle qui contribuent a la maitrise des risques",
+      name: "L'entité sélectionne et développe des activités de contrôle qui contribuent à la maîtrise des risques",
       category: "CC5 - Control Activities",
       artifacts: [
         {
           type: "document",
           source: "audit_trail",
           label:
-            "RBAC hierarchique (lib/role-hierarchy.ts) + multi-tenant isolation",
+            "RBAC hiérarchique (lib/role-hierarchy.ts) + multi-tenant isolation",
           filter: { type: "evidence.rbac" },
         },
       ],
       scopeNote:
-        "★ COUVERT NATIVEMENT. Hierarchie LEARNER < MANAGER < RSSI < ADMIN < SUPERADMIN, isolation tenant stricte.",
+        "★ COUVERT NATIVEMENT. Hiérarchie LEARNER < MANAGER < RSSI < ADMIN < SUPERADMIN, isolation tenant stricte.",
     },
     {
       ref: "CC5.3",
-      name: "L'entite deploie des controles via des politiques et des procedures",
+      name: "L'entité déploie des contrôles via des politiques et des procédures",
       category: "CC5 - Control Activities",
       artifacts: [
         {
           type: "policy",
           source: "pack_nis2_pdf",
-          label: "Pack NIS2 + PSSI interne + procedures incident",
+          label: "Pack NIS2 + PSSI interne + procédures incident",
         },
       ],
     },
@@ -1692,7 +1692,7 @@ const SOC2: FrameworkMapping = {
     // ========================================================================
     {
       ref: "CC6.1",
-      name: "L'entite implemente des mesures de controle d'acces logiques pour proteger les donnees et systemes",
+      name: "L'entité implémente des mesures de contrôle d'accès logiques pour protéger les données et systèmes",
       category: "CC6 - Logical and Physical Access",
       artifacts: [
         {
@@ -1707,7 +1707,7 @@ const SOC2: FrameworkMapping = {
     },
     {
       ref: "CC6.2",
-      name: "Avant d'octroyer l'acces, l'entite enregistre, autorise et identifie les nouveaux utilisateurs",
+      name: "Avant d'octroyer l'accès, l'entité enregistre, autorise et identifie les nouveaux utilisateurs",
       category: "CC6 - Logical and Physical Access",
       artifacts: [
         {
@@ -1718,43 +1718,43 @@ const SOC2: FrameworkMapping = {
         },
       ],
       scopeNote:
-        "Tout cycle de vie utilisateur audite (creation, role, suspension, suppression).",
+        "Tout cycle de vie utilisateur audité (création, rôle, suspension, suppression).",
     },
     {
       ref: "CC6.3",
-      name: "L'entite autorise, modifie ou retire l'acces en fonction des roles et responsabilites",
+      name: "L'entité autorise, modifie ou retire l'accès en fonction des rôles et responsabilités",
       category: "CC6 - Logical and Physical Access",
       artifacts: [
         {
           type: "report",
           source: "audit_trail",
           label:
-            "Inventaire comptes privilegies (/superadmin/admins-by-tenant)",
+            "Inventaire comptes privilégiés (/superadmin/admins-by-tenant)",
           filter: { role: "ADMIN_RSSI_SUPERADMIN" },
         },
       ],
       scopeNote:
-        "★ COUVERT NATIVEMENT. Cf. mesure 7 ANSSI HG : inventaire exhaustif + export CSV + detection dormants.",
+        "★ COUVERT NATIVEMENT. Cf. mesure 7 ANSSI HG : inventaire exhaustif + export CSV + détection dormants.",
     },
     {
       ref: "CC6.6",
-      name: "L'entite implemente des controles pour proteger contre les menaces depuis l'exterieur du perimetre",
+      name: "L'entité implémente des contrôles pour protéger contre les menaces depuis l'extérieur du périmètre",
       category: "CC6 - Logical and Physical Access",
       artifacts: [
         {
           type: "document",
           source: "audit_trail",
           label:
-            "HAProxy frontal + rate-limit + WAF leger + HSTS preload + CSP nonce",
+            "HAProxy frontal + rate-limit + WAF léger + HSTS preload + CSP nonce",
           filter: { type: "evidence.network_defense" },
         },
       ],
       scopeNote:
-        "★ COUVERT NATIVEMENT. Defense en profondeur reseau + applicative.",
+        "★ COUVERT NATIVEMENT. Défense en profondeur réseau + applicative.",
     },
     {
       ref: "CC6.7",
-      name: "L'entite restreint la transmission, le mouvement et la suppression de donnees aux objectifs autorises",
+      name: "L'entité restreint la transmission, le mouvement et la suppression de données aux objectifs autorisés",
       category: "CC6 - Logical and Physical Access",
       artifacts: [
         {
@@ -1768,7 +1768,7 @@ const SOC2: FrameworkMapping = {
     },
     {
       ref: "CC6.8",
-      name: "L'entite implemente des controles pour prevenir ou detecter et agir sur l'introduction de logiciels malveillants",
+      name: "L'entité implémente des contrôles pour prévenir ou détecter et agir sur l'introduction de logiciels malveillants",
       category: "CC6 - Logical and Physical Access",
       artifacts: [
         {
@@ -1788,7 +1788,7 @@ const SOC2: FrameworkMapping = {
     // ========================================================================
     {
       ref: "CC7.1",
-      name: "L'entite utilise des procedures de detection pour identifier les changements de configuration et les vulnerabilites",
+      name: "L'entité utilise des procédures de détection pour identifier les changements de configuration et les vulnérabilités",
       category: "CC7 - System Operations",
       artifacts: [
         {
@@ -1801,42 +1801,42 @@ const SOC2: FrameworkMapping = {
     },
     {
       ref: "CC7.2",
-      name: "L'entite surveille les composants du systeme et l'environnement pour les anomalies",
+      name: "L'entité surveille les composants du système et l'environnement pour les anomalies",
       category: "CC7 - System Operations",
       artifacts: [
         {
           type: "event_log",
           source: "audit_trail",
           label:
-            "Detection bursts admin / exfiltration en masse (sprint 3 pentest)",
+            "Détection bursts admin / exfiltration en masse (sprint 3 pentest)",
           filter: { type: "anomaly.detected" },
         },
       ],
       scopeNote:
-        "Sprint 3 pentest : rate-limit endpoints /api/admin/*/export + detection > 100 req/60s.",
+        "Sprint 3 pentest : rate-limit endpoints /api/admin/*/export + détection > 100 req/60s.",
     },
     {
       ref: "CC7.3",
-      name: "L'entite evalue les evenements de securite et determine s'ils constituent un incident",
+      name: "L'entité évalue les événements de sécurité et détermine s'ils constituent un incident",
       category: "CC7 - System Operations",
       artifacts: [
         {
           type: "policy",
           source: "incident_procedure",
-          label: "Procedure incident Pack NIS2 (qualification < 1h)",
+          label: "Procédure incident Pack NIS2 (qualification < 1h)",
         },
       ],
     },
     {
       ref: "CC7.4",
-      name: "L'entite repond aux incidents de securite identifies en executant un programme de reponse",
+      name: "L'entité répond aux incidents de sécurité identifiés en exécutant un programme de réponse",
       category: "CC7 - System Operations",
       artifacts: [
         {
           type: "policy",
           source: "incident_procedure",
           label:
-            "Procedure incident unifiee (CNIL 72h + ANSSI 24h/72h/1mois + client < 24h)",
+            "Procédure incident unifiée (CNIL 72h + ANSSI 24h/72h/1mois + client < 24h)",
         },
         {
           type: "event_log",
@@ -1846,17 +1846,17 @@ const SOC2: FrameworkMapping = {
         },
       ],
       scopeNote:
-        "★ COUVERT NATIVEMENT. Procedure formalisee + tests tabletop annuels.",
+        "★ COUVERT NATIVEMENT. Procédure formalisée + tests tabletop annuels.",
     },
     {
       ref: "CC7.5",
-      name: "L'entite identifie, developpe et implemente les activites pour se remettre des incidents",
+      name: "L'entité identifie, développe et implémente les activités pour se remettre des incidents",
       category: "CC7 - System Operations",
       artifacts: [
         {
           type: "document",
           source: "audit_trail",
-          label: "Backup quotidien chiffre age + test restauration trimestriel",
+          label: "Backup quotidien chiffré age + test restauration trimestriel",
           filter: { type: "evidence.backup_policy" },
         },
       ],
@@ -1867,19 +1867,19 @@ const SOC2: FrameworkMapping = {
     // ========================================================================
     {
       ref: "CC8.1",
-      name: "L'entite autorise, conçoit, developpe ou se procure, configure, documente, teste, approuve et implemente les changements",
+      name: "L'entité autorise, conçoit, développe ou se procure, configure, documente, teste, approuve et implémente les changements",
       category: "CC8 - Change Management",
       artifacts: [
         {
           type: "document",
           source: "audit_trail",
           label:
-            "PR review obligatoire + CI/CD + tests automatises Vitest + Production build",
+            "PR review obligatoire + CI/CD + tests automatisés Vitest + Production build",
           filter: { type: "evidence.change_management" },
         },
       ],
       scopeNote:
-        "★ COUVERT NATIVEMENT. Branches protegees main/develop, review obligatoire, CI verte requise, deploy manuel.",
+        "★ COUVERT NATIVEMENT. Branches protégées main/develop, review obligatoire, CI verte requise, deploy manuel.",
     },
 
     // ========================================================================
@@ -1887,7 +1887,7 @@ const SOC2: FrameworkMapping = {
     // ========================================================================
     {
       ref: "CC9.1",
-      name: "L'entite identifie, selectionne et developpe des activites pour attenuer les risques liees a la perturbation des activites",
+      name: "L'entité identifie, sélectionne et développe des activités pour atténuer les risques liées à la perturbation des activités",
       category: "CC9 - Risk Mitigation",
       artifacts: [
         {
@@ -1899,54 +1899,54 @@ const SOC2: FrameworkMapping = {
         },
       ],
       scopeNote:
-        "DRP/BCP partiel : backup + geo-redondance OK, mais test formel annuel a formaliser.",
+        "DRP/BCP partiel : backup + geo-redondance OK, mais test formel annuel à formaliser.",
     },
     {
       ref: "CC9.2",
-      name: "L'entite evalue et gere les risques associes aux fournisseurs et partenaires",
+      name: "L'entité évalue et gère les risques associés aux fournisseurs et partenaires",
       category: "CC9 - Risk Mitigation",
       artifacts: [
         {
           type: "policy",
           source: "dpa_pdf",
           label:
-            "DPA signe avec tous les sous-traitants (Scaleway, Mollie, Mistral, OVH)",
+            "DPA signé avec tous les sous-traitants (Scaleway, Mollie, Mistral, OVH)",
         },
       ],
       scopeNote:
-        "Tous sous-traitants UE souverains, DPA RGPD art. 28 systematique.",
+        "Tous sous-traitants UE souverains, DPA RGPD art. 28 systématique.",
     },
   ],
   outOfScope: [
     {
       ref: "A1.1-A1.3",
       reason:
-        "Availability TSC : on aligne sur SLA 99% mensuel mais pas certifie SOC 2 Type II",
+        "Availability TSC : on aligne sur SLA 99% mensuel mais pas certifié SOC 2 Type II",
     },
     {
       ref: "PI1.1-PI1.5",
       reason:
-        "Processing Integrity TSC : pas applicable a un SaaS de sensibilisation (pas de transactions financieres critiques pour le client)",
+        "Processing Integrity TSC : pas applicable à un SaaS de sensibilisation (pas de transactions financières critiques pour le client)",
     },
     {
       ref: "C1.1-C1.2",
       reason:
-        "Confidentiality TSC : couvert via Security CC6.x. Pas de scope etendu specifique.",
+        "Confidentiality TSC : couvert via Security CC6.x. Pas de scope étendu spécifique.",
     },
     {
       ref: "P1.0-P8.1",
       reason:
-        "Privacy TSC : couvert via RGPD (referentiel europeen, plus strict que SOC 2 Privacy)",
+        "Privacy TSC : couvert via RGPD (référentiel européen, plus strict que SOC 2 Privacy)",
     },
     {
       ref: "CC1.3, CC1.5, CC3.3, CC3.4, CC5.2",
       reason:
-        "Controles de gouvernance entreprise specifiques au scaling > 5 collaborateurs",
+        "Contrôles de gouvernance entreprise spécifiques au scaling > 5 collaborateurs",
     },
     {
       ref: "CC6.4, CC6.5",
       reason:
-        "Acces physique aux installations (datacenters) : delegue a Scaleway (certifie ISO 27001, ISO 50001, HDS)",
+        "Accès physique aux installations (datacenters) : délégué à Scaleway (certifié ISO 27001, ISO 50001, HDS)",
     },
   ],
 };
