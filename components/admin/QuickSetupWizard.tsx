@@ -132,7 +132,7 @@ export default function QuickSetupWizard() {
       {step === 1 && (
         <Card title="Parlons de votre organisation" icon="🏢">
           <p className="text-sm text-gray-600 dark:text-gray-300 mb-5">
-            Trois questions rapides. On utilise vos reponses pour activer
+            Trois questions rapides. On utilise vos réponses pour activer
             automatiquement les modules qui ont du sens pour vous.
           </p>
 
@@ -149,7 +149,7 @@ export default function QuickSetupWizard() {
             </div>
           </Field>
 
-          <Field label="Secteur d'activite">
+          <Field label="Secteur d'activité">
             <div className="grid sm:grid-cols-2 gap-2">
               {(Object.keys(SECTOR_LABELS) as TenantSector[]).map((s) => (
                 <Choice
@@ -162,7 +162,7 @@ export default function QuickSetupWizard() {
             </div>
           </Field>
 
-          <Field label="Maturite cyber actuelle">
+          <Field label="Maturité cyber actuelle">
             <div className="space-y-2">
               {(Object.keys(MATURITY_LABELS) as CyberMaturity[]).map((m) => (
                 <Choice
@@ -188,9 +188,9 @@ export default function QuickSetupWizard() {
       )}
 
       {step === 2 && suggestion && (
-        <Card title="Voici votre programme suggere" icon="🎯">
+        <Card title="Voici votre programme suggéré" icon="🎯">
           <p className="text-sm text-gray-600 dark:text-gray-300 mb-5">
-            Sur la base de votre profil, nous avons active{" "}
+            Sur la base de votre profil, nous avons activé{" "}
             <strong className="text-primary-500">
               {suggestion.activated} modules
             </strong>{" "}
@@ -199,7 +199,7 @@ export default function QuickSetupWizard() {
               {suggestion.mandatory} obligatoire
               {suggestion.mandatory > 1 ? "s" : ""}
             </strong>{" "}
-            (les fondations : phishing, mots de passe). Selection :{" "}
+            (les fondations : phishing, mots de passe). Sélection :{" "}
             {suggestion.rationale}.
           </p>
 
@@ -215,7 +215,7 @@ export default function QuickSetupWizard() {
           </div>
 
           <div className="rounded-xl bg-accent-50/40 dark:bg-accent-900/10 border border-accent-200/40 p-3 mt-4 text-xs text-gray-600 dark:text-gray-300">
-            💡 Vous pourrez ajuster cette selection a tout moment depuis{" "}
+            💡 Vous pourrez ajuster cette sélection à tout moment depuis{" "}
             <Link
               href="/admin/modules"
               className="text-accent-600 hover:underline font-medium"
@@ -237,9 +237,9 @@ export default function QuickSetupWizard() {
       )}
 
       {step === 3 && (
-        <Card title="Inviter votre equipe" icon="👥">
+        <Card title="Inviter votre équipe" icon="👥">
           <p className="text-sm text-gray-600 dark:text-gray-300 mb-5">
-            Saisissez un ou plusieurs emails (un par ligne, ou separe par
+            Saisissez un ou plusieurs emails (un par ligne, ou séparé par
             virgule). Format optionnel :{" "}
             <code className="text-xs bg-gray-100 dark:bg-slate-800 px-1 rounded">
               email,nom,service
@@ -256,7 +256,7 @@ export default function QuickSetupWizard() {
           />
 
           <p className="text-xs text-gray-500 mt-2">
-            Vous pouvez sauter cette etape - on vous laissera inviter plus tard
+            Vous pouvez sauter cette étape - on vous laissera inviter plus tard
             depuis{" "}
             <Link
               href="/admin/utilisateurs"
@@ -295,14 +295,14 @@ export default function QuickSetupWizard() {
         <Card title="Votre rituel hebdomadaire" icon="📅">
           <p className="text-sm text-gray-600 dark:text-gray-300 mb-5">
             Vos collaborateurs recevront une fois par semaine un rappel pour
-            leur module. Choisissez le jour qui s'integre le mieux dans leur
+            leur module. Choisissez le jour qui s'intègre le mieux dans leur
             semaine.
           </p>
 
           {invitedCount !== null && invitedCount > 0 && (
             <p className="text-xs text-emerald-700 dark:text-emerald-300 mb-4">
-              ✓ {invitedCount} collaborateur{invitedCount > 1 ? "s" : ""} invite
-              {invitedCount > 1 ? "s" : ""} a l'etape precedente.
+              ✓ {invitedCount} collaborateur{invitedCount > 1 ? "s" : ""} invité
+              {invitedCount > 1 ? "s" : ""} à l'étape précédente.
             </p>
           )}
 
@@ -325,7 +325,7 @@ export default function QuickSetupWizard() {
             </div>
           </Field>
 
-          <Field label="Phishing simule">
+          <Field label="Phishing simulé">
             <label className="flex items-start gap-3 p-3 rounded-lg border border-gray-200 dark:border-slate-700 hover:border-accent-500 cursor-pointer">
               <input
                 type="checkbox"
@@ -338,8 +338,8 @@ export default function QuickSetupWizard() {
                   Lancer une simulation de phishing dans 7 jours
                 </p>
                 <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                  Email factice envoye a votre equipe pour mesurer le taux de
-                  clic, sans sanction. Ideal pour avoir une baseline.
+                  Email factice envoyé à votre équipe pour mesurer le taux de
+                  clic, sans sanction. Idéal pour avoir une baseline.
                 </p>
               </div>
             </label>
@@ -357,13 +357,13 @@ export default function QuickSetupWizard() {
       )}
 
       {step === 5 && (
-        <Card title="Tout est pret !" icon="🎉">
+        <Card title="Tout est prêt !" icon="🎉">
           <p className="text-base text-gray-700 dark:text-gray-200 mb-5">
-            Bravo, votre programme est lance.
+            Bravo, votre programme est lancé.
             {invitedCount && invitedCount > 0
-              ? ` ${invitedCount} collaborateur${invitedCount > 1 ? "s ont" : " a"} ete invite${invitedCount > 1 ? "s" : ""}, `
+              ? ` ${invitedCount} collaborateur${invitedCount > 1 ? "s ont" : " a"} été invité${invitedCount > 1 ? "s" : ""}, `
               : " "}
-            les fondamentaux sont actives, le rituel est cale.
+            les fondamentaux sont activés, le rituel est calé.
           </p>
 
           <div className="grid sm:grid-cols-2 gap-3 mt-4">
@@ -375,7 +375,7 @@ export default function QuickSetupWizard() {
                 📊 Tableau de bord
               </p>
               <p className="text-xs text-gray-600 dark:text-gray-300">
-                Etat cyber de l'organisation, KPIs, suivi equipe.
+                État cyber de l'organisation, KPIs, suivi équipe.
               </p>
             </Link>
             <Link
@@ -384,7 +384,7 @@ export default function QuickSetupWizard() {
             >
               <p className="font-bold text-primary-500 mb-1">📚 Modules</p>
               <p className="text-xs text-gray-600 dark:text-gray-300">
-                Ajuster les saisons activees, ajouter des obligatoires.
+                Ajuster les saisons activées, ajouter des obligatoires.
               </p>
             </Link>
             <Link
@@ -393,7 +393,7 @@ export default function QuickSetupWizard() {
             >
               <p className="font-bold text-primary-500 mb-1">👥 Utilisateurs</p>
               <p className="text-xs text-gray-600 dark:text-gray-300">
-                Inviter d'autres collaborateurs, gerer les groupes.
+                Inviter d'autres collaborateurs, gérer les groupes.
               </p>
             </Link>
             <Link
@@ -404,7 +404,7 @@ export default function QuickSetupWizard() {
                 🔒 Activer la 2FA
               </p>
               <p className="text-xs text-gray-600 dark:text-gray-300">
-                Securiser votre compte admin (recommande).
+                Sécuriser votre compte admin (recommandé).
               </p>
             </Link>
           </div>

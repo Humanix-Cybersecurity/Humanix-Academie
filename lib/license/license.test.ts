@@ -296,7 +296,7 @@ describe("verifyLicenseCached", () => {
 describe("describeLicenseError", () => {
   it("retourne un message FR pour chaque type d'erreur", () => {
     expect(describeLicenseError("missing")).toMatch(/Aucune licence/);
-    expect(describeLicenseError("expired")).toMatch(/expiree/);
+    expect(describeLicenseError("expired")).toMatch(/expirée/);
     expect(describeLicenseError("bad_signature")).toMatch(/Signature/);
     expect(describeLicenseError("malformed")).toMatch(/invalide/);
     expect(describeLicenseError("not_yet_valid")).toMatch(/futur/);

@@ -72,7 +72,7 @@ export default function SaisonCard({
       )}
       {!isLocked && pct === 100 && (
         <span
-          aria-label="Saison terminee"
+          aria-label="Saison terminée"
           className="absolute top-4 right-4 text-3xl"
         >
           🏆
@@ -147,7 +147,7 @@ export default function SaisonCard({
           {/* CTA */}
           {isLocked ? (
             <p className="text-sm italic text-gray-500 dark:text-gray-400">
-              Bientot disponible
+              Bientôt disponible
             </p>
           ) : firstUndoneSlug ? (
             <Link
@@ -161,7 +161,7 @@ export default function SaisonCard({
               <span className="text-xl" aria-hidden="true">
                 ✓
               </span>{" "}
-              Saison terminee - bravo
+              Saison terminée - bravo
             </p>
           )}
 
@@ -169,15 +169,15 @@ export default function SaisonCard({
               On affiche "~X min par episode" plutot que le total (qui ferait
               36 min et casserait la promesse "5 minutes par jour"). */}
           <p className="text-xs text-gray-500 dark:text-gray-400 mt-4 text-center tabular-nums">
-            {total} episode{total > 1 ? "s" : ""} · ~{avgMinutes} min par
-            episode
+            {total} épisode{total > 1 ? "s" : ""} · ~{avgMinutes} min par
+            épisode
             {expertCount > 0 ? (
               <>
                 {" "}
                 ·{" "}
                 <span
                   className="text-accent-500 font-semibold"
-                  title="Episodes avec scenario detaille redige par un expert humain"
+                  title="Épisodes avec scénario détaillé rédigé par un expert humain"
                 >
                   📝{" "}
                   {expertCount === total
@@ -191,9 +191,9 @@ export default function SaisonCard({
                 ·{" "}
                 <span
                   className="text-amber-600 dark:text-amber-400 font-semibold"
-                  title="Episodes en fallback structure (questions + quiz generiques). Enrichissement par expert prevu."
+                  title="Épisodes en fallback structuré (questions + quiz génériques). Enrichissement par expert prévu."
                 >
-                  🔜 bientot enrichi
+                  🔜 bientôt enrichi
                 </span>
               </>
             ) : null}

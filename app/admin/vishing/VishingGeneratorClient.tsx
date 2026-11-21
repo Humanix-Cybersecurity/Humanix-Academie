@@ -25,7 +25,7 @@ const VISHING_VOICES: Array<{ slug: string; label: string; tag: string }> = [
     label: "Marie - Pressante",
     tag: "🔥 cred. attaque",
   },
-  { slug: "fr_marie_neutral", label: "Marie - Posee", tag: "🎯 baseline" },
+  { slug: "fr_marie_neutral", label: "Marie - Posée", tag: "🎯 baseline" },
   {
     slug: "fr_marie_curious",
     label: "Marie - Insistante",
@@ -61,11 +61,11 @@ const TEMPLATES: Array<{
   {
     value: "fake-banque",
     label: "Faux conseiller bancaire",
-    description: "Pretexte fraude + demande OTP",
+    description: "Prétexte fraude + demande OTP",
   },
   {
     value: "fake-direction",
-    label: "Fraude au President",
+    label: "Fraude au Président",
     description: "Direction urgente + virement confidentiel",
   },
   {
@@ -76,18 +76,18 @@ const TEMPLATES: Array<{
   {
     value: "fake-cnil",
     label: "Faux contrôle CNIL/ANSSI",
-    description: "Pretexte controle reglementaire",
+    description: "Prétexte contrôle réglementaire",
   },
   {
     value: "free",
-    label: "Scenario libre",
-    description: "Decrivez le scenario voulu en contexte",
+    label: "Scénario libre",
+    description: "Décrivez le scénario voulu en contexte",
   },
 ];
 
 const DIFFICULTIES = [
   { value: "easy", label: "Facile (signaux gros)" },
-  { value: "medium", label: "Moyen (signaux moderes)" },
+  { value: "medium", label: "Moyen (signaux modérés)" },
   { value: "hard", label: "Difficile (signaux subtils)" },
 ];
 
@@ -132,13 +132,13 @@ export default function VishingGeneratorClient() {
         setError(
           data?.message ||
             data?.error ||
-            `Erreur HTTP ${res.status}. Reessayez plus tard.`,
+            `Erreur HTTP ${res.status}. Réessayez plus tard.`,
         );
         return;
       }
       setScript(data.script as VishingScript);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Erreur reseau");
+      setError(err instanceof Error ? err.message : "Erreur réseau");
     } finally {
       setLoading(false);
     }
@@ -178,7 +178,7 @@ export default function VishingGeneratorClient() {
       const blob = await res.blob();
       setAudioUrl(URL.createObjectURL(blob));
     } catch (err) {
-      setTtsError(err instanceof Error ? err.message : "Erreur reseau TTS");
+      setTtsError(err instanceof Error ? err.message : "Erreur réseau TTS");
     } finally {
       setTtsLoading(false);
     }
@@ -188,7 +188,7 @@ export default function VishingGeneratorClient() {
     <div className="space-y-6">
       <form onSubmit={handleGenerate} className="card space-y-4">
         <h2 className="font-bold text-primary-500 mb-1">
-          Configurer le scenario
+          Configurer le scénario
         </h2>
 
         <div className="grid sm:grid-cols-2 gap-4">
@@ -231,7 +231,7 @@ export default function VishingGeneratorClient() {
 
           <label className="block">
             <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-              Difficulte
+              Difficulté
             </span>
             <select
               value={difficulty}
@@ -258,12 +258,12 @@ export default function VishingGeneratorClient() {
               onChange={(e) => setContext(e.target.value)}
               maxLength={200}
               rows={2}
-              placeholder="Ex : campagne post-incident phishing reussi"
+              placeholder="Ex : campagne post-incident phishing réussi"
               className="mt-1 block w-full rounded-md border-gray-300 dark:border-slate-700 dark:bg-slate-800 shadow-sm focus:border-accent-500 focus:ring-accent-500"
               disabled={loading}
             />
             <span className="text-xs text-gray-500">
-              Pas de PII (email, telephone, SIREN/SIRET, nom propre reel).
+              Pas de PII (email, téléphone, SIREN/SIRET, nom propre réel).
             </span>
           </label>
         </div>
@@ -274,7 +274,7 @@ export default function VishingGeneratorClient() {
           className="btn-primary"
         >
           {loading
-            ? "Generation en cours..."
+            ? "Génération en cours..."
             : "🎙️ Générer le script de vishing"}
         </button>
 
@@ -293,10 +293,10 @@ export default function VishingGeneratorClient() {
           <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div>
               <h2 className="font-bold text-primary-500">
-                Script genere - formation interne uniquement
+                Script généré - formation interne uniquement
               </h2>
               <p className="text-xs text-gray-500 mt-1">
-                Persona attaquant : {script.attackerPersona} · Numero affiche :{" "}
+                Persona attaquant : {script.attackerPersona} · Numéro affiché :{" "}
                 <code className="px-1 py-0.5 rounded bg-gray-100 dark:bg-slate-800">
                   {script.spoofedCallerId}
                 </code>
@@ -315,7 +315,7 @@ export default function VishingGeneratorClient() {
                   onChange={(e) => setVoice(e.target.value)}
                   disabled={ttsLoading}
                   className="rounded-md text-xs border-gray-300 dark:border-slate-700 dark:bg-slate-800 focus:border-accent-500 focus:ring-accent-500"
-                  aria-label="Voix de synthese vocale"
+                  aria-label="Voix de synthèse vocale"
                 >
                   {VISHING_VOICES.map((v) => (
                     <option key={v.slug} value={v.slug}>
@@ -330,7 +330,7 @@ export default function VishingGeneratorClient() {
                 disabled={ttsLoading}
                 className="btn-secondary text-sm whitespace-nowrap"
               >
-                {ttsLoading ? "Synthese..." : "🔊 Ecouter (TTS souverain FR)"}
+                {ttsLoading ? "Synthese..." : "🔊 Écouter (TTS souverain FR)"}
               </button>
             </div>
           </header>
@@ -347,7 +347,7 @@ export default function VishingGeneratorClient() {
           {script.redFlags.length > 0 && (
             <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-md p-3">
               <h3 className="font-bold text-green-800 dark:text-green-200 mb-2 text-sm">
-                Signaux faibles a debriefer après la simulation
+                Signaux faibles à débriefer après la simulation
               </h3>
               <ul className="text-sm space-y-1 list-disc list-inside text-green-900 dark:text-green-100">
                 {script.redFlags.map((f, i) => (
@@ -361,8 +361,8 @@ export default function VishingGeneratorClient() {
             <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-md p-3">
               <p className="text-xs text-blue-700 dark:text-blue-300 mb-2">
                 🔒 TTS souverain FR (Mistral Voxtral en SaaS Paris, ou Piper
-                self-hosted selon `TTS_PROVIDER`). Aucun audio n'est conserve
-                cote provider - le buffer est cache en local pour reutilisation.
+                self-hosted selon `TTS_PROVIDER`). Aucun audio n'est conservé
+                côté provider - le buffer est caché en local pour réutilisation.
               </p>
               <p className="text-xs text-blue-700 dark:text-blue-300 mb-2">
                 Voix de synthèse : elle n'imite aucune personne réelle. Le
@@ -388,8 +388,8 @@ export default function VishingGeneratorClient() {
           )}
 
           <div className="text-xs text-gray-500 dark:text-gray-400 italic">
-            ⚠ Ce script est genere a des fins pedagogiques. Toute utilisation
-            malveillante est strictement interdite et engage la responsabilite
+            ⚠ Ce script est généré à des fins pédagogiques. Toute utilisation
+            malveillante est strictement interdite et engage la responsabilité
             de l'utilisateur.
           </div>
         </div>

@@ -129,10 +129,10 @@ export function AttestationPdf({ data }: { data: AttestationData }) {
   return (
     <Document
       title={`Attestation exercice de crise - ${data.orgName}`}
-      author="Humanix Academie"
+      author="Humanix Académie"
     >
       <Page size="A4" style={styles.page}>
-        <Text style={styles.brand}>Humanix Academie</Text>
+        <Text style={styles.brand}>Humanix Académie</Text>
         <Text style={styles.eyebrow}>Registre des exercices</Text>
         <Text style={styles.title}>
           Attestation d&apos;exercice de crise cyber
@@ -142,13 +142,13 @@ export function AttestationPdf({ data }: { data: AttestationData }) {
         <Text style={styles.para}>
           L&apos;organisation{" "}
           <Text style={{ fontWeight: "bold" }}>{data.orgName}</Text> atteste
-          avoir realise, le {data.dateStr}, un exercice de gestion de crise
-          d&apos;origine cyber, anime via la plateforme Humanix Academie.
+          avoir réalisé, le {data.dateStr}, un exercice de gestion de crise
+          d&apos;origine cyber, animé via la plateforme Humanix Académie.
         </Text>
 
         <View style={styles.detailBox}>
           <View style={styles.row}>
-            <Text style={styles.key}>Scenario</Text>
+            <Text style={styles.key}>Scénario</Text>
             <Text style={styles.val}>{data.scenarioTitle}</Text>
           </View>
           <View style={styles.row}>
@@ -172,19 +172,19 @@ export function AttestationPdf({ data }: { data: AttestationData }) {
         </View>
 
         <Text style={styles.recyf}>
-          Cet exercice contribue a l&apos;objectif de securite n°15 du
-          Referentiel Cyber France (ReCyF, ANSSI) : « Exercices, tests et
-          entrainements », et aux bonnes pratiques de preparation a la gestion
-          de crise attendues au titre de la directive NIS2. A verser au registre
+          Cet exercice contribue à l&apos;objectif de sécurité n°15 du
+          Référentiel Cyber France (ReCyF, ANSSI) : « Exercices, tests et
+          entraînements », et aux bonnes pratiques de préparation à la gestion
+          de crise attendues au titre de la directive NIS2. À verser au registre
           des exercices de l&apos;organisation.
         </Text>
 
         <Text style={styles.caveat}>
-          Attestation declarative etablie a des fins internes de tracabilite.
-          Elle ne constitue ni une certification ni une preuve opposable a un
+          Attestation déclarative établie à des fins internes de traçabilité.
+          Elle ne constitue ni une certification ni une preuve opposable à un
           tiers ; le ReCyF est un document de travail de l&apos;ANSSI,
-          susceptible d&apos;evoluer. Ce document ne remplace pas un exercice
-          conduit ou audite par un prestataire qualifie.
+          susceptible d&apos;évoluer. Ce document ne remplace pas un exercice
+          conduit ou audité par un prestataire qualifié.
         </Text>
 
         <View style={styles.signRow}>
@@ -195,13 +195,13 @@ export function AttestationPdf({ data }: { data: AttestationData }) {
             <Text style={styles.signValue}>{data.hostName}</Text>
           </View>
           <View style={styles.signBlock}>
-            <Text style={styles.signLabel}>Date d&apos;emission</Text>
+            <Text style={styles.signLabel}>Date d&apos;émission</Text>
             <Text style={styles.signValue}>{data.generatedStr}</Text>
           </View>
         </View>
 
         <Text style={styles.footer}>
-          Genere par Humanix Academie le {data.generatedStr} · La cyber humaine
+          Généré par Humanix Académie le {data.generatedStr} · La cyber humaine
           pour tous
         </Text>
       </Page>
@@ -223,25 +223,25 @@ export function ParticipantAttestationPdf({
   return (
     <Document
       title={`Attestation de participation - ${data.participantName}`}
-      author="Humanix Academie"
+      author="Humanix Académie"
     >
       <Page size="A4" style={styles.page}>
-        <Text style={styles.brand}>Humanix Academie</Text>
-        <Text style={styles.eyebrow}>Participation a un exercice de crise</Text>
+        <Text style={styles.brand}>Humanix Académie</Text>
+        <Text style={styles.eyebrow}>Participation à un exercice de crise</Text>
         <Text style={styles.title}>Attestation de participation</Text>
         <View style={styles.rule} />
 
         <Text style={styles.para}>
           <Text style={{ fontWeight: "bold" }}>{data.participantName}</Text> a
-          participe, le {data.dateStr}, a un exercice de gestion de crise
-          d&apos;origine cyber organise par{" "}
-          <Text style={{ fontWeight: "bold" }}>{data.orgName}</Text> et anime
-          via la plateforme Humanix Academie.
+          participé, le {data.dateStr}, à un exercice de gestion de crise
+          d&apos;origine cyber organisé par{" "}
+          <Text style={{ fontWeight: "bold" }}>{data.orgName}</Text> et animé
+          via la plateforme Humanix Académie.
         </Text>
 
         <View style={styles.detailBox}>
           <View style={styles.row}>
-            <Text style={styles.key}>Scenario</Text>
+            <Text style={styles.key}>Scénario</Text>
             <Text style={styles.val}>{data.scenarioTitle}</Text>
           </View>
           <View style={styles.row}>
@@ -254,7 +254,7 @@ export function ParticipantAttestationPdf({
           </View>
           {data.role && (
             <View style={styles.row}>
-              <Text style={styles.key}>Role tenu</Text>
+              <Text style={styles.key}>Rôle tenu</Text>
               <Text style={styles.val}>{data.role}</Text>
             </View>
           )}
@@ -267,22 +267,22 @@ export function ParticipantAttestationPdf({
         </View>
 
         <Text style={styles.recyf}>
-          Cet exercice contribue a l&apos;objectif de securite n°15 du
-          Referentiel Cyber France (ReCyF, ANSSI) : « Exercices, tests et
-          entrainements », et aux bonnes pratiques de preparation a la gestion
+          Cet exercice contribue à l&apos;objectif de sécurité n°15 du
+          Référentiel Cyber France (ReCyF, ANSSI) : « Exercices, tests et
+          entraînements », et aux bonnes pratiques de préparation à la gestion
           de crise attendues au titre de la directive NIS2.
         </Text>
 
         <Text style={styles.caveat}>
-          Attestation declarative etablie a des fins internes de tracabilite.
-          Elle ne constitue ni une certification ni une preuve opposable a un
+          Attestation déclarative établie à des fins internes de traçabilité.
+          Elle ne constitue ni une certification ni une preuve opposable à un
           tiers ; le ReCyF est un document de travail de l&apos;ANSSI,
-          susceptible d&apos;evoluer. Le score est un indicateur pedagogique,
-          pas une note de competence.
+          susceptible d&apos;évoluer. Le score est un indicateur pédagogique,
+          pas une note de compétence.
         </Text>
 
         <Text style={styles.footer}>
-          Genere par Humanix Academie le {data.generatedStr} · La cyber humaine
+          Généré par Humanix Académie le {data.generatedStr} · La cyber humaine
           pour tous
         </Text>
       </Page>

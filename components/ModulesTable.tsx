@@ -391,8 +391,8 @@ export default function ModulesTable({
               className="underline hover:text-primary-500"
             >
               {selected.size === filtered.length
-                ? "Tout deselectionner"
-                : "Selectionner les " + filtered.length + " visibles"}
+                ? "Tout désélectionner"
+                : "Sélectionner les " + filtered.length + " visibles"}
             </button>
           )}
         </div>
@@ -404,7 +404,7 @@ export default function ModulesTable({
       {selected.size > 0 && (
         <div className="mb-4 flex flex-wrap items-center gap-2 rounded-2xl border-2 border-accent-500 bg-accent-50 dark:bg-accent-900/20 p-3">
           <span className="text-sm font-bold text-primary-500 tabular-nums">
-            {selected.size} module{selected.size > 1 ? "s" : ""} selectionne
+            {selected.size} module{selected.size > 1 ? "s" : ""} sélectionné
             {selected.size > 1 ? "s" : ""}
           </span>
           <div className="flex flex-wrap gap-2 ml-auto">
@@ -412,7 +412,7 @@ export default function ModulesTable({
               ✓ Activer
             </BulkButton>
             <BulkButton onClick={() => onBulk("deactivate")} disabled={pending}>
-              ✕ Desactiver
+              ✕ Désactiver
             </BulkButton>
             <BulkButton
               onClick={() => onBulk("make-mandatory")}
@@ -452,7 +452,7 @@ export default function ModulesTable({
             onClick={clearFilters}
             className="text-sm text-accent-500 hover:underline font-medium"
           >
-            Reinitialiser les filtres
+            Réinitialiser les filtres
           </button>
         </div>
       ) : (
@@ -505,7 +505,7 @@ export default function ModulesTable({
                           type="checkbox"
                           checked={isSelected}
                           onChange={() => toggleSelected(s.id)}
-                          aria-label={`Selectionner ${s.title}`}
+                          aria-label={`Sélectionner ${s.title}`}
                           className="mt-1.5 h-4 w-4 rounded border-gray-300 text-accent-500 focus:ring-accent-500"
                         />
 
@@ -576,7 +576,7 @@ export default function ModulesTable({
                             {s.description}
                           </p>
                           <p className="text-xs text-gray-500 mt-1">
-                            {s.episodesCount} episode
+                            {s.episodesCount} épisode
                             {s.episodesCount > 1 ? "s" : ""}
                             {s.episodesCount > 0 && (
                               <>
@@ -585,7 +585,7 @@ export default function ModulesTable({
                                 {Math.round(
                                   s.totalMinutes / s.episodesCount,
                                 )}{" "}
-                                min / episode · {s.totalMinutes} min total ·{" "}
+                                min / épisode · {s.totalMinutes} min total ·{" "}
                                 {s.totalXp} XP
                               </>
                             )}
@@ -657,11 +657,11 @@ export default function ModulesTable({
 
                           <div>
                             <p className="text-[10px] uppercase tracking-widest font-bold text-accent-500 mb-2">
-                              Episodes ({s.episodes.length})
+                              Épisodes ({s.episodes.length})
                             </p>
                             {s.episodes.length === 0 ? (
                               <p className="text-xs text-gray-500 italic">
-                                Aucun episode publie pour le moment.
+                                Aucun épisode publié pour le moment.
                               </p>
                             ) : (
                               <ol className="space-y-1.5">
@@ -686,7 +686,7 @@ export default function ModulesTable({
                                       rel="noopener noreferrer"
                                       className="text-xs text-accent-500 hover:underline font-medium shrink-0"
                                     >
-                                      Apercu ↗
+                                      Aperçu ↗
                                     </Link>
                                   </li>
                                 ))}
@@ -697,12 +697,12 @@ export default function ModulesTable({
                           {(s.completionsCount > 0 || s.avgScore !== null) && (
                             <div>
                               <p className="text-[10px] uppercase tracking-widest font-bold text-accent-500 mb-2">
-                                Engagement de tes equipes
+                                Engagement de tes équipes
                               </p>
                               <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-sm">
                                 <div className="rounded-lg bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 p-2.5">
                                   <p className="text-[10px] uppercase tracking-wide text-gray-500 dark:text-gray-400">
-                                    Completions
+                                    Complétions
                                   </p>
                                   <p className="font-bold text-primary-500 dark:text-accent-300 tabular-nums">
                                     {s.completionsCount}
@@ -736,14 +736,14 @@ export default function ModulesTable({
         <p className="text-gray-500">
           {pending
             ? "Sauvegarde en cours..."
-            : "✓ Toutes les modifications sont sauvegardees automatiquement"}
+            : "✓ Toutes les modifications sont sauvegardées automatiquement"}
         </p>
         <button
           onClick={onReset}
           disabled={pending}
           className="text-gray-500 hover:text-primary-500 disabled:opacity-50"
         >
-          Reinitialiser l'ordre par defaut
+          Réinitialiser l'ordre par défaut
         </button>
       </div>
     </>
@@ -864,7 +864,7 @@ function FamilySection({
           onClick={onSelectAll}
           className="ml-auto text-xs text-gray-500 hover:text-accent-500 underline"
         >
-          Selectionner cette famille
+          Sélectionner cette famille
         </button>
       </header>
       {!collapsed && (

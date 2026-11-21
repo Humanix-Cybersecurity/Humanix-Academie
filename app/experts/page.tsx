@@ -48,7 +48,7 @@ export default async function ExpertsPage() {
           className="max-w-5xl mx-auto px-4 pt-12 pb-10 sm:pt-16 sm:pb-12 text-center"
         >
           <p className="text-xs sm:text-sm uppercase tracking-[0.25em] font-bold text-accent-500 mb-2">
-            Bibliotheque vivante · communaute marketplace
+            Bibliothèque vivante · communauté marketplace
           </p>
           <h1
             id="hero-title"
@@ -63,9 +63,9 @@ export default async function ExpertsPage() {
             className="text-lg sm:text-xl text-gray-700 dark:text-gray-200 max-w-2xl mx-auto leading-relaxed animate-slide-up"
             style={{ animationDelay: "220ms" }}
           >
-            Pas de catalogue genere en interne. Chaque module porte le nom d'un
+            Pas de catalogue généré en interne. Chaque module porte le nom d'un
             professionnel français qui en assume la signature : RSSI,
-            consultants en sécurité, gendarmes cyber, formateurs specialises.
+            consultants en sécurité, gendarmes cyber, formateurs spécialisés.
           </p>
         </section>
       </HexBackdrop>
@@ -74,18 +74,18 @@ export default async function ExpertsPage() {
         {/* Manifeste */}
         <div className="rounded-3xl border-2 border-primary-200 dark:border-primary-900/40 bg-gradient-to-br from-blue-50 via-white to-indigo-50 dark:from-slate-900 dark:via-slate-900 dark:to-blue-950/40 p-6 sm:p-8 mb-10 shadow-sm">
           <p className="text-xs uppercase tracking-[0.25em] font-bold text-accent-500 mb-2">
-            Notre engagement editorial
+            Notre engagement éditorial
           </p>
           <h2 className="font-display text-xl sm:text-2xl font-extrabold text-primary-500 dark:text-accent-300 mb-3">
-            Pourquoi des modules signes ?
+            Pourquoi des modules signés ?
           </h2>
           <p className="text-sm sm:text-base text-gray-700 dark:text-gray-200 leading-relaxed">
-            La cybersecurite humaine ne se forme pas avec des slides recycles.
-            Elle se forme avec des histoires vraies, racontees par des gens qui
+            La cybersécurité humaine ne se forme pas avec des slides recyclés.
+            Elle se forme avec des histoires vraies, racontées par des gens qui
             en ont vu passer. En valorisant nos experts contributeurs, on
-            construit un catalogue qui grandit avec la communaute française -
-            plutot qu'un produit cle-en-main fige. Chaque expert est librement
-            contactable. Chaque module rappelle qui l'a ecrit.
+            construit un catalogue qui grandit avec la communauté française -
+            plutôt qu'un produit clé-en-main figé. Chaque expert est librement
+            contactable. Chaque module rappelle qui l'a écrit.
           </p>
         </div>
 
@@ -187,13 +187,13 @@ export default async function ExpertsPage() {
             Tu es expert cyber ?
           </p>
           <h2 className="font-display text-2xl sm:text-3xl font-extrabold mb-3 relative leading-tight">
-            La bibliotheque a besoin de ta voix.
+            La bibliothèque a besoin de ta voix.
           </h2>
           <p className="opacity-90 mb-6 max-w-xl mx-auto leading-relaxed relative">
             Publie 1 module dans la marketplace, et fais partie d'une
-            bibliotheque vivante consultee par des milliers d'apprenants
-            francais - particuliers, equipes, organisations. Visibilite, lien
-            LinkedIn, badge auteur sur chaque module installe.
+            bibliothèque vivante consultée par des milliers d'apprenants
+            français - particuliers, équipes, organisations. Visibilité, lien
+            LinkedIn, badge auteur sur chaque module installé.
           </p>
           <Link
             href="/contact?sujet=expert"
@@ -208,9 +208,9 @@ export default async function ExpertsPage() {
           ================================================================ */}
         <section className="text-center pt-10 pb-4">
           <blockquote className="font-display italic text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
-            « Une cybersecurite qui parle au monde reel s'ecrit avec ceux qui le
+            « Une cybersécurité qui parle au monde réel s'écrit avec ceux qui le
             vivent. Pas avec un copywriter qui n'a jamais vu un faux RIB
-            atterrir dans un mail un mardi a 17h. »
+            atterrir dans un mail un mardi à 17h. »
           </blockquote>
           <p
             aria-hidden="true"

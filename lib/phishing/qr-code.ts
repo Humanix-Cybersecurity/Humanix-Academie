@@ -50,9 +50,9 @@ Montant : 35 EUR (majore 75 EUR sous 45j)
 Scannez pour payer en ligne :`,
     pedagogicalMarkers: [
       "L'ANTAI ne distribue JAMAIS d'avis avec QR code papier sous-essuie-glace",
-      "Une vraie amende est envoyee par courrier postal officiel (CERT, signe)",
-      "Pour payer une amende reelle : taper antai.gouv.fr a la main, jamais via QR",
-      "Le QR derriere etait un FAUX site qui aurait collecte ta CB",
+      "Une vraie amende est envoyée par courrier postal officiel (CERT, signé)",
+      "Pour payer une amende réelle : taper antai.gouv.fr à la main, jamais via QR",
+      "Le QR derrière était un FAUX site qui aurait collecté ta CB",
     ],
     difficulty: 4,
   },
@@ -62,16 +62,16 @@ Scannez pour payer en ligne :`,
     name: "Faux WiFi gratuit",
     emoji: "📶",
     context:
-      "Imprimer comme une affiche 'WiFi visiteurs gratuit' et coller dans une salle de reunion, accueil, cafeteria. La cible scanne pour se connecter au reseau.",
+      "Imprimer comme une affiche 'WiFi visiteurs gratuit' et coller dans une salle de réunion, accueil, cafétéria. La cible scanne pour se connecter au réseau.",
     posterCallout: `WIFI GRATUIT - VISITEURS
 Reseau : Humanix-Guest
 Mot de passe automatique
 Scannez pour vous connecter :`,
     pedagogicalMarkers: [
-      "Un WiFi legitime ne demande JAMAIS un QR code pour transmettre le mot de passe",
+      "Un WiFi légitime ne demande JAMAIS un QR code pour transmettre le mot de passe",
       "Le QR aurait ouvert une page demandant ton login d'entreprise (collect credentials)",
-      "Pour un vrai WiFi visiteurs : demande le mot de passe a l'accueil de vive voix",
-      "Si tu dois te connecter en exterieur : utilise le partage de connexion 4G/5G de ton telephone",
+      "Pour un vrai WiFi visiteurs : demande le mot de passe à l'accueil de vive voix",
+      "Si tu dois te connecter en extérieur : utilise le partage de connexion 4G/5G de ton téléphone",
     ],
     difficulty: 3,
   },
@@ -81,16 +81,16 @@ Scannez pour vous connecter :`,
     name: "Faux menu restaurant",
     emoji: "🍽️",
     context:
-      "Imprimer comme une fiche 'menu du jour - scanner pour voir' et coller sur les tables d'une cafeteria d'entreprise, restaurant. La cible scanne et est invitee a 'payer pour reserver une table'.",
+      "Imprimer comme une fiche 'menu du jour - scanner pour voir' et coller sur les tables d'une cafétéria d'entreprise, restaurant. La cible scanne et est invitée à 'payer pour réserver une table'.",
     posterCallout: `MENU DU JOUR
 Decouvrez nos suggestions
 Reservez votre table en 2 clics
 Scannez le QR pour voir le menu :`,
     pedagogicalMarkers: [
-      "Aucun restaurant ne demande de payer pour 'reserver une table' via QR sur la table",
-      "Le QR menait vers une page de paiement frauduleuse qui aurait collecte ta CB",
-      "Pour reserver : appel ou site officiel du restaurant (taper l'URL a la main)",
-      "Si l'etablissement utilise vraiment un QR menu, il pointe vers une carte digitale, jamais un paiement",
+      "Aucun restaurant ne demande de payer pour 'réserver une table' via QR sur la table",
+      "Le QR menait vers une page de paiement frauduleuse qui aurait collecté ta CB",
+      "Pour réserver : appel ou site officiel du restaurant (taper l'URL à la main)",
+      "Si l'établissement utilise vraiment un QR menu, il pointe vers une carte digitale, jamais un paiement",
     ],
     difficulty: 3,
   },
@@ -100,16 +100,16 @@ Scannez le QR pour voir le menu :`,
     name: "Faux affichage RH/CSE",
     emoji: "📋",
     context:
-      "Imprimer comme une affiche RH ('mise a jour avantages CSE' ou 'evaluation annuelle') et coller dans les couloirs de l'entreprise, machine a cafe, panneau syndical.",
+      "Imprimer comme une affiche RH ('mise à jour avantages CSE' ou 'évaluation annuelle') et coller dans les couloirs de l'entreprise, machine à café, panneau syndical.",
     posterCallout: `MISE A JOUR AVANTAGES CSE
 Validation requise avant fin du mois
 Connectez-vous avec vos identifiants
 Scannez pour acceder au portail :`,
     pedagogicalMarkers: [
       "La RH/CSE ne communique JAMAIS via QR code sur affiche papier - toujours par email officiel ou intranet connu",
-      "Le QR menait a un faux portail SSO qui aurait vole ton login d'entreprise",
-      "Pour acceder a tes avantages CSE : passer par le portail intranet officiel (URL connue, pas via QR)",
-      "Toute affiche RH/CSE legitime utilise des canaux internes traces (intranet, email signe)",
+      "Le QR menait à un faux portail SSO qui aurait volé ton login d'entreprise",
+      "Pour accéder à tes avantages CSE : passer par le portail intranet officiel (URL connue, pas via QR)",
+      "Toute affiche RH/CSE légitime utilise des canaux internes tracés (intranet, email signé)",
     ],
     difficulty: 5, // tres credible car contexte interne
   },

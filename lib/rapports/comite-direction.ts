@@ -97,29 +97,29 @@ export function composerRapport(args: {
   urlRapport: string;
 }): ContenuRapport {
   const { nomTenant, mois, urlRapport } = args;
-  const subject = `Rapport de conformite ${nomTenant} - ${mois}`;
+  const subject = `Rapport de conformité ${nomTenant} - ${mois}`;
 
   const text = [
-    `Rapport de conformite - ${mois}`,
+    `Rapport de conformité - ${mois}`,
     "",
     `Le rapport mensuel de ${nomTenant} est disponible :`,
     urlRapport,
     "",
-    "Il recapitule la posture de conformite, la progression des",
-    "formations et les evenements de securite du mois ecoule.",
+    "Il récapitule la posture de conformité, la progression des",
+    "formations et les événements de sécurité du mois écoulé.",
     "",
-    "L'acces demande une authentification : le document n'est pas joint",
-    "a ce message, et sa consultation est journalisee.",
+    "L'accès demande une authentification : le document n'est pas joint",
+    "à ce message, et sa consultation est journalisée.",
   ].join("\n");
 
   const html = [
-    `<p><strong>Rapport de conformite &mdash; ${escapeHtml(mois)}</strong></p>`,
+    `<p><strong>Rapport de conformité &mdash; ${escapeHtml(mois)}</strong></p>`,
     `<p>Le rapport mensuel de ${escapeHtml(nomTenant)} est disponible :</p>`,
     `<p><a href="${escapeHtml(urlRapport)}">Consulter le rapport</a></p>`,
-    "<p>Il recapitule la posture de conformite, la progression des formations",
-    "et les evenements de securite du mois ecoule.</p>",
-    '<p style="color:#666;font-size:0.9em">L\'acces demande une authentification :',
-    "le document n'est pas joint a ce message, et sa consultation est journalisee.</p>",
+    "<p>Il récapitule la posture de conformité, la progression des formations",
+    "et les événements de sécurité du mois écoulé.</p>",
+    '<p style="color:#666;font-size:0.9em">L\'accès demande une authentification :',
+    "le document n'est pas joint à ce message, et sa consultation est journalisée.</p>",
   ].join("\n");
 
   return { subject, html, text };

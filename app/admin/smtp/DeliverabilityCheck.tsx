@@ -45,11 +45,11 @@ export default function DeliverabilityCheck({ domain }: { domain: string }) {
             <span aria-hidden="true">📧</span> Délivrabilité du domaine
           </h2>
           <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">
-            Verifie que{" "}
+            Vérifie que{" "}
             <strong className="font-mono text-cyan-700 dark:text-cyan-300">
               {domain}
             </strong>{" "}
-            a SPF, DKIM et DMARC bien configures. Sans ca, tes phishing simulés
+            a SPF, DKIM et DMARC bien configurés. Sans ça, tes phishing simulés
             risquent d&apos;arriver en spam.
           </p>
         </div>
@@ -72,7 +72,7 @@ export default function DeliverabilityCheck({ domain }: { domain: string }) {
           role="alert"
           className="rounded-xl border border-red-300 dark:border-red-700 bg-red-50 dark:bg-red-900/30 p-3 text-sm text-red-800 dark:text-red-300"
         >
-          Echec du check : <code className="font-mono">{error}</code>
+          Échec du check : <code className="font-mono">{error}</code>
         </div>
       )}
 
@@ -107,18 +107,18 @@ export default function DeliverabilityCheck({ domain }: { domain: string }) {
             <div className="mt-2 space-y-2 leading-relaxed">
               <p>
                 <strong>SPF (Sender Policy Framework)</strong> : record TXT qui
-                declare quels serveurs ont le droit d&apos;envoyer du mail pour
-                ton domaine. Sans SPF, les serveurs recepteurs (Gmail, Outlook)
-                considerent tes mails suspects.
+                déclare quels serveurs ont le droit d&apos;envoyer du mail pour
+                ton domaine. Sans SPF, les serveurs récepteurs (Gmail, Outlook)
+                considèrent tes mails suspects.
               </p>
               <p>
                 <strong>DKIM (DomainKeys Identified Mail)</strong> : signature
-                cryptographique des mails. Ton serveur SMTP signe avec une cle
-                privee, et le record TXT publie la cle publique. Le recepteur
-                verifie la signature : si valide = mail non modifié.
+                cryptographique des mails. Ton serveur SMTP signe avec une clé
+                privée, et le record TXT publie la clé publique. Le récepteur
+                vérifie la signature : si valide = mail non modifié.
               </p>
               <p>
-                <strong>DMARC</strong> : politique declaree au monde "que faire
+                <strong>DMARC</strong> : politique déclarée au monde "que faire
                 si SPF OU DKIM échoue". Trois modes :
               </p>
               <ul className="list-disc pl-5">
@@ -141,7 +141,7 @@ export default function DeliverabilityCheck({ domain }: { domain: string }) {
           </details>
 
           <p className="text-[10px] text-gray-400 italic">
-            Verifie le {dateHeureParis(result.checkedAt)} via lookup DNS direct
+            Vérifié le {dateHeureParis(result.checkedAt)} via lookup DNS direct
             (pas de cache).
           </p>
         </>

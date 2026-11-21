@@ -17,7 +17,7 @@ export default function ErasureQueue({ queue }: { queue: QueueRow[] }) {
   if (queue.length === 0) {
     return (
       <p className="text-sm text-gray-500 dark:text-gray-400 italic">
-        Aucune demande d'effacement enregistree dans les 90 derniers jours.
+        Aucune demande d'effacement enregistrée dans les 90 derniers jours.
       </p>
     );
   }
@@ -26,23 +26,23 @@ export default function ErasureQueue({ queue }: { queue: QueueRow[] }) {
     <div className="overflow-x-auto -mx-4 px-4">
       <table className="w-full text-sm min-w-[600px]">
         <caption className="sr-only">
-          Demandes d'effacement RGPD article 17 enregistrees dans les 90
-          derniers jours, avec personne concernee, date de demande, etat de
-          traitement et delai legal restant
+          Demandes d'effacement RGPD article 17 enregistrées dans les 90
+          derniers jours, avec personne concernée, date de demande, état de
+          traitement et délai légal restant
         </caption>
         <thead>
           <tr className="border-b border-gray-200 dark:border-slate-700 text-left">
             <th className="p-2 font-medium text-gray-700 dark:text-gray-300">
-              Personne concernee
+              Personne concernée
             </th>
             <th className="p-2 font-medium text-gray-700 dark:text-gray-300">
-              Demande recue
+              Demande reçue
             </th>
             <th className="p-2 font-medium text-gray-700 dark:text-gray-300">
-              Etat
+              État
             </th>
             <th className="p-2 font-medium text-gray-700 dark:text-gray-300">
-              Delai
+              Délai
             </th>
           </tr>
         </thead>

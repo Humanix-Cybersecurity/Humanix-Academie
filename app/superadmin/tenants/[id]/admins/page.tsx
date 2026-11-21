@@ -87,8 +87,8 @@ export default async function TenantAdminsPage({
         </h1>
         <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">
           Gestion des admins natifs (membres du tenant) et externes (membership
-          accorde par un SUPERADMIN). Les emails sont affiches en clair pour
-          permettre l&apos;identification, chaque action est tracee dans le
+          accordé par un SUPERADMIN). Les emails sont affichés en clair pour
+          permettre l&apos;identification, chaque action est tracée dans le
           journal d&apos;audit.
         </p>
       </header>
@@ -101,7 +101,7 @@ export default async function TenantAdminsPage({
               Admins natifs ({natives.length})
             </h2>
             <p className="text-xs text-gray-500 dark:text-gray-400">
-              Membres du tenant {tenant.name} avec role &gt;= MANAGER.
+              Membres du tenant {tenant.name} avec rôle &gt;= MANAGER.
             </p>
           </div>
           <Link
@@ -115,7 +115,7 @@ export default async function TenantAdminsPage({
         {natives.length === 0 ? (
           <p className="text-sm text-gray-500 italic">
             Aucun admin natif. Utilise &laquo; Inviter un nouvel admin &raquo;
-            ci-dessous pour en creer un.
+            ci-dessous pour en créer un.
           </p>
         ) : (
           <ul className="divide-y divide-gray-100 dark:divide-slate-800">
@@ -157,7 +157,7 @@ export default async function TenantAdminsPage({
               Admins externes ({externals.length})
             </h2>
             <p className="text-xs text-gray-500 dark:text-gray-400">
-              Users d&apos;autres tenants qui ont un acces admin a celui-ci via
+              Users d&apos;autres tenants qui ont un accès admin à celui-ci via
               un TenantMembership.
             </p>
           </div>
@@ -185,9 +185,9 @@ export default async function TenantAdminsPage({
             Ajouter un admin externe
           </h3>
           <p className="text-xs text-gray-600 dark:text-gray-400 mb-3">
-            Le user doit deja exister sur la plateforme (n&apos;importe quel
+            Le user doit déjà exister sur la plateforme (n&apos;importe quel
             tenant). Si l&apos;email est inconnu, utilise &laquo; Inviter un
-            nouvel admin &raquo; ci-dessous a la place.
+            nouvel admin &raquo; ci-dessous à la place.
           </p>
           <AddExternalAdminForm tenantId={id} />
         </div>
@@ -236,7 +236,7 @@ export default async function TenantAdminsPage({
           Inviter un nouvel admin natif
         </h2>
         <p className="text-xs text-gray-600 dark:text-gray-400 mt-1 mb-3">
-          Cree un user dans le tenant {tenant.name} avec le role choisi et
+          Crée un user dans le tenant {tenant.name} avec le rôle choisi et
           envoie un magic link. Le user devient membre natif du tenant.
         </p>
         <InviteNewTenantAdminForm tenantId={id} tenantName={tenant.name} />
@@ -244,8 +244,8 @@ export default async function TenantAdminsPage({
 
       {/* Notice audit */}
       <p className="text-[11px] text-gray-500 dark:text-gray-500 italic text-center">
-        Chaque action (ajout / retrait / changement de role) est journalisee
-        dans le journal d&apos;audit avec ton identite SUPERADMIN.
+        Chaque action (ajout / retrait / changement de rôle) est journalisée
+        dans le journal d&apos;audit avec ton identité SUPERADMIN.
       </p>
     </div>
   );

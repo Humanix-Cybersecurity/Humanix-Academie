@@ -101,7 +101,7 @@ describe("modeles - la frontiere de ce qu'on remplit", () => {
 
   it("amorce les traitements courants sans les remplir", () => {
     const contenu = modeleRegistre("Acme").contenu;
-    for (const attendu of ["Paie", "Recrutement", "Videosurveillance"]) {
+    for (const attendu of ["Paie", "Recrutement", "Vidéosurveillance"]) {
       expect(contenu).toContain(attendu);
     }
   });
@@ -115,7 +115,7 @@ describe("modeles - la frontiere de ce qu'on remplit", () => {
   });
 
   it("rappelle l'echeance d'un mois sur le suivi des demandes", () => {
-    expect(modeleSuiviDemandes("Acme").contenu).toMatch(/ECHEANCE \(1 mois\)/);
+    expect(modeleSuiviDemandes("Acme").contenu).toMatch(/ÉCHÉANCE \(1 mois\)/);
   });
 });
 

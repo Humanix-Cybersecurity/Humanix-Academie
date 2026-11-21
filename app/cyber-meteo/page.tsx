@@ -54,7 +54,7 @@ export default async function CyberMeteoPage() {
           className="max-w-4xl mx-auto px-4 pt-12 pb-10 sm:pt-16 sm:pb-12 text-center"
         >
           <p className="text-xs sm:text-sm uppercase tracking-[0.25em] font-bold text-accent-500 mb-2">
-            🇫🇷 Cyber-meteo France · CERT-FR temps reel
+            🇫🇷 Cyber-météo France · CERT-FR temps réel
           </p>
           <h1
             id="hero-title"
@@ -68,9 +68,9 @@ export default async function CyberMeteoPage() {
             className="text-lg sm:text-xl text-gray-700 dark:text-gray-200 max-w-2xl mx-auto leading-relaxed animate-slide-up"
             style={{ animationDelay: "220ms" }}
           >
-            Données officielles CERT-FR (cert.ssi.gouv.fr) agregees toutes les
-            heures. Aucune telemetrie chez vous, aucune dependance hors UE,
-            aucune alarmisme - juste la lecture honnete du moment.
+            Données officielles CERT-FR (cert.ssi.gouv.fr) agrégées toutes les
+            heures. Aucune télémétrie chez vous, aucune dépendance hors UE,
+            aucune alarmisme - juste la lecture honnête du moment.
           </p>
         </section>
       </HexBackdrop>
@@ -146,11 +146,11 @@ export default async function CyberMeteoPage() {
             Aller plus loin
           </p>
           <h2 className="font-display text-2xl sm:text-3xl font-extrabold mb-3 relative leading-tight">
-            Cette meteo est notre engagement de transparence.
+            Cette météo est notre engagement de transparence.
           </h2>
           <p className="opacity-90 mb-6 max-w-xl mx-auto leading-relaxed relative">
-            Pour aller au-dela : photo claire de la maturite humaine de ton
-            organisation en 5 minutes, ou demarrage d'un programme de
+            Pour aller au-delà : photo claire de la maturité humaine de ton
+            organisation en 5 minutes, ou démarrage d'un programme de
             sensibilisation pour tes équipes.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center relative">
@@ -158,13 +158,13 @@ export default async function CyberMeteoPage() {
               href="/audit-flash"
               className="bg-white text-primary-500 font-bold px-6 py-3 rounded-2xl hover:scale-105 transition shadow-lg"
             >
-              🎯 Photo claire de la maturite (5 min)
+              🎯 Photo claire de la maturité (5 min)
             </Link>
             <Link
               href="/demo"
               className="bg-white/10 backdrop-blur border border-white/40 text-white font-bold px-6 py-3 rounded-2xl hover:bg-white/20 transition"
             >
-              Ouvrir une demo (sans carte)
+              Ouvrir une démo (sans carte)
             </Link>
           </div>
         </section>
@@ -174,9 +174,9 @@ export default async function CyberMeteoPage() {
           ================================================================ */}
         <section className="text-center pt-10 pb-4">
           <blockquote className="font-display italic text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
-            « La meteo cyber n'est pas une alarme - c'est une lecture du ciel.
-            On observe, on prepare, on n'angoisse pas. La vigilance se cultive,
-            la peur s'epuise. »
+            « La météo cyber n'est pas une alarme - c'est une lecture du ciel.
+            On observe, on prépare, on n'angoisse pas. La vigilance se cultive,
+            la peur s'épuise. »
           </blockquote>
           <p
             aria-hidden="true"

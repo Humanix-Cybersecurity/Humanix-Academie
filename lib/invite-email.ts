@@ -118,7 +118,7 @@ export async function sendInviteMagicLink(
   const res = await sendEmail({
     to: email,
     fromName: brand.emailFromName,
-    subject: `🦊 ${ctx.inviterName} t'invite a rejoindre ${ctx.tenantName} sur ${brand.brandName}`,
+    subject: `🦊 ${ctx.inviterName} t'invite à rejoindre ${ctx.tenantName} sur ${brand.brandName}`,
     html: buildInviteHtml({ ...ctx, email, url, expires, brand }),
     unsubscribe: { kind: "transactional" },
   });
@@ -172,20 +172,20 @@ function buildInviteHtml(params: {
 
 <tr><td style="padding:32px 32px 16px">
 <p style="margin:0;font-size:12px;text-transform:uppercase;letter-spacing:1px;color:${params.brand.accentColor};font-weight:bold">Invitation ${escapeHtml(params.brand.brandName)}</p>
-<h1 style="margin:8px 0 0;color:${params.brand.primaryColor};font-size:24px;line-height:1.3">On t'invite a rejoindre<br/>${escapeHtml(params.tenantName)}</h1>
+<h1 style="margin:8px 0 0;color:${params.brand.primaryColor};font-size:24px;line-height:1.3">On t'invite à rejoindre<br/>${escapeHtml(params.tenantName)}</h1>
 </td></tr>
 
 <tr><td style="padding:0 32px 16px">
 <p style="margin:0 0 16px;color:#333;font-size:15px">${greeting}</p>
 <p style="margin:0 0 16px;color:#333;font-size:15px">
-<strong>${escapeHtml(params.inviterName)}</strong> t'invite a rejoindre l'espace
+<strong>${escapeHtml(params.inviterName)}</strong> t'invite à rejoindre l'espace
 <strong>${escapeHtml(params.tenantName)}</strong> sur ${escapeHtml(params.brand.brandName)}, la plateforme
-de sensibilisation a la cybersecurite.
+de sensibilisation à la cybersécurité.
 </p>
 <p style="margin:0 0 24px;color:#333;font-size:15px">
 Pour activer ton compte et commencer ta formation, clique simplement sur le
 bouton ci-dessous, puis confirme sur la page qui s'ouvre. Aucun mot de
-passe a creer - c'est un lien magique securise.
+passe à créer - c'est un lien magique sécurisé.
 </p>
 </td></tr>
 
@@ -196,12 +196,12 @@ passe a creer - c'est un lien magique securise.
 <tr><td style="padding:0 32px 24px">
 <p style="margin:0 0 12px;color:#666;font-size:13px">
 Ce lien expire le <strong>${expiresStr}</strong>. Si tu ne fais rien, ton
-compte restera en attente d'activation - ${params.inviterName.toLowerCase().includes("admin") ? "la personne qui administre ton espace" : "la personne a l'origine de cette invitation"} peut te renvoyer une invitation a tout moment.
+compte restera en attente d'activation - ${params.inviterName.toLowerCase().includes("admin") ? "la personne qui administre ton espace" : "la personne à l'origine de cette invitation"} peut te renvoyer une invitation à tout moment.
 </p>
 <p style="margin:0;color:#666;font-size:13px">
-Si tu n'es pas a l'origine de cette invitation ou que tu ne souhaites pas
+Si tu n'es pas à l'origine de cette invitation ou que tu ne souhaites pas
 rejoindre cet espace, ignore simplement ce mail. Ton adresse <strong>${escapeHtml(params.email)}</strong>
-ne sera pas utilisee.
+ne sera pas utilisée.
 </p>
 </td></tr>
 
@@ -210,7 +210,7 @@ ne sera pas utilisee.
 ${
   params.brand.hidePoweredBy
     ? escapeHtml(params.brand.brandName)
-    : `Humanix Cybersecurity SASU · Toulouse, France · contact@humanix-cybersecurity.fr<br/>Plateforme française de cybersensibilisation · AGPLv3 · Donnees hebergees en France`
+    : `Humanix Cybersecurity SASU · Toulouse, France · contact@humanix-cybersecurity.fr<br/>Plateforme française de cybersensibilisation · AGPLv3 · Données hébergées en France`
 }
 </p>
 </td></tr>

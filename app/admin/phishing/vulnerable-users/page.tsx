@@ -36,9 +36,9 @@ export default async function VulnerableUsersPage() {
     return (
       <>
         <AdminPageHeader
-          title="Vulnerabilites phishing"
+          title="Vulnérabilités phishing"
           icon="🎯"
-          description="Profil IA de chaque apprenant base sur ses interactions phishing simulees."
+          description="Profil IA de chaque apprenant basé sur ses interactions phishing simulées."
         />
         <PlanGate
           feature="phishing"
@@ -110,9 +110,9 @@ export default async function VulnerableUsersPage() {
         </Link>
       </div>
       <AdminPageHeader
-        title="Vulnerabilites phishing"
+        title="Vulnérabilités phishing"
         icon="🎯"
-        description="Profil IA Mistral par apprenant sur 180 jours d'interactions avec les simulations. Clique sur 'Analyser' pour generer un narratif personnalise."
+        description="Profil IA Mistral par apprenant sur 180 jours d'interactions avec les simulations. Clique sur 'Analyser' pour générer un narratif personnalisé."
       />
 
       <AdminSection
@@ -121,7 +121,7 @@ export default async function VulnerableUsersPage() {
         {sorted.length === 0 ? (
           <p className="text-sm text-gray-500">
             Aucun apprenant avec interactions phishing sur les 180 derniers
-            jours. Lance une campagne baseline pour generer des donnees.
+            jours. Lance une campagne baseline pour générer des données.
           </p>
         ) : (
           <div className="overflow-x-auto rounded-xl border border-gray-200 dark:border-slate-800">
@@ -143,7 +143,7 @@ export default async function VulnerableUsersPage() {
                     Soumis
                   </th>
                   <th className="px-3 py-2 font-semibold text-right tabular-nums">
-                    Signales
+                    Signalés
                   </th>
                   <th className="px-3 py-2 font-semibold">Profil IA</th>
                 </tr>

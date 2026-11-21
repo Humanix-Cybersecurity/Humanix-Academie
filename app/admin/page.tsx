@@ -175,14 +175,14 @@ export default async function AdminPage() {
   // (vs "voici l'etat de maturite" generique). On adapte au contexte reel.
   const hint =
     totalSeats === 0
-      ? "L'équipe n'est pas encore activee. Premiere etape sereine : inviter les premiers explorateurs."
+      ? "L'équipe n'est pas encore activée. Première étape sereine : inviter les premiers explorateurs."
       : seenAtLeastOne === 0
-        ? "Personne n'a encore franchi la porte d'apprendre. Un petit message d'invitation peut declencher la dynamique."
+        ? "Personne n'a encore franchi la porte d'apprendre. Un petit message d'invitation peut déclencher la dynamique."
         : activationRate >= 80
-          ? "L'équipe est bien lancee. Aujourd'hui, c'est plus de polissage que d'urgence."
+          ? "L'équipe est bien lancée. Aujourd'hui, c'est plus de polissage que d'urgence."
           : activationRate >= 40
-            ? "La dynamique est lancee. Quelques personnes meritent un coup de main pour rejoindre le groupe."
-            : "Le decollage est encore timide. Une relance bienveillante peut reveiller les premiers reflexes.";
+            ? "La dynamique est lancée. Quelques personnes méritent un coup de main pour rejoindre le groupe."
+            : "Le décollage est encore timide. Une relance bienveillante peut réveiller les premiers réflexes.";
 
   return (
     <div className="animate-fadeIn space-y-8">
@@ -258,7 +258,7 @@ export default async function AdminPage() {
       >
         <blockquote className="font-display italic text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
           « Piloter une culture cyber, c'est moins une chasse aux failles qu'une
-          attention reguliere - comme entretenir un jardin. Aujourd'hui,
+          attention régulière - comme entretenir un jardin. Aujourd'hui,
           observe. Demain, arrose. »
         </blockquote>
         <p

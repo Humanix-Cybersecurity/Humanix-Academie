@@ -151,7 +151,7 @@ async function checkDkim(domain: string): Promise<AuthRecord> {
             found: true,
             value: `${selector}: ${joined.slice(0, 100)}${joined.length > 100 ? "..." : ""}`,
             severity: "INFO",
-            advice: `DKIM trouvé via selecteur "${selector}". Verifie que la cle publique correspond a celle de ton fournisseur SMTP.`,
+            advice: `DKIM trouvé via sélecteur "${selector}". Vérifie que la clé publique correspond à celle de ton fournisseur SMTP.`,
           };
         }
       }
@@ -167,7 +167,7 @@ async function checkDkim(domain: string): Promise<AuthRecord> {
     advice:
       `Aucun record DKIM trouvé sur les selecteurs courants (${DEFAULT_DKIM_SELECTORS.join(", ")}). ` +
       "Configure DKIM chez ton fournisseur (Scaleway TEM le fait automatiquement) et publie le record TXT. " +
-      "Sans DKIM, ton mail ne peut pas etre verifie comme integre, donc score spam eleve.",
+      "Sans DKIM, ton mail ne peut pas être vérifié comme intègre, donc score spam élevé.",
   };
 }
 
