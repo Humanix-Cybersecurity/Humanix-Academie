@@ -124,7 +124,7 @@ export default function LaunchCampaignForm({
           : "";
         // Phase 7b : message specifique si drip active
         const dripNote = res.dripPending
-          ? ` - ⏱️ ${res.dripPending} mail${res.dripPending > 1 ? "s" : ""} planifie${res.dripPending > 1 ? "s" : ""} pour les prochains jours (envoyes par le cron)`
+          ? ` - ⏱️ ${res.dripPending} mail${res.dripPending > 1 ? "s" : ""} planifié${res.dripPending > 1 ? "s" : ""} pour les prochains jours (envoyés par le cron)`
           : "";
         if (res.simulated) {
           setFeedback({
@@ -217,14 +217,14 @@ export default function LaunchCampaignForm({
             className="rounded"
           />
           <span className="font-bold text-fuchsia-800 dark:text-fuchsia-200">
-            🧪 Test A/B (envoyer 2 templates en parallele)
+            🧪 Test A/B (envoyer 2 templates en parallèle)
           </span>
         </label>
         {abTestEnabled && (
           <div className="mt-3 space-y-2">
             <p className="text-xs text-fuchsia-700 dark:text-fuchsia-300">
-              Les destinataires seront divises 50/50 (split deterministe). Le
-              dashboard de campagne affichera les metrics cote a cote pour
+              Les destinataires seront divisés 50/50 (split déterministe). Le
+              dashboard de campagne affichera les metrics côté à côté pour
               identifier le template qui convertit le mieux.
             </p>
             <label className="text-xs font-medium text-gray-700 dark:text-gray-300 block">
@@ -243,7 +243,7 @@ export default function LaunchCampaignForm({
             </select>
             {selectedB === selected && (
               <p className="text-xs text-amber-700 dark:text-amber-400">
-                ⚠️ Le template B doit etre different du template A pour que le
+                ⚠️ Le template B doit être différent du template A pour que le
                 test ait du sens.
               </p>
             )}
@@ -269,9 +269,9 @@ export default function LaunchCampaignForm({
         {dripEnabled && (
           <div className="mt-3 space-y-2">
             <p className="text-xs text-orange-700 dark:text-orange-300">
-              Repartit les envois en round-robin sur N jours. Evite la vague
-              &quot;tout le monde a recu le meme mail bizarre en meme
-              temps&quot; qui casse la pedagogie en open space.
+              Répartit les envois en round-robin sur N jours. Évite la vague
+              &quot;tout le monde a reçu le même mail bizarre en même
+              temps&quot; qui casse la pédagogie en open space.
             </p>
             <label className="text-xs font-medium text-gray-700 dark:text-gray-300 block">
               Etalement sur{" "}
@@ -295,9 +295,9 @@ export default function LaunchCampaignForm({
               <span>14j (max)</span>
             </div>
             <p className="text-xs text-orange-700 dark:text-orange-300 italic">
-              Les premieres cibles recoivent immediatement (J0), les suivantes
-              sont planifiees pour le cron qui les envoie au fur et a mesure
-              (/api/cron/phishing-drip, planifie 1x/heure).
+              Les premières cibles reçoivent immédiatement (J0), les suivantes
+              sont planifiées pour le cron qui les envoie au fur et à mesure
+              (/api/cron/phishing-drip, planifié 1x/heure).
             </p>
           </div>
         )}
@@ -309,7 +309,7 @@ export default function LaunchCampaignForm({
           <label className="text-sm font-medium text-gray-700 block mb-2">
             Cibler une liste de destinataires
             <span className="ml-2 text-xs font-normal text-gray-500">
-              (cohorte ad-hoc importee via CSV - prioritaire si selectionnee)
+              (cohorte ad-hoc importée via CSV - prioritaire si sélectionnée)
             </span>
           </label>
           <select

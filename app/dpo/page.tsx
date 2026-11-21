@@ -78,27 +78,27 @@ const PROMESSES = [
       ring: "border-cyan-200 dark:border-cyan-900/40",
       accent: "text-cyan-700 dark:text-cyan-300",
     },
-    body: "Humanix Academie est un sous-traitant au sens RGPD. Tu recois des le plan Découverte : le registre des traitements de la plateforme (article 30), avec finalites, données, durees, garanties - pre-rempli, signe, exportable. Plus besoin de le faire toi-même.",
+    body: "Humanix Académie est un sous-traitant au sens RGPD. Tu reçois dès le plan Découverte : le registre des traitements de la plateforme (article 30), avec finalités, données, durées, garanties - pré-rempli, signé, exportable. Plus besoin de le faire toi-même.",
   },
   {
     emoji: "📜",
-    title: "DPA modèle en piece jointe",
+    title: "DPA modèle en pièce jointe",
     palette: {
       bg: "from-emerald-50 via-white to-teal-50 dark:from-slate-900 dark:via-slate-900 dark:to-teal-950/40",
       ring: "border-emerald-200 dark:border-emerald-900/40",
       accent: "text-emerald-700 dark:text-emerald-300",
     },
-    body: "Data Processing Agreement (article 28 RGPD) déjà redige selon les exigences CNIL et signables en 1 minute. Liste exhaustive des sous-traitants ulterieurs (Scaleway Paris pour l'hosting, Mistral Paris pour l'IA, Mollie pour le paiement). Aucune dependance Cloud Act par defaut.",
+    body: "Data Processing Agreement (article 28 RGPD) déjà rédigé selon les exigences CNIL et signables en 1 minute. Liste exhaustive des sous-traitants ultérieurs (Scaleway Paris pour l'hosting, Mistral Paris pour l'IA, Mollie pour le paiement). Aucune dépendance Cloud Act par défaut.",
   },
   {
     emoji: "⏰",
-    title: "Procedure 72h pre-remplie",
+    title: "Procédure 72h pré-remplie",
     palette: {
       bg: "from-amber-50 via-white to-yellow-50 dark:from-slate-900 dark:via-slate-900 dark:to-amber-950/40",
       ring: "border-amber-200 dark:border-amber-900/40",
       accent: "text-amber-700 dark:text-amber-300",
     },
-    body: "En cas de fuite cote Humanix : runbook 72h documente, contact CNIL sur la liaison directe, formulaire pre-rempli. Cote tenant : module pedagogique 03-fuite-72h disponible pour former tes équipes a leur propre procedure.",
+    body: "En cas de fuite côté Humanix : runbook 72h documenté, contact CNIL sur la liaison directe, formulaire pré-rempli. Côté tenant : module pédagogique 03-fuite-72h disponible pour former tes équipes à leur propre procédure.",
   },
   {
     emoji: "🔓",
@@ -108,11 +108,11 @@ const PROMESSES = [
       ring: "border-purple-200 dark:border-purple-900/40",
       accent: "text-purple-700 dark:text-purple-300",
     },
-    body: "Acces, rectification, effacement, portabilite (art. 15-22) implementes nativement dans /profil pour chaque apprenant. Audit log RGPD centralise (PR #88) trace toute action sur les données personnelles. Tu peux repondre a une demande de droit en 4 clics, avec preuve d'execution.",
+    body: "Accès, rectification, effacement, portabilité (art. 15-22) implémentés nativement dans /profil pour chaque apprenant. Audit log RGPD centralisé (PR #88) trace toute action sur les données personnelles. Tu peux répondre à une demande de droit en 4 clics, avec preuve d'exécution.",
   },
   {
     emoji: "🇫🇷",
-    title: "Hebergement souverain Scaleway Paris",
+    title: "Hébergement souverain Scaleway Paris",
     palette: {
       bg: "from-rose-50 via-white to-amber-50 dark:from-slate-900 dark:via-slate-900 dark:to-rose-950/40",
       ring: "border-rose-200 dark:border-rose-900/40",
@@ -128,7 +128,7 @@ const PROMESSES = [
       ring: "border-indigo-200 dark:border-indigo-900/40",
       accent: "text-indigo-700 dark:text-indigo-300",
     },
-    body: "Plateforme open source AGPLv3. Tu peux auditer le code ligne par ligne, le forker, l'auto-heberger. Plus de boite noire a justifier au COMEX. Le rapport d'audit de sécurité est public (Markdown versionne Git, PDF a la demande).",
+    body: "Plateforme open source AGPLv3. Tu peux auditer le code ligne par ligne, le forker, l'auto-héberger. Plus de boîte noire à justifier au COMEX. Le rapport d'audit de sécurité est public (Markdown versionné Git, PDF à la demande).",
   },
 ];
 
@@ -164,9 +164,9 @@ export default function DpoLandingPage() {
             className="text-lg sm:text-xl text-gray-700 dark:text-gray-200 max-w-2xl mx-auto leading-relaxed animate-slide-up"
             style={{ animationDelay: "220ms" }}
           >
-            Humanix Academie est un outil de sensibilisation cyber. Mais c'est
+            Humanix Académie est un outil de sensibilisation cyber. Mais c'est
             aussi un sous-traitant RGPD. On a fait le choix d'être auditable par
-            construction : registre fourni, DPA modèle, 72h pre-rempli, hosting
+            construction : registre fourni, DPA modèle, 72h pré-rempli, hosting
             Scaleway Paris, audit log complet, code AGPLv3 public.
           </p>
         </section>
@@ -179,7 +179,7 @@ export default function DpoLandingPage() {
         <section aria-labelledby="promesses-title" className="space-y-1">
           <div className="text-center mb-6">
             <p className="text-xs uppercase tracking-[0.25em] font-bold text-accent-500 mb-2">
-              6 promesses tracables
+              6 promesses traçables
             </p>
             <h2
               id="promesses-title"
@@ -233,8 +233,8 @@ export default function DpoLandingPage() {
               <strong className="text-primary-500 dark:text-accent-300">
                 La situation :
               </strong>{" "}
-              tu es DPO mutualise (3 jours/semaine), tu pilotes la conformité de
-              plusieurs PME francaises. NIS2 arrive en droit français, et leurs
+              tu es DPO mutualisé (3 jours/semaine), tu pilotes la conformité de
+              plusieurs PME françaises. NIS2 arrive en droit français, et leurs
               directions te demandent déjà de prouver que les collaborateurs
               sont sensibilisés à la cyber. Tu cherches une plateforme qui ne te
               rajoute pas elle-même une dette RGPD.
@@ -243,11 +243,11 @@ export default function DpoLandingPage() {
               <strong className="text-primary-500 dark:text-accent-300">
                 Ce qu'apporte Humanix :
               </strong>{" "}
-              tu deploies le tenant en 30 minutes. Le registre, le DPA, la
-              procedure 72h sont fournis dans /admin. Tu n'as plus qu'a les
-              annexer a ton dossier de sous-traitants. La plateforme propose
-              elle-même les modules pedagogiques pour former tes collaborateurs
-              sur les sujets RGPD operationnels (regle des 3 questions, droit
+              tu déploies le tenant en 30 minutes. Le registre, le DPA, la
+              procédure 72h sont fournis dans /admin. Tu n'as plus qu'à les
+              annexer à ton dossier de sous-traitants. La plateforme propose
+              elle-même les modules pédagogiques pour former tes collaborateurs
+              sur les sujets RGPD opérationnels (règle des 3 questions, droit
               d'accès, registre, sous-traitants - saison{" "}
               <Link
                 href="/apprendre"
@@ -255,7 +255,7 @@ export default function DpoLandingPage() {
               >
                 données-sensibles
               </Link>{" "}
-              complete 6/6).
+              complète 6/6).
             </p>
             <p>
               <strong className="text-primary-500 dark:text-accent-300">
@@ -268,16 +268,16 @@ export default function DpoLandingPage() {
               >
                 /admin
               </Link>{" "}
-              au dirigeant, qui voit en temps reel le taux de completion. Plus
+              au dirigeant, qui voit en temps réel le taux de complétion. Plus
               besoin d'envoyer un PDF mensuel - la preuve est consultable et
-              exportable. La meteo cyber{" "}
+              exportable. La météo cyber{" "}
               <Link
                 href="/cyber-meteo"
                 className="text-accent-500 underline font-medium"
               >
                 /cyber-meteo
               </Link>{" "}
-              donne le contexte national CERT-FR. Tu economises 4 a 6 heures par
+              donne le contexte national CERT-FR. Tu économises 4 à 6 heures par
               mois.
             </p>
           </div>
@@ -511,25 +511,25 @@ export default function DpoLandingPage() {
             🛡
           </div>
           <p className="text-xs uppercase tracking-[0.3em] font-bold opacity-80 mb-2 relative">
-            Echangeons
+            Échangeons
           </p>
           <h2
             id="cta-title"
             className="font-display text-3xl sm:text-4xl font-extrabold mb-3 relative leading-tight"
           >
-            Tu es DPO ? On t'ecoute.
+            Tu es DPO ? On t'écoute.
           </h2>
           <p className="opacity-90 mb-6 max-w-xl mx-auto text-base sm:text-lg leading-relaxed relative">
-            Que tu sois interne dans une PME, mutualise sur plusieurs
-            structures, ou consultant independant - ta voix oriente la roadmap
-            espace DPO. Demo dediee 30 min, sans pression commerciale.
+            Que tu sois interne dans une PME, mutualisé sur plusieurs
+            structures, ou consultant indépendant - ta voix oriente la roadmap
+            espace DPO. Démo dédiée 30 min, sans pression commerciale.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center relative">
             <a
               href="mailto:contact@humanix-cybersecurity.fr?subject=Espace+DPO+%E2%80%94+pilote+Humanix"
               className="bg-white text-primary-500 font-bold px-6 py-3 rounded-2xl hover:scale-105 transition shadow-lg"
             >
-              📧 Demander une demo DPO
+              📧 Demander une démo DPO
             </a>
             <Link
               href="/confidentialite"

@@ -255,8 +255,8 @@ export default async function TarifsPage({
                 <p className="opacity-90 mb-4 leading-relaxed">
                   Notre <strong>audit cyber flash</strong> donne une photo
                   claire de la maturité humaine de ton organisation, en 15
-                  questions bienveillantes. Rapport PDF a la fin, recommandation
-                  personnalisee - sans pression.
+                  questions bienveillantes. Rapport PDF à la fin, recommandation
+                  personnalisée - sans pression.
                 </p>
                 <Link
                   href="/audit-flash"
@@ -512,18 +512,18 @@ export default async function TarifsPage({
               },
               {
                 emoji: "🇫🇷",
-                title: "Souverain par defaut",
+                title: "Souverain par défaut",
                 text: "Conçu, hébergé et opéré en France. Conformité RGPD/NIS2 native. Pas de Cloud Act au menu.",
               },
               {
                 emoji: "🤝",
-                title: "Integre a l'ecosysteme",
+                title: "Intégré à l'écosystème",
                 text: "Connecteur natif CISO Assistant (intuitem). Format OSCAL standard. Webhooks Sentinel/Splunk/Sekoia.",
               },
               {
                 emoji: "🎮",
                 title: "Ludique pour de vrai",
-                text: "Mascotte evolutive, boutique, challenges entre services, badges. Les collaborateurs reviennent par envie.",
+                text: "Mascotte évolutive, boutique, challenges entre services, badges. Les collaborateurs reviennent par envie.",
               },
               {
                 emoji: "⚡",
@@ -533,7 +533,7 @@ export default async function TarifsPage({
               {
                 emoji: "📊",
                 title: "Score de risque humain",
-                text: "Mesure objective, en temps reel, par collaborateur et par service. Ce que ton assureur cyber demande.",
+                text: "Mesure objective, en temps réel, par collaborateur et par service. Ce que ton assureur cyber demande.",
               },
               {
                 emoji: "🎨",
@@ -543,12 +543,12 @@ export default async function TarifsPage({
               {
                 emoji: "🦊",
                 title: "Une mascotte qui te parle",
-                text: "Hex t'accompagne, te coache, te felicite. Pas un chatbot froid. Un compagnon de progression.",
+                text: "Hex t'accompagne, te coache, te félicite. Pas un chatbot froid. Un compagnon de progression.",
               },
               {
                 emoji: "💰",
-                title: "Volume plutot que rente",
-                text: "3 €/user/mois en Pro. 5 a 10x moins cher que les acteurs US. Volume > 30 grosses boites.",
+                title: "Volume plutôt que rente",
+                text: "3 €/user/mois en Pro. 5 à 10x moins cher que les acteurs US. Volume > 30 grosses boîtes.",
               },
             ].map((diff, idx) => (
               <DiffCard
@@ -918,11 +918,11 @@ export default async function TarifsPage({
             id="cta-final"
             className="font-display text-3xl sm:text-4xl font-extrabold mb-3 relative leading-tight"
           >
-            Prends une etoile, prends un compte, ou juste un cafe.
+            Prends une étoile, prends un compte, ou juste un café.
           </h2>
           <p className="text-lg opacity-90 mb-8 max-w-xl mx-auto leading-relaxed relative">
             Self-host libre ou cloud gratuit en 2 minutes. Premier module
-            jouable immediatement. Pas de carte bancaire, pas de relance
+            jouable immédiatement. Pas de carte bancaire, pas de relance
             commerciale, pas de pression.
           </p>
           <div className="flex flex-wrap justify-center gap-3 relative">
@@ -936,7 +936,7 @@ export default async function TarifsPage({
               href="/demo"
               className="bg-white/10 backdrop-blur border-2 border-white/70 text-white font-bold px-6 sm:px-8 py-4 rounded-2xl hover:bg-white/20 transition"
             >
-              🎮 Tester la demo publique
+              🎮 Tester la démo publique
             </Link>
             <a
               href="https://github.com/Humanix-Cybersecurity/Humanix-Academie"
@@ -951,12 +951,12 @@ export default async function TarifsPage({
               href="mailto:contact@humanix-cybersecurity.fr"
               className="bg-white/10 backdrop-blur border-2 border-white/70 text-white font-bold px-6 sm:px-8 py-4 rounded-2xl hover:bg-white/20 transition"
             >
-              📞 Echanger avec un expert
+              📞 Échanger avec un expert
             </a>
           </div>
           <p className="text-xs opacity-70 mt-6 relative">
             Une question ? <strong>contact@humanix-cybersecurity.fr</strong> -
-            on repond sous 4 h ouvrees.
+            on répond sous 4 h ouvrées.
           </p>
         </section>
 
@@ -966,7 +966,7 @@ export default async function TarifsPage({
         <section className="text-center pt-10 pb-4">
           <blockquote className="font-display italic text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
             « Le prix est un choix politique. On a choisi de ne laisser personne
-            au bord du chemin - pas par charite, par strategie. La cybersecurite
+            au bord du chemin - pas par charité, par stratégie. La cybersécurité
             ne peut pas être un luxe quand 90 % des attaques visent les humains.
             »
           </blockquote>

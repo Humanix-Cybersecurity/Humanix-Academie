@@ -82,8 +82,8 @@ describe("composerRapport", () => {
       mois: "août 2026",
       urlRapport: "https://humanix-academie.fr/rapport",
     });
-    expect(r.subject).toBe("Rapport de conformite ACME - août 2026");
+    expect(r.subject).toBe("Rapport de conformité ACME - août 2026");
     expect(r.text).toContain("https://humanix-academie.fr/rapport");
-    expect(r.text).toContain("journalisee");
+    expect(r.text).toContain("journalisée");
   });
 });

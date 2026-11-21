@@ -73,7 +73,7 @@ const SAMPLE_RESPONSE = `{
   }
 }`;
 
-const CURL_EXAMPLE = `# Recupere ton snapshot DPO (JSON)
+const CURL_EXAMPLE = `# Récupère ton snapshot DPO (JSON)
 curl -H "Authorization: Bearer \${HUMANIX_API_KEY}" \\
   https://humanix-academie.fr/api/v1/dpo-export`;
 

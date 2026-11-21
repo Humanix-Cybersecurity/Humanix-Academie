@@ -512,7 +512,7 @@ const FEATURES: Feature[] = [
         <p>
           Le User est ensuite injecté dans le champ <code>owner</code>{" "}
           (singulier) sur les evidences, applied controls, findings, risk
-          scenarios, metric instances et asset workforce, et dans{" "}
+          scénarios, metric instances et asset workforce, et dans{" "}
           <code>owners</code> (pluriel) sur les incidents.
         </p>
       </>

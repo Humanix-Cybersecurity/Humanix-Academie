@@ -158,17 +158,17 @@ function normalizeDomain(d: string): string {
 /** Map LicenseError → message i18n FR. */
 export function describeLicenseError(error: LicenseError): string {
   const map: Record<LicenseError, string> = {
-    missing: "Aucune licence configuree (HUMANIX_LICENSE_KEY absente).",
+    missing: "Aucune licence configurée (HUMANIX_LICENSE_KEY absente).",
     malformed: "Format de licence invalide.",
     bad_signature:
-      "Signature invalide. La licence a ete modifiee ou ne provient pas de Humanix Cybersecurity.",
-    expired: "Licence expiree. Contactez Humanix pour le renouvellement.",
+      "Signature invalide. La licence a été modifiée ou ne provient pas de Humanix Cybersecurity.",
+    expired: "Licence expirée. Contactez Humanix pour le renouvellement.",
     not_yet_valid:
-      "Licence pas encore valide (date d'emission dans le futur). Verifiez l'horloge serveur.",
+      "Licence pas encore valide (date d'émission dans le futur). Vérifiez l'horloge serveur.",
     domain_mismatch:
-      "Licence emise pour un autre domaine. Une licence est cluster-lockee.",
+      "Licence émise pour un autre domaine. Une licence est cluster-lockée.",
     unsupported_version:
-      "Version de licence non supportee. Mettez a jour Humanix Academie.",
+      "Version de licence non supportée. Mettez à jour Humanix Académie.",
   };
   return map[error];
 }

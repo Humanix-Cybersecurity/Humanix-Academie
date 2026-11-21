@@ -156,7 +156,7 @@ export async function enableExposureMonitoring(
   revalidatePath("/admin/exposition");
   return {
     ok: true,
-    message: `Veille configuree sur ${domains.length} domaine(s).`,
+    message: `Veille configurée sur ${domains.length} domaine(s).`,
   };
 }
 
@@ -180,7 +180,7 @@ export async function disableExposureMonitoring(): Promise<ActionResult> {
   });
 
   revalidatePath("/admin/exposition");
-  return { ok: true, message: "Veille desactivee." };
+  return { ok: true, message: "Veille désactivée." };
 }
 
 /**
@@ -201,7 +201,7 @@ export async function validateExposureAction(
   );
   revalidatePath("/admin/exposition");
   if (!res.ok) return { ok: false, error: res.error };
-  return { ok: true, message: "Formation de remediation assignee." };
+  return { ok: true, message: "Formation de remédiation assignée." };
 }
 
 /** Ecarte une exposition (faux positif) : statut -> DISMISSED. */
@@ -214,7 +214,7 @@ export async function dismissExposureAction(
   const res = await dismissExposure(exposureId, guard.tenantId, guard.userId);
   revalidatePath("/admin/exposition");
   if (!res.ok) return { ok: false, error: "not_found" };
-  return { ok: true, message: "Exposition ecartee." };
+  return { ok: true, message: "Exposition écartée." };
 }
 
 // ---------------------------------------------------------------------------

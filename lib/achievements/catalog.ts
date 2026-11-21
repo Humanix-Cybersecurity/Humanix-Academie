@@ -265,7 +265,7 @@ export const ACHIEVEMENTS_CATALOG: AchievementDef[] = [
     slug: "perfect_15",
     title: "Sniper cyber",
     emoji: "🏹",
-    description: "15 quizz parfaits. La precision incarnee.",
+    description: "15 quizz parfaits. La précision incarnée.",
     category: "mastery",
     rarity: "epic",
     points: 80,
@@ -488,7 +488,7 @@ export const ACHIEVEMENTS_CATALOG: AchievementDef[] = [
     slug: "xp_10000",
     title: "Endgame XP",
     emoji: "🔥",
-    description: "Atteins 10 000 XP. Le pallier Maitre est franchi.",
+    description: "Atteins 10 000 XP. Le pallier Maître est franchi.",
     category: "progression",
     rarity: "legendary",
     points: 250,
@@ -600,7 +600,7 @@ export const ACHIEVEMENTS_CATALOG: AchievementDef[] = [
   },
   {
     slug: "five_saisons_done",
-    title: "5 saisons completes",
+    title: "5 saisons complètes",
     emoji: "📚",
     description: "Termine 5 saisons entieres. Le rythme de croisiere.",
     category: "mastery",
@@ -611,7 +611,7 @@ export const ACHIEVEMENTS_CATALOG: AchievementDef[] = [
   },
   {
     slug: "ten_saisons_done",
-    title: "10 saisons completes",
+    title: "10 saisons complètes",
     emoji: "📖",
     description: "Termine 10 saisons entieres. Tu vois grand.",
     category: "mastery",
@@ -622,7 +622,7 @@ export const ACHIEVEMENTS_CATALOG: AchievementDef[] = [
   },
   {
     slug: "twenty_saisons_done",
-    title: "Bibliotheque cyber",
+    title: "Bibliothèque cyber",
     emoji: "🏛️",
     description: "Termine 20 saisons entieres. Encyclopedie ambulante.",
     category: "mastery",
@@ -640,7 +640,7 @@ export const ACHIEVEMENTS_CATALOG: AchievementDef[] = [
     title: "RH cyber-aware",
     emoji: "💼",
     description:
-      "Termine la saison 'cyber-rh'. Le recrutement & la formation, c'est aussi de la securite.",
+      "Termine la saison 'cyber-rh'. Le recrutement & la formation, c'est aussi de la sécurité.",
     category: "mastery",
     rarity: "epic",
     points: 80,
@@ -649,7 +649,7 @@ export const ACHIEVEMENTS_CATALOG: AchievementDef[] = [
   },
   {
     slug: "audience_master_dev",
-    title: "Dev secu",
+    title: "Dev sécu",
     emoji: "💻",
     description: "Termine la saison 'cyber-dev'. Shift-left, c'est toi.",
     category: "mastery",
@@ -663,7 +663,7 @@ export const ACHIEVEMENTS_CATALOG: AchievementDef[] = [
     title: "Finance vigilante",
     emoji: "💰",
     description:
-      "Termine la saison 'cyber-compta'. Le piege du faux RIB, jamais.",
+      "Termine la saison 'cyber-compta'. Le piège du faux RIB, jamais.",
     category: "mastery",
     rarity: "epic",
     points: 80,
@@ -684,7 +684,7 @@ export const ACHIEVEMENTS_CATALOG: AchievementDef[] = [
   },
   {
     slug: "audience_master_dpo",
-    title: "DPO operationnel",
+    title: "DPO opérationnel",
     emoji: "⚖️",
     description: "Termine la saison 'dpo-quotidien'. RGPD au quotidien.",
     category: "mastery",
@@ -700,7 +700,7 @@ export const ACHIEVEMENTS_CATALOG: AchievementDef[] = [
     title: "Anti-phishing master",
     emoji: "🎣",
     description:
-      "Termine les saisons phishing + fraude-president + email-pro. Plus aucun mail ne te piege.",
+      "Termine les saisons phishing + fraude-president + email-pro. Plus aucun mail ne te piège.",
     category: "special",
     rarity: "epic",
     points: 120,
@@ -715,7 +715,7 @@ export const ACHIEVEMENTS_CATALOG: AchievementDef[] = [
     title: "Anti-ransomware master",
     emoji: "🔒",
     description:
-      "Termine les saisons ransomware + sauvegardes + supply-chain. Tu es pret pour le pire.",
+      "Termine les saisons ransomware + sauvegardes + supply-chain. Tu es prêt pour le pire.",
     category: "special",
     rarity: "epic",
     points: 120,
@@ -745,7 +745,7 @@ export const ACHIEVEMENTS_CATALOG: AchievementDef[] = [
     title: "IA aware",
     emoji: "🤖",
     description:
-      "Termine les saisons ia-generative + deepfakes. Tu distingues le vrai du faux genere.",
+      "Termine les saisons ia-generative + deepfakes. Tu distingues le vrai du faux généré.",
     category: "special",
     rarity: "epic",
     points: 120,

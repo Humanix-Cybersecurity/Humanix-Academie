@@ -67,19 +67,19 @@ export const NIS2_SECTEURS: Array<{
     id: "annexe1",
     label: "Secteur hautement critique (annexe I)",
     exemples:
-      "Energie, transport, banque et finance, sante, eau potable et eaux usees, infrastructures numeriques (cloud, datacenters, DNS), administration publique, espace.",
+      "Énergie, transport, banque et finance, santé, eau potable et eaux usées, infrastructures numériques (cloud, datacenters, DNS), administration publique, espace.",
   },
   {
     id: "annexe2",
     label: "Autre secteur critique (annexe II)",
     exemples:
-      "Services postaux, gestion des dechets, industrie chimique, agroalimentaire, fabrication (dispositifs medicaux, electronique, machines, vehicules), fournisseurs numeriques (places de marche, moteurs de recherche, reseaux sociaux), recherche.",
+      "Services postaux, gestion des déchets, industrie chimique, agroalimentaire, fabrication (dispositifs médicaux, électronique, machines, véhicules), fournisseurs numériques (places de marché, moteurs de recherche, réseaux sociaux), recherche.",
   },
   {
     id: "autre",
     label: "Aucun de ces secteurs",
     exemples:
-      "Commerce de detail classique, services aux entreprises non listes, artisanat, professions liberales, etc.",
+      "Commerce de détail classique, services aux entreprises non listés, artisanat, professions libérales, etc.",
   },
 ];
 
@@ -101,7 +101,7 @@ export const NIS2_TAILLES: Array<{
   {
     id: "moyenne",
     label: "Entreprise moyenne",
-    critere: "De 50 a 249 personnes, ou de 10 a 50 M€ de chiffre d'affaires.",
+    critere: "De 50 à 249 personnes, ou de 10 à 50 M€ de chiffre d'affaires.",
   },
   {
     id: "grande",
@@ -116,43 +116,43 @@ export const NIS2_TAILLES: Array<{
 
 const RESULTATS: Record<Nis2Statut, Omit<Nis2EligibilityResult, "statut">> = {
   essentielle: {
-    titre: "Vous etes probablement une entite essentielle",
+    titre: "Vous êtes probablement une entité essentielle",
     resume:
-      "Votre secteur et votre taille vous placent dans la categorie la plus suivie par la directive.",
+      "Votre secteur et votre taille vous placent dans la catégorie la plus suivie par la directive.",
     consequence:
-      "Les memes mesures de bon sens que pour tout le monde (article 21), mais avec un controle plus actif de l'autorite et une attention particuliere de la direction. Rien d'insurmontable : l'essentiel reste l'organisation et les bons reflexes.",
+      "Les mêmes mesures de bon sens que pour tout le monde (article 21), mais avec un contrôle plus actif de l'autorité et une attention particulière de la direction. Rien d'insurmontable : l'essentiel reste l'organisation et les bons réflexes.",
     prochaineEtape:
-      "Faites le diagnostic pour voir, article par article, ou vous en etes et par quoi commencer.",
+      "Faites le diagnostic pour voir, article par article, où vous en êtes et par quoi commencer.",
     ton: "info",
   },
   importante: {
-    titre: "Vous etes probablement une entite importante",
+    titre: "Vous êtes probablement une entité importante",
     resume:
-      "Votre secteur vous fait entrer dans le perimetre de la directive, avec un suivi de l'autorite a posteriori.",
+      "Votre secteur vous fait entrer dans le périmètre de la directive, avec un suivi de l'autorité a posteriori.",
     consequence:
-      "Les obligations sont les memes mesures de socle que pour les entites essentielles (article 21), avec un controle qui intervient surtout en cas d'incident ou de signalement. La bonne nouvelle : se mettre en ordre de marche se fait par etapes.",
+      "Les obligations sont les mêmes mesures de socle que pour les entités essentielles (article 21), avec un contrôle qui intervient surtout en cas d'incident ou de signalement. La bonne nouvelle : se mettre en ordre de marche se fait par étapes.",
     prochaineEtape:
       "Faites le diagnostic pour situer votre niveau et obtenir un plan d'action concret.",
     ton: "info",
   },
   indirecte: {
-    titre: "Vous etes concerne indirectement",
+    titre: "Vous êtes concerné indirectement",
     resume:
-      "Vous n'etes peut-etre pas vise directement, mais vos clients reglementes vont vous demander des garanties.",
+      "Vous n'êtes peut-être pas visé directement, mais vos clients réglementés vont vous demander des garanties.",
     consequence:
-      "La directive rend chaque entite responsable de la securite de sa chaine de fournisseurs (article 21.2.d). Vos donneurs d'ordre vont repercuter ces exigences dans leurs contrats. Anticiper devient un argument commercial, pas seulement une contrainte.",
+      "La directive rend chaque entité responsable de la sécurité de sa chaîne de fournisseurs (article 21.2.d). Vos donneurs d'ordre vont répercuter ces exigences dans leurs contrats. Anticiper devient un argument commercial, pas seulement une contrainte.",
     prochaineEtape:
-      "Le diagnostic vous montre les attentes typiques de vos clients et comment y repondre sans tout chambouler.",
+      "Le diagnostic vous montre les attentes typiques de vos clients et comment y répondre sans tout chambouler.",
     ton: "attention",
   },
   hors_probable: {
-    titre: "Vous etes probablement hors du perimetre direct",
+    titre: "Vous êtes probablement hors du périmètre direct",
     resume:
-      "En l'etat, la directive ne semble pas vous viser directement, mais la prudence reste utile.",
+      "En l'état, la directive ne semble pas vous viser directement, mais la prudence reste utile.",
     consequence:
-      "NIS2 redefinit le niveau de securite attendu de tout le tissu economique. Meme hors perimetre, la demarche protege votre activite et rassure assureurs, banques et clients. Et le perimetre peut evoluer avec les decrets d'application.",
+      "NIS2 redéfinit le niveau de sécurité attendu de tout le tissu économique. Même hors périmètre, la démarche protège votre activité et rassure assureurs, banques et clients. Et le périmètre peut évoluer avec les décrets d'application.",
     prochaineEtape:
-      "Le diagnostic reste un excellent bilan de sante cyber, sans engagement.",
+      "Le diagnostic reste un excellent bilan de santé cyber, sans engagement.",
     ton: "neutre",
   },
 };

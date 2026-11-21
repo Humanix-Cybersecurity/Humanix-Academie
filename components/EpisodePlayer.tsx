@@ -41,11 +41,11 @@ type Step = "scenario" | "debrief" | "quiz" | "recap";
 // le niveau de maitrise atteint. Toutes chaleureuses, jamais jugeantes.
 const RECAP_CITATIONS = {
   perfect:
-    "« Tu n'as pas a être expert. Tu as juste a être averti une seconde avant le clic. C'est exactement ce que tu viens de faire. »",
-  good: "« La maitrise cyber, c'est moins une affaire d'expert qu'une habitude tranquille. Tu construis cette habitude. »",
+    "« Tu n'as pas à être expert. Tu as juste à être averti une seconde avant le clic. C'est exactement ce que tu viens de faire. »",
+  good: "« La maîtrise cyber, c'est moins une affaire d'expert qu'une habitude tranquille. Tu construis cette habitude. »",
   partial:
-    "« Le meilleur reflexe cyber, c'est de prendre 30 secondes avant d'agir. Tu en es déjà capable. »",
-  low: "« Apprendre la cyber, c'est apprendre a se faire confiance. Hex t'accompagne, pas le contraire. »",
+    "« Le meilleur réflexe cyber, c'est de prendre 30 secondes avant d'agir. Tu en es déjà capable. »",
+  low: "« Apprendre la cyber, c'est apprendre à se faire confiance. Hex t'accompagne, pas le contraire. »",
 };
 
 export default function EpisodePlayer(props: {
@@ -277,7 +277,7 @@ export default function EpisodePlayer(props: {
             <div className="bg-gradient-to-br from-cyan-50 via-white to-blue-50 dark:from-cyan-950/30 dark:via-slate-900 dark:to-blue-950/30 rounded-2xl p-5 mb-6 leading-relaxed whitespace-pre-line text-gray-800 dark:text-gray-100 border-l-4 border-accent-500">
               <FormattedText text={props.scenario} />
               <div className="mt-4 pt-3 border-t border-cyan-200/40 dark:border-cyan-900/40">
-                <TTSButton text={props.scenario} label="Ecouter le scenario" />
+                <TTSButton text={props.scenario} label="Écouter le scénario" />
               </div>
             </div>
 
@@ -303,7 +303,7 @@ export default function EpisodePlayer(props: {
               ))}
             </div>
             <p className="text-xs text-gray-500 dark:text-gray-500 italic text-center mt-5">
-              Astuce : tu peux utiliser les chiffres 1 a 4 du clavier
+              Astuce : tu peux utiliser les chiffres 1 à 4 du clavier
             </p>
           </div>
         )}
@@ -338,7 +338,7 @@ export default function EpisodePlayer(props: {
               >
                 <p className="font-display font-extrabold mb-2 text-lg">
                   {choice.outcome === "good"
-                    ? "✓ Bien joue"
+                    ? "✓ Bien joué"
                     : choice.outcome === "bad"
                       ? "🌿 Pas grave, on apprend"
                       : "→ Pas si simple"}
@@ -373,7 +373,7 @@ export default function EpisodePlayer(props: {
                   <p className="text-xs uppercase tracking-[0.25em] text-accent-500 font-bold">
                     Le debrief de Hex
                   </p>
-                  <TTSButton text={props.debrief} label="Ecouter le debrief" />
+                  <TTSButton text={props.debrief} label="Écouter le debrief" />
                 </div>
                 <MarkdownView content={props.debrief} />
               </div>
@@ -385,10 +385,10 @@ export default function EpisodePlayer(props: {
               }}
               className="btn-primary w-full text-lg animate-glow"
             >
-              Quiz eclair <span aria-hidden="true">→</span>
+              Quiz éclair <span aria-hidden="true">→</span>
             </button>
             <p className="text-xs text-gray-500 dark:text-gray-500 italic text-center mt-4">
-              Astuce : appuie sur Entree
+              Astuce : appuie sur Entrée
             </p>
           </div>
         )}
@@ -488,7 +488,7 @@ export default function EpisodePlayer(props: {
               <div className="animate-fadeIn">
                 <div className="bg-gradient-to-br from-cyan-50 via-white to-blue-50 dark:from-cyan-950/30 dark:via-slate-900 dark:to-blue-950/30 rounded-2xl p-5 mb-4 text-sm leading-relaxed border-l-4 border-accent-500">
                   <p className="font-display font-bold text-accent-600 dark:text-accent-300 mb-2 flex items-center gap-2">
-                    <span aria-hidden="true">💡</span> Hex t'eclaire
+                    <span aria-hidden="true">💡</span> Hex t'éclaire
                   </p>
                   <p className="text-gray-700 dark:text-gray-200">
                     <FormattedText text={props.quiz[quizIndex].explanation} />
@@ -524,17 +524,17 @@ export default function EpisodePlayer(props: {
               </div>
             </div>
             <p className="text-xs sm:text-sm uppercase tracking-[0.25em] font-bold text-accent-500 mb-2">
-              Episode termine
+              Épisode terminé
             </p>
             <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-primary-500 dark:text-accent-300 mb-2">
-              Bravo, tu en as fini avec celui-la.
+              Bravo, tu en as fini avec celui-là.
             </h2>
             <p className="text-gray-600 dark:text-gray-300 mb-8 italic">
-              Voici ton bilan tranquille de l'episode.
+              Voici ton bilan tranquille de l'épisode.
             </p>
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-xl mx-auto mb-8">
-              <BilanCard label="XP gagnes" value={`+${totalXPEarned}`} accent />
+              <BilanCard label="XP gagnés" value={`+${totalXPEarned}`} accent />
               {coinsEarned > 0 && (
                 <BilanCard label="Coins" value={`+${coinsEarned}`} amber />
               )}
@@ -543,7 +543,7 @@ export default function EpisodePlayer(props: {
                 value={`${quizScore}/${props.quiz.length}`}
               />
               <BilanCard
-                label="Reussite"
+                label="Réussite"
                 value={`${Math.round(quizSuccessRate * 100)}%`}
               />
             </div>
@@ -581,7 +581,7 @@ export default function EpisodePlayer(props: {
                   }}
                   className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500 via-pink-500 to-amber-500 text-white rounded-2xl px-6 py-3 font-display font-extrabold shadow-lg animate-glow"
                 >
-                  <span aria-hidden="true">✨</span> Niveau {levelUp} debloque -
+                  <span aria-hidden="true">✨</span> Niveau {levelUp} débloqué -
                   clique pour voir
                 </button>
               </div>

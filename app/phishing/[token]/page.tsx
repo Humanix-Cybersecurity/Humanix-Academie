@@ -242,22 +242,22 @@ export default async function PhishingLandingPage({
               Tu viens de soumettre tes credentials sur un faux site
             </p>
             <p className="text-sm text-red-800 dark:text-red-300 mb-3 leading-relaxed">
-              Pas de panique : c&apos;etait un test, AUCUNE valeur n&apos;a ete
-              enregistree (on stocke uniquement les metadonnees : tu as soumis X
-              champs dont un mot de passe). Mais si ca avait ete un vrai site de
-              phishing, ton mot de passe serait deja entre les mains d&apos;un
+              Pas de panique : c&apos;était un test, AUCUNE valeur n&apos;a été
+              enregistrée (on stocke uniquement les métadonnées : tu as soumis X
+              champs dont un mot de passe). Mais si ça avait été un vrai site de
+              phishing, ton mot de passe serait déjà entre les mains d&apos;un
               attaquant.
             </p>
             <p className="text-sm font-bold text-red-900 dark:text-red-200 mb-2">
-              Reflexes a appliquer maintenant si ce piege etait reel :
+              Réflexes à appliquer maintenant si ce piège était réel :
             </p>
             <ol className="text-sm text-red-800 dark:text-red-300 list-decimal pl-5 space-y-1">
-              <li>Changer ce mot de passe sur le vrai site immediatement</li>
+              <li>Changer ce mot de passe sur le vrai site immédiatement</li>
               <li>
-                Le changer aussi sur tout autre site ou il etait reutilise
+                Le changer aussi sur tout autre site où il était réutilisé
               </li>
               <li>Activer la 2FA partout ou c&apos;est possible</li>
-              <li>Verifier les connexions recentes / sessions actives</li>
+              <li>Vérifier les connexions récentes / sessions actives</li>
             </ol>
           </div>
         )}
@@ -427,13 +427,13 @@ export default async function PhishingLandingPage({
                 🪤{" "}
                 {dbTpl?.landingTitle
                   ? `Ce que tu aurais vu : ${dbTpl.landingTitle}`
-                  : "Ce que tu aurais vu apres le clic"}
+                  : "Ce que tu aurais vu après le clic"}
               </p>
               <p className="text-sm text-gray-700 dark:text-gray-300 mb-4 leading-relaxed">
                 Sur un vrai site de phishing, tu serais arrive sur une fausse
                 page de login (souvent une copie pixel-perfect de Microsoft,
                 Google, ta banque...). Tu peux essayer de la soumettre
-                ci-dessous pour vivre l&apos;experience -- on capture seulement
+                ci-dessous pour vivre l&apos;expérience -- on capture seulement
                 le geste, jamais les valeurs.
               </p>
               {/* Phase 2 (juin 2026) : si le template definit une landing
@@ -475,7 +475,7 @@ export default async function PhishingLandingPage({
                   autoComplete="off"
                 >
                   <p className="text-center text-lg font-bold text-gray-700 dark:text-gray-200 mb-4">
-                    🔐 Connexion securisee
+                    🔐 Connexion sécurisée
                   </p>
                   <label
                     htmlFor="fake-email"
@@ -514,7 +514,7 @@ export default async function PhishingLandingPage({
                     Se connecter
                   </button>
                   <p className="text-[11px] text-center text-gray-500 mt-3 italic">
-                    Aucune valeur n&apos;est enregistree -- on stocke uniquement
+                    Aucune valeur n&apos;est enregistrée -- on stocke uniquement
                     le geste (nom et longueur du champ, jamais le contenu).
                   </p>
                 </form>

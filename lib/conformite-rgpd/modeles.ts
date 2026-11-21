@@ -67,34 +67,34 @@ function csv(lignes: readonly (readonly string[])[]): string {
 export function modeleRegistre(nomEntreprise: string): Modele {
   const entetes = [
     "Nom du traitement",
-    "Finalite",
-    "Base legale",
-    "Personnes concernees",
-    "Categories de donnees",
+    "Finalité",
+    "Base légale",
+    "Personnes concernées",
+    "Catégories de données",
     "Destinataires",
     "Transfert hors UE",
-    "Duree de conservation",
-    "Mesures de securite",
+    "Durée de conservation",
+    "Mesures de sécurité",
   ];
 
   const exempleHumanix = [
-    "Sensibilisation cyber (Humanix Academie)",
-    "Former les collaborateurs a la securite informatique",
-    "Interet legitime",
+    "Sensibilisation cyber (Humanix Académie)",
+    "Former les collaborateurs à la sécurité informatique",
+    "Intérêt légitime",
     "Collaborateurs inscrits",
-    "Nom, e-mail professionnel, progression, resultats de quiz",
-    "Humanix-Cybersecurity (sous-traitant), Scaleway (hebergeur, France)",
+    "Nom, e-mail professionnel, progression, résultats de quiz",
+    "Humanix-Cybersecurity (sous-traitant), Scaleway (hébergeur, France)",
     "Non",
-    "Duree du contrat + 1 an",
-    "Chiffrement, cloisonnement par client, journalisation des acces",
+    "Durée du contrat + 1 an",
+    "Chiffrement, cloisonnement par client, journalisation des accès",
   ];
 
   const amorces = [
     "Paie",
     "Recrutement",
     "Gestion des clients",
-    "Controle d'acces (badges)",
-    "Videosurveillance",
+    "Contrôle d'accès (badges)",
+    "Vidéosurveillance",
   ].map((nom) => [nom, "", "", "", "", "", "", "", ""]);
 
   return {
@@ -114,15 +114,15 @@ export function modeleRegistre(nomEntreprise: string): Modele {
 export function modeleDurees(nomEntreprise: string): Modele {
   const entetes = [
     "Traitement",
-    "Duree en base active",
-    "Archivage intermediaire",
-    "Sort a l'issue",
+    "Durée en base active",
+    "Archivage intermédiaire",
+    "Sort à l'issue",
     "Justification",
   ];
   const exemple = [
     "Candidatures non retenues",
-    "Duree du recrutement",
-    "2 ans apres le dernier contact",
+    "Durée du recrutement",
+    "2 ans après le dernier contact",
     "Suppression",
     "Recommandation CNIL",
   ];
@@ -131,7 +131,7 @@ export function modeleDurees(nomEntreprise: string): Modele {
     "Recrutement",
     "Clients",
     "Badges",
-    "Videosurveillance",
+    "Vidéosurveillance",
   ].map((n) => [n, "", "", "", ""]);
   return {
     nomFichier: `durees-conservation-${slug(nomEntreprise)}.csv`,
@@ -145,10 +145,10 @@ export function modeleSousTraitants(nomEntreprise: string): Modele {
   const entetes = [
     "Prestataire",
     "Ce qu'il fait pour nous",
-    "Donnees auxquelles il accede",
-    "Pays d'hebergement",
-    "Contrat de sous-traitance signe",
-    "Date de la derniere revue",
+    "Données auxquelles il accède",
+    "Pays d'hébergement",
+    "Contrat de sous-traitance signé",
+    "Date de la dernière revue",
   ];
   const exemple = [
     "Humanix-Cybersecurity",
@@ -161,7 +161,7 @@ export function modeleSousTraitants(nomEntreprise: string): Modele {
   const amorces = [
     "Cabinet comptable",
     "Logiciel de paie",
-    "Hebergeur du site",
+    "Hébergeur du site",
     "Outil de messagerie",
   ].map((n) => [n, "", "", "", "", ""]);
   return {
@@ -178,42 +178,42 @@ export function modeleSousTraitants(nomEntreprise: string): Modele {
  * la personne signerait sans la lire serait pire qu'aucune mention.
  */
 export function modeleMentionInformation(nomEntreprise: string): Modele {
-  const contenu = `MENTION D'INFORMATION — a adapter, puis a placer la ou vous collectez
-des donnees : contrat de travail, formulaire du site, affichage a l'entree.
+  const contenu = `MENTION D'INFORMATION — à adapter, puis à placer là où vous collectez
+des données : contrat de travail, formulaire du site, affichage à l'entrée.
 
-Les crochets [...] sont des trous a remplir. Ne les laissez pas : une
+Les crochets [...] sont des trous à remplir. Ne les laissez pas : une
 mention approximative vaut mieux qu'une mention fausse, mais une mention
 fausse est pire que rien.
 
 ---
 
-${nomEntreprise} collecte et traite vos donnees personnelles.
+${nomEntreprise} collecte et traite vos données personnelles.
 
-Finalite : [pourquoi vous collectez ces donnees — ex. gerer la paie]
+Finalité : [pourquoi vous collectez ces données — ex. gérer la paie]
 
-Base legale : [obligation legale / execution du contrat / interet legitime /
+Base légale : [obligation légale / exécution du contrat / intérêt légitime /
 consentement — une seule, celle qui correspond vraiment]
 
-Donnees collectees : [liste — ex. nom, prenom, NIR, coordonnees bancaires]
+Données collectées : [liste — ex. nom, prénom, NIR, coordonnées bancaires]
 
-Destinataires : [qui y accede — service RH, cabinet comptable, editeur du
+Destinataires : [qui y accède — service RH, cabinet comptable, éditeur du
 logiciel de paie]
 
-Duree de conservation : [duree — ex. 5 ans apres la fin du contrat]
+Durée de conservation : [durée — ex. 5 ans après la fin du contrat]
 
-Vos droits : vous pouvez demander l'acces a vos donnees, leur rectification,
-leur effacement, la limitation de leur traitement, ou vous opposer a
-celui-ci. Vous pouvez egalement definir des directives sur leur sort apres
-votre deces.
+Vos droits : vous pouvez demander l'accès à vos données, leur rectification,
+leur effacement, la limitation de leur traitement, ou vous opposer à
+celui-ci. Vous pouvez également définir des directives sur leur sort après
+votre décès.
 
-Pour exercer ces droits : [adresse e-mail ou postale dediee]
+Pour exercer ces droits : [adresse e-mail ou postale dédiée]
 
-Vous pouvez introduire une reclamation aupres de la CNIL (www.cnil.fr).
+Vous pouvez introduire une réclamation auprès de la CNIL (www.cnil.fr).
 
 ---
 
-RAPPEL : ce modele n'est pas un conseil juridique. Il vous donne la
-structure attendue ; le contenu depend de votre situation.
+RAPPEL : ce modèle n'est pas un conseil juridique. Il vous donne la
+structure attendue ; le contenu dépend de votre situation.
 `;
   return {
     nomFichier: `mention-information-${slug(nomEntreprise)}.txt`,
@@ -233,22 +233,22 @@ structure attendue ; le contenu depend de votre situation.
  */
 export function modeleSuiviDemandes(nomEntreprise: string): Modele {
   const entetes = [
-    "Date de reception",
+    "Date de réception",
     "Demandeur",
     "Nature de la demande",
-    "ECHEANCE (1 mois)",
-    "Identite verifiee",
-    "Date de reponse",
-    "Suite donnee",
+    "ÉCHÉANCE (1 mois)",
+    "Identité vérifiée",
+    "Date de réponse",
+    "Suite donnée",
   ];
   const exemple = [
     "2026-01-15",
-    "Salarie — service comptabilite",
-    "Acces a ses donnees",
+    "Salarié — service comptabilité",
+    "Accès à ses données",
     "2026-02-15",
     "Oui",
     "2026-01-28",
-    "Copie transmise par courrier recommande",
+    "Copie transmise par courrier recommandé",
   ];
   return {
     nomFichier: `suivi-demandes-droits-${slug(nomEntreprise)}.csv`,
@@ -267,11 +267,11 @@ export const MODELES_PAR_ETAPE: Record<
   { libelle: string; fabrique: (nomEntreprise: string) => Modele }
 > = {
   "registre-traitements": {
-    libelle: "Registre pre-structure (tableur)",
+    libelle: "Registre pré-structuré (tableur)",
     fabrique: modeleRegistre,
   },
   "durees-conservation": {
-    libelle: "Tableau des durees (tableur)",
+    libelle: "Tableau des durées (tableur)",
     fabrique: modeleDurees,
   },
   "sous-traitants": {
@@ -279,7 +279,7 @@ export const MODELES_PAR_ETAPE: Record<
     fabrique: modeleSousTraitants,
   },
   "information-personnes": {
-    libelle: "Mention d'information a trous",
+    libelle: "Mention d'information à trous",
     fabrique: modeleMentionInformation,
   },
   "demandes-personnes": {

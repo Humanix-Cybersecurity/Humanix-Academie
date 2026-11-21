@@ -52,7 +52,7 @@ const PORTES = [
       ring: "border-cyan-200 dark:border-cyan-900/40",
       accent: "text-cyan-700 dark:text-cyan-300",
     },
-    body: "Tu deploies Humanix dans ta structure - boite, association, collectivite, ou en perso - en self-host ou en cloud. Tu as des questions, des retours, des bugs a signaler. Bienvenue - c'est ton experience qui ameliore le produit.",
+    body: "Tu déploies Humanix dans ta structure - boîte, association, collectivité, ou en perso - en self-host ou en cloud. Tu as des questions, des retours, des bugs à signaler. Bienvenue - c'est ton expérience qui améliore le produit.",
     actions: [
       {
         label: "GitHub Discussions",
@@ -74,7 +74,7 @@ const PORTES = [
       ring: "border-emerald-200 dark:border-emerald-900/40",
       accent: "text-emerald-700 dark:text-emerald-300",
     },
-    body: "Bug fix, nouvelle feature, connecteur additionnel (Drata, Vanta, ServiceNow), traduction. Stack : Next.js 14, TypeScript strict, Prisma, PostgreSQL, Tailwind. CONTRIBUTING.md detaille tout.",
+    body: "Bug fix, nouvelle feature, connecteur additionnel (Drata, Vanta, ServiceNow), traduction. Stack : Next.js 14, TypeScript strict, Prisma, PostgreSQL, Tailwind. CONTRIBUTING.md détaille tout.",
     actions: [
       {
         label: "Lire CONTRIBUTING.md",
@@ -96,7 +96,7 @@ const PORTES = [
       ring: "border-amber-200 dark:border-amber-900/40",
       accent: "text-amber-700 dark:text-amber-300",
     },
-    body: "Tu es RSSI, gendarme cyber, formateur, DPO, consultant. Tu as une experience terrain unique. Le catalogue s'enrichit chaque mois de modules ecrits par des praticiens, et le tien y a sa place. Voir CONTRIBUTING.md section 'Contribuer un module MDX'.",
+    body: "Tu es RSSI, gendarme cyber, formateur, DPO, consultant. Tu as une expérience terrain unique. Le catalogue s'enrichit chaque mois de modules écrits par des praticiens, et le tien y a sa place. Voir CONTRIBUTING.md section 'Contribuer un module MDX'.",
     actions: [
       {
         label: "Guide module MDX",
@@ -104,7 +104,7 @@ const PORTES = [
         external: true,
       },
       {
-        label: "Bibliotheque des experts",
+        label: "Bibliothèque des experts",
         href: "/experts",
         external: false,
       },
@@ -112,21 +112,21 @@ const PORTES = [
   },
   {
     emoji: "🤝",
-    title: "Tu es editeur d'outil cyber",
+    title: "Tu es éditeur d'outil cyber",
     palette: {
       bg: "from-purple-50 via-white to-pink-50 dark:from-slate-900 dark:via-slate-900 dark:to-purple-950/40",
       ring: "border-purple-200 dark:border-purple-900/40",
       accent: "text-purple-700 dark:text-purple-300",
     },
-    body: "Tu edites un outil cyber souverain (GRC, SIEM, EDR, IAM, ITSM). On a deja construit des connecteurs techniques vers CISO Assistant, Sekoia.io, HarfangLab, Lucca et GLPI. Echangeons sur l'integration et l'interoperabilite.",
+    body: "Tu édites un outil cyber souverain (GRC, SIEM, EDR, IAM, ITSM). On a déjà construit des connecteurs techniques vers CISO Assistant, Sekoia.io, HarfangLab, Lucca et GLPI. Échangeons sur l'intégration et l'interopérabilité.",
     actions: [
       {
-        label: "Voir les integrations",
+        label: "Voir les intégrations",
         href: "/integrations",
         external: false,
       },
       {
-        label: "Echanger sur l'ecosysteme",
+        label: "Échanger sur l'écosystème",
         href: "mailto:contact@humanix-cybersecurity.fr?subject=Integration+ecosysteme+cyber",
         external: true,
       },
@@ -146,7 +146,7 @@ export default function CommunautePage() {
           className="max-w-5xl mx-auto px-4 pt-12 pb-10 sm:pt-16 sm:pb-12 text-center"
         >
           <p className="text-xs sm:text-sm uppercase tracking-[0.25em] font-bold text-accent-500 mb-2">
-            Communaute · open source AGPLv3 · ouverte a tous
+            Communauté · open source AGPLv3 · ouverte à tous
           </p>
           <h1
             id="hero-title"
@@ -154,17 +154,17 @@ export default function CommunautePage() {
             style={{ animationDelay: "100ms" }}
           >
             La cyber{" "}
-            <span className="text-accent-500">se construit a plusieurs.</span>
+            <span className="text-accent-500">se construit à plusieurs.</span>
           </h1>
           <p
             className="text-lg sm:text-xl text-gray-700 dark:text-gray-200 max-w-2xl mx-auto leading-relaxed animate-slide-up"
             style={{ animationDelay: "220ms" }}
           >
-            Humanix Academie est un projet ouvert. Code AGPLv3, decisions en
-            clair sur GitHub, modules signes par leurs auteurs. Que tu sois
-            apprenante en perso, utilisatrice en entreprise, developpeuse
-            curieuse, RSSI sur le terrain ou partenaire editeur - il y a une
-            porte d'entree pour toi.
+            Humanix Académie est un projet ouvert. Code AGPLv3, décisions en
+            clair sur GitHub, modules signés par leurs auteurs. Que tu sois
+            apprenante en perso, utilisatrice en entreprise, développeuse
+            curieuse, RSSI sur le terrain ou partenaire éditeur - il y a une
+            porte d'entrée pour toi.
           </p>
         </section>
       </HexBackdrop>
@@ -176,7 +176,7 @@ export default function CommunautePage() {
         <section aria-labelledby="portes-title" className="space-y-6">
           <div className="text-center">
             <p className="text-xs uppercase tracking-[0.25em] font-bold text-accent-500 mb-2">
-              4 portes d'entree
+              4 portes d'entrée
             </p>
             <h2
               id="portes-title"
@@ -247,7 +247,7 @@ export default function CommunautePage() {
           style={{ animationDelay: "100ms" }}
         >
           <p className="text-xs uppercase tracking-[0.25em] font-bold text-accent-500 mb-2">
-            Comment on echange
+            Comment on échange
           </p>
           <h2
             id="canaux-title"
@@ -259,27 +259,27 @@ export default function CommunautePage() {
             <ChannelCard
               emoji="🐙"
               title="GitHub Discussions"
-              desc="Q&A, idees, RFC features. Tout reste public, archive permanente, indexable."
+              desc="Q&A, idées, RFC features. Tout reste public, archive permanente, indexable."
               cta="discussions/categories/q-a"
               href="https://github.com/Humanix-Cybersecurity/Humanix-Academie/discussions"
             />
             <ChannelCard
               emoji="🐛"
               title="GitHub Issues"
-              desc="Bugs confirmes uniquement. Template oblige. Reponse sous 3 jours ouvres."
+              desc="Bugs confirmés uniquement. Template oblige. Réponse sous 3 jours ouvrés."
               cta="issues"
               href="https://github.com/Humanix-Cybersecurity/Humanix-Academie/issues"
             />
             <ChannelCard
               emoji="💬"
               title="Discord (post-launch)"
-              desc="Discussion synchrone, salons par theme. Ouvre apres le launch OSS du 26 mai 2026."
+              desc="Discussion synchrone, salons par thème. Ouvre après le launch OSS du 26 mai 2026."
               cta="ouverture mai 2026"
               disabled
             />
           </div>
           <p className="text-xs text-gray-600 dark:text-gray-400 italic mt-5 leading-relaxed">
-            Pour les <strong>vulnerabilites de securite</strong>, ne pas
+            Pour les <strong>vulnérabilités de sécurité</strong>, ne pas
             utiliser ces canaux publics - voir{" "}
             <a
               href="https://github.com/Humanix-Cybersecurity/Humanix-Academie/blob/main/SECURITY.md"
@@ -289,7 +289,7 @@ export default function CommunautePage() {
             >
               SECURITY.md
             </a>{" "}
-            pour la procedure de divulgation responsable.
+            pour la procédure de divulgation responsable.
           </p>
         </section>
 
@@ -319,7 +319,7 @@ export default function CommunautePage() {
                 <strong className="text-primary-500 dark:text-accent-300">
                   Code complet ouvert
                 </strong>{" "}
-                - aucun module cache, aucune brique fermee importante. AGPLv3
+                - aucun module caché, aucune brique fermée importante. AGPLv3
                 strict, audit ligne par ligne possible.
               </span>
             </li>
@@ -329,11 +329,11 @@ export default function CommunautePage() {
               </span>
               <span>
                 <strong className="text-primary-500 dark:text-accent-300">
-                  Decisions en clair
+                  Décisions en clair
                 </strong>{" "}
                 - roadmap, choix techniques majeurs, abandons : tout passe par
-                des issues publiques. Pas de roadmap secrete, pas de meeting
-                gouvernemental cache.
+                des issues publiques. Pas de roadmap secrète, pas de meeting
+                gouvernemental caché.
               </span>
             </li>
             <li className="flex items-start gap-3">
@@ -342,10 +342,10 @@ export default function CommunautePage() {
               </span>
               <span>
                 <strong className="text-primary-500 dark:text-accent-300">
-                  Reponse sous 7 jours
+                  Réponse sous 7 jours
                 </strong>{" "}
-                - tout PR ou issue recoit un retour sous 7 jours ouvres.
-                Premiere review sous 3 jours pour les contributeurs reguliers.
+                - tout PR ou issue reçoit un retour sous 7 jours ouvrés.
+                Première review sous 3 jours pour les contributeurs réguliers.
               </span>
             </li>
             <li className="flex items-start gap-3">
@@ -357,7 +357,7 @@ export default function CommunautePage() {
                   DCO simple, pas de CLA pesant
                 </strong>{" "}
                 - Developer Certificate of Origin = `git commit -s` suffit. Pas
-                de paperasse a signer, pas de cession de droits abusive.
+                de paperasse à signer, pas de cession de droits abusive.
               </span>
             </li>
             <li className="flex items-start gap-3">
@@ -366,7 +366,7 @@ export default function CommunautePage() {
               </span>
               <span>
                 <strong className="text-primary-500 dark:text-accent-300">
-                  Code of Conduct applique
+                  Code of Conduct appliqué
                 </strong>{" "}
                 -{" "}
                 <a
@@ -377,7 +377,7 @@ export default function CommunautePage() {
                 >
                   Contributor Covenant 2.1
                 </a>
-                . Tout comportement abusif est traite serieusement (security@,
+                . Tout comportement abusif est traité sérieusement (security@,
                 72h).
               </span>
             </li>
@@ -408,9 +408,9 @@ export default function CommunautePage() {
             Donne-nous une étoile, ou viens dire bonjour.
           </h2>
           <p className="opacity-90 mb-6 max-w-xl mx-auto text-base sm:text-lg leading-relaxed relative">
-            La meilleure facon de soutenir un editeur OSS solo, c'est d'utiliser
+            La meilleure façon de soutenir un éditeur OSS solo, c'est d'utiliser
             le produit, signaler un bug, contribuer un module, ou simplement en
-            parler a un confrere RSSI. Aucune obligation, juste une invitation.
+            parler à un confrère RSSI. Aucune obligation, juste une invitation.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center relative">
             <a
@@ -445,9 +445,9 @@ export default function CommunautePage() {
             ============================================================ */}
         <section className="text-center pt-8 pb-4">
           <blockquote className="font-display italic text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
-            « Une plateforme cyber qui vit seule meurt seule. La nouveaute de
-            chaque saison, la qualite de chaque module, la stabilite de chaque
-            connecteur - tout cela vient de la communaute, ou ne vient pas. »
+            « Une plateforme cyber qui vit seule meurt seule. La nouveauté de
+            chaque saison, la qualité de chaque module, la stabilité de chaque
+            connecteur - tout cela vient de la communauté, ou ne vient pas. »
           </blockquote>
           <p
             aria-hidden="true"

@@ -77,15 +77,15 @@ export const SECTIONS: Record<
 > = {
   etincelle: {
     titre: "Avant tout",
-    sous_titre: "De quoi il retourne, et si ca vous concerne. Aucune tache.",
+    sous_titre: "De quoi il retourne, et si ça vous concerne. Aucune tâche.",
   },
   socle: {
     titre: "Le socle",
-    sous_titre: "Un mois de travail, reparti. C'est la base de tout le reste.",
+    sous_titre: "Un mois de travail, réparti. C'est la base de tout le reste.",
   },
   recurrent: {
     titre: "Ce qui se rejoue",
-    sous_titre: "La conformite n'est pas un projet qu'on termine.",
+    sous_titre: "La conformité n'est pas un projet qu'on termine.",
   },
 };
 
@@ -96,7 +96,7 @@ export const CATALOGUE: readonly EtapeParcours[] = [
     portee: "personne",
     question: "De quoi parle-t-on, au juste ?",
     pourquoi:
-      "Le RGPD concerne une entreprise de douze personnes autant qu'un grand groupe. Tant qu'on ne sait pas ce qu'il demande vraiment, on ne peut ni commencer, ni deleguer.",
+      "Le RGPD concerne une entreprise de douze personnes autant qu'un grand groupe. Tant qu'on ne sait pas ce qu'il demande vraiment, on ne peut ni commencer, ni déléguer.",
     action:
       "Vingt minutes de lecture, sans jargon. Aucune tache a produire : juste de quoi cesser d'avoir peur du sujet.",
     verdict: "humanix_aide",
@@ -108,13 +108,13 @@ export const CATALOGUE: readonly EtapeParcours[] = [
     portee: "personne",
     question: "Suis-je vraiment DPO ?",
     pourquoi:
-      "Beaucoup portent le titre sans y etre tenus ; d'autres devraient en designer un et l'ignorent. Le savoir change ce qu'on attend de vous.",
+      "Beaucoup portent le titre sans y être tenus ; d'autres devraient en désigner un et l'ignorent. Le savoir change ce qu'on attend de vous.",
     action:
       "Repondez aux trois questions de l'outil CNIL. Notez la reponse quelque part : on vous la redemandera.",
     verdict: "hors_perimetre",
     reference: "RGPD art. 37",
     ressource: {
-      libelle: "Outil de designation — CNIL",
+      libelle: "Outil de désignation — CNIL",
       url: "https://www.cnil.fr/fr/designation-dpo",
     },
     peutEtreSansObjet: false,
@@ -123,15 +123,15 @@ export const CATALOGUE: readonly EtapeParcours[] = [
     cle: "registre-traitements",
     section: "socle",
     portee: "entreprise",
-    question: "Qu'est-ce que mon entreprise fait des donnees ?",
+    question: "Qu'est-ce que mon entreprise fait des données ?",
     pourquoi:
-      "C'est la pierre angulaire. Sans cette liste, aucune des etapes suivantes n'est evaluable : on ne protege pas ce qu'on n'a pas recense.",
+      "C'est la pierre angulaire. Sans cette liste, aucune des étapes suivantes n'est évaluable : on ne protège pas ce qu'on n'a pas recensé.",
     action:
       "Listez CINQ traitements evidents : paie, recrutement, clients, badges, video. Cinq, pas trente. Le reste viendra.",
     verdict: "humanix_aide",
     reference: "RGPD art. 30",
     ressource: {
-      libelle: "Modele de registre — CNIL (tableur)",
+      libelle: "Modèle de registre — CNIL (tableur)",
       url: "https://www.cnil.fr/fr/RGPD-le-registre-des-activites-de-traitement",
     },
     peutEtreSansObjet: false,
@@ -140,9 +140,9 @@ export const CATALOGUE: readonly EtapeParcours[] = [
     cle: "information-personnes",
     section: "socle",
     portee: "entreprise",
-    question: "Les gens savent-ils ce que je fais de leurs donnees ?",
+    question: "Les gens savent-ils ce que je fais de leurs données ?",
     pourquoi:
-      "Collecter sans informer est la faute la plus frequente, et la plus simple a corriger. Elle se voit immediatement lors d'un controle.",
+      "Collecter sans informer est la faute la plus fréquente, et la plus simple à corriger. Elle se voit immédiatement lors d'un contrôle.",
     action:
       "Verifiez trois endroits : le contrat de travail, les formulaires du site, et l'affichage a l'entree si vous avez des cameras.",
     verdict: "humanix_aide",
@@ -153,9 +153,9 @@ export const CATALOGUE: readonly EtapeParcours[] = [
     cle: "durees-conservation",
     section: "socle",
     portee: "entreprise",
-    question: "Combien de temps je garde tout ca ?",
+    question: "Combien de temps je garde tout ça ?",
     pourquoi:
-      "Presque tout le monde est en faute ici, et personne ne le sait : on garde par defaut, indefiniment. Une duree non definie est une duree illegale.",
+      "Presque tout le monde est en faute ici, et personne ne le sait : on garde par défaut, indéfiniment. Une durée non définie est une durée illégale.",
     action:
       "Pour vos cinq traitements, ecrivez une duree en face de chacun. Un tableau de cinq lignes suffit.",
     verdict: "humanix_aide",
@@ -166,9 +166,9 @@ export const CATALOGUE: readonly EtapeParcours[] = [
     cle: "sous-traitants",
     section: "socle",
     portee: "entreprise",
-    question: "Qui d'autre voit ces donnees ?",
+    question: "Qui d'autre voit ces données ?",
     pourquoi:
-      "Votre comptable, votre logiciel de paie, votre hebergeur : chacun traite des donnees pour vous, et chacun doit etre encadre par un contrat.",
+      "Votre comptable, votre logiciel de paie, votre hébergeur : chacun traite des données pour vous, et chacun doit être encadré par un contrat.",
     action:
       "Listez vos prestataires qui voient des donnees personnelles. Pour chacun, demandez-lui son contrat de sous-traitance.",
     verdict: "humanix_aide",
@@ -179,22 +179,22 @@ export const CATALOGUE: readonly EtapeParcours[] = [
     cle: "demandes-personnes",
     section: "recurrent",
     portee: "entreprise",
-    question: "Que faire si quelqu'un demande ses donnees ?",
+    question: "Que faire si quelqu'un demande ses données ?",
     pourquoi:
-      "Vous avez UN MOIS pour repondre, et le delai court des la demande — y compris si elle arrive par un simple courriel a l'accueil.",
+      "Vous avez UN MOIS pour répondre, et le délai court dès la demande — y compris si elle arrive par un simple courriel à l'accueil.",
     action:
       "Decidez qui recoit ces demandes et ou elles sont notees. Une adresse et un tableau suffisent pour commencer.",
     verdict: "humanix_aide",
-    reference: "RGPD art. 12 a 22",
+    reference: "RGPD art. 12 à 22",
     peutEtreSansObjet: false,
   },
   {
     cle: "violation-donnees",
     section: "recurrent",
     portee: "entreprise",
-    question: "Et si je perds des donnees ?",
+    question: "Et si je perds des données ?",
     pourquoi:
-      "72 heures pour notifier la CNIL. Ce n'est pas le moment de decouvrir la procedure : elle doit tenir sur une page, lisible a 3 h du matin.",
+      "72 heures pour notifier la CNIL. Ce n'est pas le moment de découvrir la procédure : elle doit tenir sur une page, lisible à 3 h du matin.",
     action:
       "Ecrivez qui appeler et dans quel ordre. Notre propre procedure vous sert de modele — elle est ecrite pour etre executee seul, sous stress.",
     verdict: "humanix_aide",
@@ -205,15 +205,15 @@ export const CATALOGUE: readonly EtapeParcours[] = [
     cle: "aipd",
     section: "recurrent",
     portee: "entreprise",
-    question: "Certains de mes traitements sont-ils a risque ?",
+    question: "Certains de mes traitements sont-ils à risque ?",
     pourquoi:
-      "Quelques traitements imposent une analyse d'impact avant meme de commencer. La liste est courte et publique : verifier coute dix minutes.",
+      "Quelques traitements imposent une analyse d'impact avant même de commencer. La liste est courte et publique : vérifier coûte dix minutes.",
     action:
       "Comparez vos cinq traitements a la liste CNIL. Si aucun n'y figure, notez-le et passez : c'est une reponse valable.",
     verdict: "humanix_aide",
     reference: "RGPD art. 35",
     ressource: {
-      libelle: "Liste des traitements soumis a AIPD — CNIL",
+      libelle: "Liste des traitements soumis à AIPD — CNIL",
       url: "https://www.cnil.fr/fr/analyse-dimpact-relative-la-protection-des-donnees-publication-dune-liste-des-traitements-pour",
     },
     peutEtreSansObjet: true,
@@ -222,9 +222,9 @@ export const CATALOGUE: readonly EtapeParcours[] = [
     cle: "demontrer",
     section: "recurrent",
     portee: "entreprise",
-    question: "Comment je prouve tout ca ?",
+    question: "Comment je prouve tout ça ?",
     pourquoi:
-      "Etre conforme ne suffit pas : il faut pouvoir le DEMONTRER. C'est ce qu'on vous demandera en premier, et ce qui manque le plus souvent.",
+      "Être conforme ne suffit pas : il faut pouvoir le DÉMONTRER. C'est ce qu'on vous demandera en premier, et ce qui manque le plus souvent.",
     action:
       "Rassemblez au meme endroit vos registres, durees, contrats et notes. Un dossier partage suffit — l'important est qu'il existe.",
     verdict: "humanix_aide",

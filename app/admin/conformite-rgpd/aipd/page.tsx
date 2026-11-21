@@ -29,9 +29,9 @@ import AipdTemplateClient from "./AipdTemplateClient";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "Generateur AIPD - Console DPO | Humanix",
+  title: "Générateur AIPD - Console DPO | Humanix",
   description:
-    "Modèle d'Analyse d'Impact a la Protection des Données, conforme article 35 RGPD, exportable en Markdown. Squelette methodologique pour DPO interne ou mutualise.",
+    "Modèle d'Analyse d'Impact à la Protection des Données, conforme article 35 RGPD, exportable en Markdown. Squelette méthodologique pour DPO interne ou mutualisé.",
 };
 
 export default async function AipdGeneratorPage() {
@@ -45,8 +45,8 @@ export default async function AipdGeneratorPage() {
   return (
     <div className="space-y-8">
       <AdminPageHeader
-        title="Generateur AIPD"
-        description="Modèle d'Analyse d'Impact pre-rempli, conforme article 35 RGPD. Copie, complete, exporte."
+        title="Générateur AIPD"
+        description="Modèle d'Analyse d'Impact pré-rempli, conforme article 35 RGPD. Copie, complète, exporte."
         icon="📝"
         actions={
           <Link
@@ -64,7 +64,7 @@ export default async function AipdGeneratorPage() {
           ============================================================ */}
       <AdminSection
         title="Avant de commencer"
-        description="L'AIPD est un exercice structure. Voici la methode rapide."
+        description="L'AIPD est un exercice structuré. Voici la méthode rapide."
         variant="muted"
       >
         <div className="space-y-3 text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
@@ -72,24 +72,24 @@ export default async function AipdGeneratorPage() {
             <strong className="text-primary-500 dark:text-accent-300">
               Quand mener une AIPD ?
             </strong>{" "}
-            Article 35.3 RGPD impose une AIPD pour les traitements a risque
-            eleve : profilage / decisions automatisees, données sensibles a
-            grande echelle, surveillance systematique d'espaces publics,
+            Article 35.3 RGPD impose une AIPD pour les traitements à risque
+            élevé : profilage / décisions automatisées, données sensibles à
+            grande échelle, surveillance systématique d'espaces publics,
             transferts hors UE de grande ampleur, données de personnes
-            vulnerables (mineurs, salaries).
+            vulnérables (mineurs, salariés).
           </p>
           <p>
             <strong className="text-primary-500 dark:text-accent-300">
               Combien de temps ?
             </strong>{" "}
-            Une AIPD bien menee prend 4 a 8 heures de DPO + 2 a 4 heures
-            d'echanges avec le metier et l'IT. Au-dela, c'est qu'il y a un
-            probleme de scoping (le projet est sans doute trop ambitieux et doit
+            Une AIPD bien menée prend 4 à 8 heures de DPO + 2 à 4 heures
+            d'échanges avec le métier et l'IT. Au-delà, c'est qu'il y a un
+            problème de scoping (le projet est sans doute trop ambitieux et doit
             être decoupé).
           </p>
           <p>
             <strong className="text-primary-500 dark:text-accent-300">
-              Outils recommandes :
+              Outils recommandés :
             </strong>{" "}
             le{" "}
             <a
@@ -100,14 +100,14 @@ export default async function AipdGeneratorPage() {
             >
               PIA Tool gratuit de la CNIL
             </a>{" "}
-            (Windows/Mac/Linux) est l'outil officiel - accepte par la CNIL en
-            cas de controle. Le modèle ci-dessous est un squelette Markdown
-            complementaire pour ceux qui preferent travailler dans Notion,
+            (Windows/Mac/Linux) est l'outil officiel - accepté par la CNIL en
+            cas de contrôle. Le modèle ci-dessous est un squelette Markdown
+            complémentaire pour ceux qui préfèrent travailler dans Notion,
             OneDrive ou un GRC.
           </p>
           <p>
             <strong className="text-primary-500 dark:text-accent-300">
-              Module pedagogique :
+              Module pédagogique :
             </strong>{" "}
             le module{" "}
             <Link
@@ -116,7 +116,7 @@ export default async function AipdGeneratorPage() {
             >
               "Mener une AIPD sans s'y noyer"
             </Link>{" "}
-            de la saison dpo-quotidien detaille la methode. Lecture 8 minutes.
+            de la saison dpo-quotidien détaille la méthode. Lecture 8 minutes.
           </p>
         </div>
       </AdminSection>
@@ -126,7 +126,7 @@ export default async function AipdGeneratorPage() {
           ============================================================ */}
       <AdminSection
         title="Modèle Markdown"
-        description="Copie le contenu, colle-le dans ton outil prefere, complete les zones [a remplir]."
+        description="Copie le contenu, colle-le dans ton outil préféré, complète les zones [à remplir]."
       >
         <AipdTemplateClient />
       </AdminSection>
@@ -135,8 +135,8 @@ export default async function AipdGeneratorPage() {
           3. Apres l'AIPD : que faire ?
           ============================================================ */}
       <AdminSection
-        title="Apres avoir rempli l'AIPD"
-        description="Les 4 etapes critiques post-redaction"
+        title="Après avoir rempli l'AIPD"
+        description="Les 4 étapes critiques post-rédaction"
         variant="highlight"
       >
         <ol className="space-y-3 text-sm text-gray-700 dark:text-gray-300 leading-relaxed list-decimal pl-5">
@@ -144,29 +144,29 @@ export default async function AipdGeneratorPage() {
             <strong className="text-primary-500 dark:text-accent-300">
               Validation interne :
             </strong>{" "}
-            l'AIPD doit être validee par le responsable de traitement (DG /
-            metier) ET le DPO. Trace ecrite de la validation.
+            l'AIPD doit être validée par le responsable de traitement (DG /
+            métier) ET le DPO. Trace écrite de la validation.
           </li>
           <li>
             <strong className="text-primary-500 dark:text-accent-300">
-              Consultation des personnes concernees :
+              Consultation des personnes concernées :
             </strong>{" "}
             si pertinent, recueillir leur avis (article 35.9). Exemple : CSE
-            pour les salaries, panels pour les clients.
+            pour les salariés, panels pour les clients.
           </li>
           <li>
             <strong className="text-primary-500 dark:text-accent-300">
-              Consultation prealable CNIL :
+              Consultation préalable CNIL :
             </strong>{" "}
-            si l'AIPD revele un risque residuel eleve malgre les mesures, la
-            CNIL doit être consultee AVANT mise en oeuvre (article 36). Reponse
+            si l'AIPD révèle un risque résiduel élevé malgré les mesures, la
+            CNIL doit être consultée AVANT mise en oeuvre (article 36). Réponse
             sous 8 semaines.
           </li>
           <li>
             <strong className="text-primary-500 dark:text-accent-300">
-              Revue periodique :
+              Revue périodique :
             </strong>{" "}
-            l'AIPD doit être revue tous les ans ou des qu'il y a un changement
+            l'AIPD doit être revue tous les ans ou dès qu'il y a un changement
             substantiel du traitement. Marque la date de prochaine revue dans
             ton calendrier DPO.
           </li>

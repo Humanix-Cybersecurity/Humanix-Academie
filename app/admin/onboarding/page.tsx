@@ -72,7 +72,7 @@ export default async function OnboardingPage() {
         description={
           isFreshTenant
             ? `Activons votre programme dans ${tenant.name} en 4 minutes.`
-            : `Suivi de configuration de ${tenant.name}. Tout peut etre relance a tout moment.`
+            : `Suivi de configuration de ${tenant.name}. Tout peut être relancé à tout moment.`
         }
       />
 
@@ -94,7 +94,7 @@ export default async function OnboardingPage() {
                     {otherUsersCount > 1 ? "s" : ""} actif
                     {otherUsersCount > 1 ? "s" : ""} · {activatedSaisonCount}{" "}
                     module
-                    {activatedSaisonCount > 1 ? "s" : ""} active
+                    {activatedSaisonCount > 1 ? "s" : ""} activé
                     {activatedSaisonCount > 1 ? "s" : ""}.
                   </p>
                 </div>
@@ -116,17 +116,17 @@ export default async function OnboardingPage() {
             </article>
 
             <AdminSection
-              title="Etapes recommandees"
+              title="Étapes recommandées"
               description="Suivez ces 3 actions pour passer en mode plein."
             >
               <ol className="space-y-3">
                 <ChecklistItem
                   done={otherUsersCount > 0}
-                  title="Inviter votre equipe"
+                  title="Inviter votre équipe"
                   description={
                     otherUsersCount > 0
                       ? `${otherUsersCount} collaborateur${otherUsersCount > 1 ? "s" : ""} invite${otherUsersCount > 1 ? "s" : ""}.`
-                      : "Au moins 1 collaborateur a inviter."
+                      : "Au moins 1 collaborateur à inviter."
                   }
                   href="/admin/utilisateurs"
                   ctaLabel={
@@ -137,11 +137,11 @@ export default async function OnboardingPage() {
                 />
                 <ChecklistItem
                   done={activatedSaisonCount > 0}
-                  title="Activer les modules adaptes"
+                  title="Activer les modules adaptés"
                   description={
                     activatedSaisonCount > 0
                       ? `${activatedSaisonCount} module${activatedSaisonCount > 1 ? "s" : ""} active${activatedSaisonCount > 1 ? "s" : ""}. Filtres et bulk actions disponibles.`
-                      : "Choisir les saisons pertinentes pour vos equipes."
+                      : "Choisir les saisons pertinentes pour vos équipes."
                   }
                   href="/admin/modules"
                   ctaLabel={
@@ -151,11 +151,11 @@ export default async function OnboardingPage() {
                 <ChecklistItem
                   done={!!currentUser?.mfaEnabled}
                   title="Activer la 2FA admin"
-                  description="Compte admin = cle du tenant. La 2FA TOTP reduit drastiquement le risque de compromission."
+                  description="Compte admin = clé du tenant. La 2FA TOTP réduit drastiquement le risque de compromission."
                   href="/profil/securite"
                   ctaLabel={
                     currentUser?.mfaEnabled
-                      ? "Gerer la 2FA"
+                      ? "Gérer la 2FA"
                       : "Activer maintenant"
                   }
                 />
@@ -164,7 +164,7 @@ export default async function OnboardingPage() {
 
             <AdminSection
               title="Besoin d'aide ?"
-              description="On accompagne tous les nouveaux tenants la premiere semaine."
+              description="On accompagne tous les nouveaux tenants la première semaine."
             >
               <ul className="text-sm space-y-2">
                 <li>
@@ -173,7 +173,7 @@ export default async function OnboardingPage() {
                     href="/securite"
                     className="text-accent-700 hover:underline"
                   >
-                    Trust Center / docs securite
+                    Trust Center / docs sécurité
                   </Link>
                 </li>
                 <li>

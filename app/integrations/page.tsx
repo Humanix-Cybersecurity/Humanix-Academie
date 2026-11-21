@@ -351,22 +351,22 @@ export default function IntegrationsHubPage() {
           className="max-w-5xl mx-auto px-4 pt-12 pb-10 sm:pt-16 sm:pb-12 text-center"
         >
           <p className="text-xs sm:text-sm uppercase tracking-[0.25em] font-bold text-accent-500 mb-2">
-            Hub d'interoperabilite · souverainete par defaut
+            Hub d'interopérabilité · souveraineté par défaut
           </p>
           <h1
             id="hero-title"
             className="font-display text-4xl sm:text-6xl font-extrabold text-primary-500 dark:text-accent-300 leading-[1.05] mb-4 animate-slide-up"
             style={{ animationDelay: "100ms" }}
           >
-            Connecteurs & <span className="text-accent-500">integrations.</span>
+            Connecteurs & <span className="text-accent-500">intégrations.</span>
           </h1>
           <p
             className="text-lg sm:text-xl text-gray-700 dark:text-gray-200 max-w-2xl mx-auto leading-relaxed animate-slide-up"
             style={{ animationDelay: "220ms" }}
           >
-            Humanix s'integre nativement a ton ecosysteme RSSI. Hub-and-spoke
-            avec priorite souverainete française et standards ouverts. Aucune
-            ile, aucun lock-in, aucune dependance hors UE par defaut.
+            Humanix s'intègre nativement à ton écosystème RSSI. Hub-and-spoke
+            avec priorité souveraineté française et standards ouverts. Aucune
+            île, aucun lock-in, aucune dépendance hors UE par défaut.
           </p>
         </header>
       </HexBackdrop>

@@ -6,12 +6,12 @@
 export const WEBHOOK_EVENTS = {
   "episode.completed": {
     label: "Un collaborateur termine un module",
-    description: "Envoye quand un user passe un episode au statut COMPLETED.",
+    description: "Envoyé quand un user passe un épisode au statut COMPLETED.",
     sample: {
       userName: "Alice Martin",
       userEmail: "alice@acme.fr",
       saisonTitle: "Saison 1 - Phishing",
-      episodeTitle: "Reconnaitre un faux mail Microsoft",
+      episodeTitle: "Reconnaître un faux mail Microsoft",
       score: 92,
       bestScore: 92,
     },
@@ -19,7 +19,7 @@ export const WEBHOOK_EVENTS = {
   "saison.completed": {
     label: "Un collaborateur termine une saison entière",
     description:
-      "Envoye quand un user a complete tous les episodes d'une saison. Idempotent : 1 seul envoi par (user, saison).",
+      "Envoyé quand un user a complété tous les épisodes d'une saison. Idempotent : 1 seul envoi par (user, saison).",
     sample: {
       userName: "Alice Martin",
       saisonTitle: "Saison 1 - Phishing",
@@ -30,7 +30,7 @@ export const WEBHOOK_EVENTS = {
   "threat.trigger.fired": {
     label: "Une menace réelle a déclenché une formation ciblée",
     description:
-      "Envoye quand POST /api/integrations/edr-trigger a assigne un episode aux collaborateurs touches par une menace detectee (boucle fermee). Compteurs uniquement, jamais d'adresse.",
+      "Envoyé quand POST /api/integrations/edr-trigger a assigné un épisode aux collaborateurs touchés par une menace détectée (boucle fermée). Compteurs uniquement, jamais d'adresse.",
     sample: {
       triggerId: "clx...",
       source: "mailinblack",
@@ -46,7 +46,7 @@ export const WEBHOOK_EVENTS = {
   "phishing.campaign_completed": {
     label: "Une campagne phishing simulé est terminée",
     description:
-      "Envoye quand le delai d'expiration d'une campagne est atteint. Resume : envoyes / cliques / signales.",
+      "Envoyé quand le délai d'expiration d'une campagne est atteint. Résumé : envoyés / cliqués / signalés.",
     sample: {
       campaignTitle: "Faux Microsoft 365 - Mai 2026",
       sentTo: 42,
@@ -58,7 +58,7 @@ export const WEBHOOK_EVENTS = {
   "phishing.user_clicked": {
     label: "Un collaborateur a cliqué sur un phishing simulé",
     description:
-      "Envoye en temps reel des qu'un user clique sur le lien d'un mail piege simule. Permet une alerte Slack/Teams au RSSI ou un trigger SOC pour declencher une remediation immediate. Inclut le mini-module flash auto-assigne.",
+      "Envoyé en temps réel dès qu'un user clique sur le lien d'un mail piège simulé. Permet une alerte Slack/Teams au RSSI ou un trigger SOC pour déclencher une remédiation immédiate. Inclut le mini-module flash auto-assigné.",
     sample: {
       userName: "Alice Martin",
       userEmail: "alice@acme.fr",
@@ -71,18 +71,18 @@ export const WEBHOOK_EVENTS = {
   "phishing.reported": {
     label: "Un mail suspect a été signalé",
     description:
-      "Envoye quand un utilisateur signale un mail comme phishing (depuis l'add-in Outlook ou en interne). Le canal Slack/Teams reçoit l'alerte en temps reel - utile pour le SOC ou l'IT.",
+      "Envoyé quand un utilisateur signale un mail comme phishing (depuis l'add-in Outlook ou en interne). Le canal Slack/Teams reçoit l'alerte en temps réel - utile pour le SOC ou l'IT.",
     sample: {
       userName: "Alice Martin",
       fromAddress: "noreply@suspect.example",
-      subject: "[ACTION REQUISE] Verifiez votre compte",
+      subject: "[ACTION REQUISE] Vérifiez votre compte",
       source: "outlook-addin",
     },
   },
   "risk.degraded": {
     label: "Le score de risque collectif s'est dégradé",
     description:
-      "Declenche quand le score collectif baisse de >= 5 points en 7 jours (signal d'alerte).",
+      "Déclenché quand le score collectif baisse de >= 5 points en 7 jours (signal d'alerte).",
     sample: {
       previousScore: 72,
       currentScore: 64,
@@ -93,7 +93,7 @@ export const WEBHOOK_EVENTS = {
   "user.invited": {
     label: "Un nouvel utilisateur a été invité",
     description:
-      "Envoye lors de l'envoi d'un mail magique-link a un nouvel arrivant.",
+      "Envoyé lors de l'envoi d'un mail magique-link à un nouvel arrivant.",
     sample: {
       email: "bob@acme.fr",
       invitedBy: "Charles Admin",
@@ -101,9 +101,9 @@ export const WEBHOOK_EVENTS = {
   },
   "marketplace.module_installed": {
     label: "Un module marketplace a été installé",
-    description: "Envoye quand un admin installe un module communautaire.",
+    description: "Envoyé quand un admin installe un module communautaire.",
     sample: {
-      moduleTitle: "Rancongiciels - comprendre, eviter, reagir",
+      moduleTitle: "Rançongiciels - comprendre, éviter, réagir",
       author: "Pierre Dupont (RSSI@CHU Cherbourg)",
       installedBy: "Charles Admin",
     },

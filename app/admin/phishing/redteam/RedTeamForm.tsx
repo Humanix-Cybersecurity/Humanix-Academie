@@ -31,7 +31,7 @@ export default function RedTeamForm() {
             type="text"
             id="sector"
             name="sector"
-            placeholder="PME industrie, cabinet medical, grande distribution..."
+            placeholder="PME industrie, cabinet médical, grande distribution..."
             required
             maxLength={200}
             className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-900 text-sm"
@@ -43,20 +43,20 @@ export default function RedTeamForm() {
             htmlFor="attackContext"
             className="block text-sm font-bold text-gray-700 dark:text-gray-200 mb-1"
           >
-            Contexte / attaque visee
+            Contexte / attaque visée
           </label>
           <textarea
             id="attackContext"
             name="attackContext"
-            placeholder="Ex: 'On a entendu parler de fraude au PDG dans le secteur, avec faux RIB et urgence weekend' OU 'Je veux tester le reflexe RH face a un faux CV avec piece jointe douteuse'"
+            placeholder="Ex: 'On a entendu parler de fraude au PDG dans le secteur, avec faux RIB et urgence weekend' OU 'Je veux tester le réflexe RH face à un faux CV avec pièce jointe douteuse'"
             required
             maxLength={1000}
             rows={4}
             className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-900 text-sm"
           />
           <p className="text-xs text-gray-500 mt-1">
-            Plus tu donnes de contexte, plus Mistral genere un scenario
-            pertinent. 100 a 500 chars conseilles.
+            Plus tu donnes de contexte, plus Mistral génère un scénario
+            pertinent. 100 à 500 chars conseillés.
           </p>
         </div>
 
@@ -66,7 +66,7 @@ export default function RedTeamForm() {
               htmlFor="targetAudience"
               className="block text-sm font-bold text-gray-700 dark:text-gray-200 mb-1"
             >
-              Cibles a tester
+              Cibles à tester
             </label>
             <input
               type="text"
@@ -84,7 +84,7 @@ export default function RedTeamForm() {
               htmlFor="difficulty"
               className="block text-sm font-bold text-gray-700 dark:text-gray-200 mb-1"
             >
-              Difficulte
+              Difficulté
             </label>
             <select
               id="difficulty"
@@ -94,7 +94,7 @@ export default function RedTeamForm() {
             >
               <option value="subtle">Subtle (vraie vigilance requise)</option>
               <option value="medium">Medium (signaux moyens)</option>
-              <option value="brutal">Brutal (signaux evidents)</option>
+              <option value="brutal">Brutal (signaux évidents)</option>
             </select>
           </div>
         </div>
@@ -104,7 +104,7 @@ export default function RedTeamForm() {
           disabled={isPending}
           className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {isPending ? "Mistral reflechit (10-20s)..." : "Generer le scenario"}
+          {isPending ? "Mistral réfléchit (10-20s)..." : "Générer le scénario"}
         </button>
       </form>
 
@@ -116,7 +116,7 @@ export default function RedTeamForm() {
               className="rounded-2xl border-2 border-red-300 dark:border-red-700 bg-red-50 dark:bg-red-900/30 p-4"
             >
               <p className="font-bold text-red-900 dark:text-red-200">
-                Generation echouee
+                Génération échouée
               </p>
               <p className="text-sm text-red-800 dark:text-red-300 mt-1 font-mono">
                 {state.error}
@@ -124,7 +124,7 @@ export default function RedTeamForm() {
               {state.error === "no_api_key" && (
                 <p className="text-xs text-red-700 dark:text-red-400 mt-2">
                   La variable d&apos;environnement MISTRAL_API_KEY n&apos;est
-                  pas configuree. Ajoute-la dans .env et relance.
+                  pas configurée. Ajoute-la dans .env et relance.
                 </p>
               )}
             </div>
@@ -154,7 +154,7 @@ function ScenarioPreview({
   return (
     <div className="space-y-4">
       <p className="text-xs uppercase tracking-widest font-bold text-emerald-700 dark:text-emerald-300 mb-2">
-        ✅ Brouillon genere
+        ✅ Brouillon généré
       </p>
 
       <div className="rounded-xl border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 overflow-hidden">
@@ -202,7 +202,7 @@ function ScenarioPreview({
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <div className="rounded-xl border border-amber-300 dark:border-amber-700 bg-amber-50 dark:bg-amber-900/30 p-4">
           <p className="text-xs uppercase tracking-widest font-bold text-amber-800 dark:text-amber-300 mb-2">
-            🚩 Signaux pedagogiques ({scenario.markers.length})
+            🚩 Signaux pédagogiques ({scenario.markers.length})
           </p>
           <ul className="text-sm text-amber-900 dark:text-amber-100 space-y-1 list-disc pl-4">
             {scenario.markers.map((m, i) => (
@@ -219,7 +219,7 @@ function ScenarioPreview({
             {scenario.audienceRecommendation}
           </p>
           <p className="text-xs uppercase tracking-widest font-bold text-cyan-800 dark:text-cyan-300 mt-4 mb-2">
-            📚 Objectif pedagogique
+            📚 Objectif pédagogique
           </p>
           <p className="text-sm text-cyan-900 dark:text-cyan-100">
             {scenario.pedagogicalGoal}
@@ -239,9 +239,9 @@ function ScenarioPreview({
       </div>
 
       <div className="rounded-lg border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-900/20 p-3 text-xs text-amber-900 dark:text-amber-200">
-        <strong>Prochaine etape :</strong> utilise le bouton{" "}
-        <em>Sauvegarder comme template</em> pour persister ce scenario en BDD et
-        le rendre dispo dans le selecteur de campagne sur /admin/phishing. Sinon
+        <strong>Prochaine étape :</strong> utilise le bouton{" "}
+        <em>Sauvegarder comme template</em> pour persister ce scénario en BDD et
+        le rendre dispo dans le sélecteur de campagne sur /admin/phishing. Sinon
         copie le HTML / sujet / sender et utilise-les manuellement.
       </div>
     </div>
@@ -271,7 +271,7 @@ function SaveAsTemplateButton({
       const cleanName = scenario.subject
         .replace(/^\[?(URGENT|Action requise|Confidentiel)\]?\s*/i, "")
         .slice(0, 80);
-      fd.set("name", cleanName || "Scenario red team");
+      fd.set("name", cleanName || "Scénario red team");
       fd.set("subject", scenario.subject);
       fd.set("fromEmail", scenario.fromEmail);
       fd.set("fromName", scenario.fromName);
