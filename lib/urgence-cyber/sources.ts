@@ -20,35 +20,35 @@ export const SOURCES: Source[] = [
     name: "ANSSI",
     url: "https://cyber.gouv.fr",
     description:
-      "Agence nationale de la securite des systemes d'information. Reference absolue : guides, recommandations, alertes CERT-FR.",
+      "Agence nationale de la sécurité des systèmes d'information. Référence absolue : guides, recommandations, alertes CERT-FR.",
     category: "etat",
   },
   {
     name: "CERT-FR",
     url: "https://www.cert.ssi.gouv.fr",
     description:
-      "Centre gouvernemental de veille, d'alerte et de reponse aux attaques informatiques. Bulletins quotidiens, fiches CVE majeures.",
+      "Centre gouvernemental de veille, d'alerte et de réponse aux attaques informatiques. Bulletins quotidiens, fiches CVE majeures.",
     category: "etat",
   },
   {
     name: "CNIL",
     url: "https://www.cnil.fr",
     description:
-      "Commission nationale de l'informatique et des libertes. Doctrine RGPD, jurisprudence sanctions, guide securite.",
+      "Commission nationale de l'informatique et des libertés. Doctrine RGPD, jurisprudence sanctions, guide sécurité.",
     category: "etat",
   },
   {
     name: "CyberMalveillance.gouv.fr",
     url: "https://www.cybermalveillance.gouv.fr",
     description:
-      "Plateforme officielle d'assistance victimes + diagnostic gratuit. Mise en relation avec prestataires labellises.",
+      "Plateforme officielle d'assistance victimes + diagnostic gratuit. Mise en relation avec prestataires labellisés.",
     category: "etat",
   },
   {
-    name: "data.gouv.fr - cybersecurite",
+    name: "data.gouv.fr - cybersécurité",
     url: "https://www.data.gouv.fr/fr/topics/cybersecurite",
     description:
-      "Donnees ouvertes publiques sur les incidents et les pratiques cyber.",
+      "Données ouvertes publiques sur les incidents et les pratiques cyber.",
     category: "etat",
   },
 
@@ -71,7 +71,7 @@ export const SOURCES: Source[] = [
     name: "EuropolCybercrime",
     url: "https://www.europol.europa.eu/about-europol/european-cybercrime-centre-ec3",
     description:
-      "European Cybercrime Centre. Co-fondateur de NoMoreRansom. Operations internationales documentees.",
+      "European Cybercrime Centre. Co-fondateur de NoMoreRansom. Opérations internationales documentées.",
     category: "europe",
   },
 
@@ -80,35 +80,35 @@ export const SOURCES: Source[] = [
     name: "Global Security Mag",
     url: "https://www.globalsecuritymag.fr",
     description:
-      "Magazine francais de reference cyber. Interviews CISO, analyses produit, baromètres trimestriels.",
+      "Magazine français de référence cyber. Interviews CISO, analyses produit, baromètres trimestriels.",
     category: "magazine",
   },
   {
-    name: "Le MagIT - Securite",
+    name: "Le MagIT - Sécurité",
     url: "https://www.lemagit.fr/securite",
     description:
-      "Volet securite du magazine IT francais. Analyses de fond, decryptages techniques.",
+      "Volet sécurité du magazine IT français. Analyses de fond, décryptages techniques.",
     category: "magazine",
   },
   {
     name: "Numerama",
     url: "https://www.numerama.com/cyberguerre",
     description:
-      "Section CyberGuerre. Vulgarisation de qualite + investigations sur les acteurs etatiques.",
+      "Section CyberGuerre. Vulgarisation de qualité + investigations sur les acteurs étatiques.",
     category: "magazine",
   },
   {
     name: "Krebs on Security (EN)",
     url: "https://krebsonsecurity.com",
     description:
-      "Investigation cyber par Brian Krebs. Souvent cite par l'ANSSI. Contenu en anglais mais incontournable.",
+      "Investigation cyber par Brian Krebs. Souvent cité par l'ANSSI. Contenu en anglais mais incontournable.",
     category: "magazine",
   },
   {
     name: "The Hacker News (EN)",
     url: "https://thehackernews.com",
     description:
-      "Veille tres rapide sur les CVE et incidents internationaux. A lire avec les articles ANSSI/CERT-FR pour la perspective FR.",
+      "Veille très rapide sur les CVE et incidents internationaux. À lire avec les articles ANSSI/CERT-FR pour la perspective FR.",
     category: "magazine",
   },
 
@@ -117,42 +117,42 @@ export const SOURCES: Source[] = [
     name: "Clusif",
     url: "https://www.clusif.fr",
     description:
-      "Club de la Securite de l'Information Francais. Etudes annuelles, groupes de travail, conferences mensuelles.",
+      "Club de la Sécurité de l'Information Français. Études annuelles, groupes de travail, conférences mensuelles.",
     category: "associatif",
   },
   {
     name: "OSSIR",
     url: "https://www.ossir.org",
     description:
-      "Observatoire de la securite des systemes d'information et des reseaux. Conferences techniques mensuelles, publiques et gratuites.",
+      "Observatoire de la sécurité des systèmes d'information et des réseaux. Conférences techniques mensuelles, publiques et gratuites.",
     category: "associatif",
   },
   {
     name: "AFCDP",
     url: "https://www.afcdp.net",
     description:
-      "Association francaise des correspondants a la protection des donnees. Reference DPO en France.",
+      "Association française des correspondants à la protection des données. Référence DPO en France.",
     category: "associatif",
   },
   {
     name: "Open Web Application Security Project (OWASP)",
     url: "https://owasp.org",
     description:
-      "Reference mondiale en securite applicative. OWASP Top 10, guides, outils gratuits. Chapitres locaux en France.",
+      "Référence mondiale en sécurité applicative. OWASP Top 10, guides, outils gratuits. Chapitres locaux en France.",
     category: "associatif",
   },
   {
     name: "Filigran (OpenCTI)",
     url: "https://filigran.io",
     description:
-      "Editeur francais de la plateforme OpenCTI (threat intelligence open source). Communaute, documentation, blog technique.",
+      "Éditeur français de la plateforme OpenCTI (threat intelligence open source). Communauté, documentation, blog technique.",
     category: "associatif",
   },
   {
     name: "intuitem (CISO Assistant)",
     url: "https://intuitem.com",
     description:
-      "Editeur francais de la plateforme GRC CISO Assistant (open source AGPL). Documentation, frameworks, blog.",
+      "Éditeur français de la plateforme GRC CISO Assistant (open source AGPL). Documentation, frameworks, blog.",
     category: "associatif",
   },
 ];
