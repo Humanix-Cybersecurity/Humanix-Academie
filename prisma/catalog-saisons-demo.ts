@@ -112,17 +112,18 @@ export const CATALOG_SAISONS_DEMO: CatalogSaison[] = [
   // -----------------------------------------------------------------------------
   // SAISON "MAITRISE DE L'IA" (mai 2026, post-launch sprint)
   // 12 episodes officiels. Le contenu pedagogique detaille (MDX scenario,
-  // quiz, choix) est ajoute progressivement dans content/saisons/maitrise-ia/.
+  // quiz, choix) est dans content/saisons-demo/maitrise-ia/.
   // Pour les episodes sans MDX, le moteur fallback (cf. components/Episode
   // Player.tsx) sert un contenu generique base sur le titre + description.
-  // Sources : MIT Media Lab "Your Brain on ChatGPT" 2025, Stanford HAI
-  // "Cognitive Offloading at Scale" 2025, ANSSI, AI Act EU.
+  // Sources : chaque module cite les siennes en fin de debrief (textes
+  // officiels, CNIL, ANSSI, etudes publiees). Ne rien citer ici ni dans la
+  // description qui n'ait ete lu a la source.
   // -----------------------------------------------------------------------------
   {
     slug: "maitrise-ia",
     title: "Maitrise de l'IA generative",
     description:
-      "12 episodes pour utiliser ChatGPT, Claude et consorts sans deleguer ton esprit critique. Hallucinations, atrophie cognitive, shadow AI, deepfakes, AI Act. Source : MIT Media Lab 2025, Stanford HAI, ANSSI, AI Act EU.",
+      "12 episodes pour utiliser ChatGPT, Claude et consorts sans deleguer ton esprit critique. Hallucinations, atrophie cognitive, shadow AI, deepfakes, AI Act. Sources : textes officiels (reglement europeen sur l'IA, CNIL, ANSSI) et etudes publiees.",
     coverEmoji: "🧠",
     order: 4,
     audience: "tous",
@@ -141,7 +142,7 @@ export const CATALOG_SAISONS_DEMO: CatalogSaison[] = [
       },
       {
         slug: "03-atrophie-critique",
-        title: "L'atrophie du muscle critique (MIT 2025)",
+        title: "L'atrophie du muscle critique : que dit l'etude du MIT ?",
         durationMinutes: 7,
         difficulty: "medium",
       },
