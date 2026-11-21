@@ -2,13 +2,18 @@
 //
 // /maitrise-ia - landing publique du chantier strategique "Maitrise de l'IA".
 //
-// CONTEXTE PRODUIT (mai 2026) : 18 mois apres ChatGPT-3.5, les entreprises
-// francaises ont massivement adopte l'IA generative SANS formation. L'AI Act
-// EU entre en application 2026/2027 + les etudes recentes (MIT Media Lab
-// "Your Brain on ChatGPT" 2025, Stanford HAI "Cognitive Offloading" 2025)
-// documentent une baisse mesurable des competences de raisonnement chez les
-// utilisateurs intensifs. Personne dans la cyber-formation FR (KnowBe4 FR,
+// CONTEXTE PRODUIT (mai 2026, revu en novembre 2026) : l'IA generative est
+// entree dans le travail quotidien plus vite que la formation a son usage.
+// Le reglement europeen sur l'IA demande aux organisations de favoriser la
+// maitrise de l'IA par leur personnel (article 4, applicable depuis fevrier
+// 2025, reecrit en juillet 2026), et les premieres etudes (prepublication du
+// MIT Media Lab "Your Brain on ChatGPT" 2025, enquete de Microsoft Research
+// et Carnegie Mellon a CHI 2025) decrivent des effets sur l'esprit critique,
+// avec leurs limites. Personne dans la cyber-formation FR (KnowBe4 FR,
 // Mantra, Cyber Guru, Phished, Adaptive) ne possede ce territoire.
+//
+// REGLE : chaque etude ou date citee ici a ete lue a sa source (references
+// dans les modules de la saison). Ne rien ajouter qui ne l'ait pas ete.
 //
 // POSITIONNEMENT : "L'IA ne te remplacera pas. Quelqu'un qui sait l'utiliser,
 // oui." Tonalite SOFT (cf. choix produit user, mai 2026) : pas d'alarmisme
@@ -31,7 +36,7 @@ export const metadata: Metadata = {
   title:
     "Maîtrise de l'IA en entreprise - formation cyber & esprit critique | Humanix Académie",
   description:
-    "Forme tes équipes à utiliser l'IA générative sans perdre leur esprit critique. Saison dédiée, KPIs dirigeants, conformité AI Act EU. Gratuit pour la Communauté.",
+    "Forme tes équipes à utiliser l'IA générative sans perdre leur esprit critique. Saison dédiée, auto-évaluation pour la direction, règlement européen sur l'IA expliqué. Gratuit pour la Communauté.",
   alternates: { canonical: "/maitrise-ia" },
   openGraph: {
     title: "L'IA ne te remplacera pas. Quelqu'un qui sait l'utiliser, oui.",
@@ -47,7 +52,7 @@ const EPISODES = [
     num: "01",
     title: "Quand ChatGPT invente",
     blurb:
-      "La mécanique des hallucinations, cas réels (fausses citations, faux médicaments, faux jugements).",
+      "La mécanique des hallucinations, et trois affaires réelles : jugements inventés, promesse d'un agent conversationnel, rapport aux références inexistantes.",
   },
   {
     num: "02",
@@ -59,13 +64,13 @@ const EPISODES = [
     num: "03",
     title: "L'atrophie du muscle critique",
     blurb:
-      "MIT 2025, Stanford HAI : la baisse mesurable des compétences de raisonnement chez les utilisateurs intensifs.",
+      "Ce que disent vraiment les premières études (MIT, Microsoft Research et Carnegie Mellon, 2025), avec leurs limites.",
   },
   {
     num: "04",
     title: "Mes données partent où ?",
     blurb:
-      "Ce que les LLMs stockent, qui les lit, comment ne pas fuir d'info confidentielle.",
+      "Ce que les assistants gardent, qui peut le lire, comment ne pas laisser fuiter d'info confidentielle.",
   },
   {
     num: "05",
@@ -77,7 +82,7 @@ const EPISODES = [
     num: "06",
     title: "Deepfakes vocaux",
     blurb:
-      "L'arnaque au président boostée par 3s d'audio. Reconnaître + désamorcer.",
+      "L'arnaque au président avec une voix clonée : quelques secondes d'audio peuvent suffire. Reconnaître + désamorcer.",
   },
   {
     num: "07",
@@ -100,19 +105,19 @@ const EPISODES = [
     num: "10",
     title: "Co-pilote, pas pilote",
     blurb:
-      "Workflow où l'humain garde la décision finale. Templates par métier.",
+      "Workflow où l'humain garde la décision finale. Exemples par métier.",
   },
   {
     num: "11",
     title: "AI Act 2026",
     blurb:
-      "Ce qui change pour ton équipe en France. Obligations concrètes par taille d'organisation.",
+      "Ce qui s'applique déjà, ce qui a été reporté à 2027 et 2028, et ce que ton équipe doit faire. Le règlement raisonne par rôle et par risque ; la taille ne joue qu'à la marge.",
   },
   {
     num: "12",
     title: "Bâtir une charte IA",
     blurb:
-      "Template + check-list pour cadrer l'usage de l'IA dans ton organisation.",
+      "Les cinq rubriques d'une charte et la démarche pour qu'elle soit suivie dans ton organisation.",
   },
 ];
 
@@ -122,21 +127,21 @@ const STUDIES = [
     year: "2025",
     title: "Your Brain on ChatGPT",
     finding:
-      "Les participants ayant utilisé ChatGPT pour rédiger montrent une diminution mesurable de l'activité cérébrale dans les régions liées au raisonnement, persistant même après l'arrêt de l'outil.",
+      "Prépublication, 54 personnes : celles qui rédigent avec ChatGPT montrent la connectivité cérébrale la plus faible des trois groupes et citent moins bien leur propre texte. Des résultats préliminaires, sans mesure après la fin de l'expérience.",
   },
   {
-    source: "Stanford HAI",
+    source: "Microsoft Research · Carnegie Mellon",
     year: "2025",
-    title: "Cognitive Offloading at Scale",
+    title: "The Impact of Generative AI on Critical Thinking",
     finding:
-      "Les knowledge workers délèguent 38 % de leurs micro-décisions à l'IA en moyenne. Le rappel d'information sans IA chute de 23 % après 6 mois d'usage quotidien.",
+      "Enquête auprès de 319 personnes qui utilisent l'IA générative au travail : plus la confiance dans l'outil est grande, moins elles déclarent exercer leur esprit critique. Une association, pas une cause.",
   },
   {
-    source: "Commission européenne",
-    year: "2026",
-    title: "AI Act - entrée en vigueur",
+    source: "Union européenne",
+    year: "2024-2026",
+    title: "Règlement sur l'IA",
     finding:
-      "Les systèmes IA à haut risque (RH, scoring, infrastructure) doivent garantir une supervision humaine effective. La formation des utilisateurs devient une obligation traçable.",
+      "L'article 4 demande aux organisations de favoriser la maîtrise de l'IA par leur personnel : il s'applique depuis février 2025. Les règles du haut risque, dont le contrôle humain, ont été reportées au 2 décembre 2027, et au 2 août 2028 pour l'IA intégrée à des produits.",
   },
 ];
 
@@ -160,7 +165,7 @@ export default function MaitriseIAPage() {
             Forme tes équipes <em>et</em> tes proches à utiliser l&apos;IA
             générative <strong>sans déléguer leur esprit critique</strong>.
             Hallucinations, shadow AI, deepfakes, atrophie cognitive - on traite
-            tout, en français, en 5 minutes par épisode.
+            tout, en français, en quelques minutes par épisode.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link href="/apprendre" className="btn-primary text-lg px-7 py-3">
@@ -174,7 +179,7 @@ export default function MaitriseIAPage() {
             </Link>
           </div>
           <p className="text-xs text-gray-500 dark:text-gray-400 mt-3 italic">
-            Gratuit pour la Communauté · Conforme AI Act EU · Hébergé en France
+            Gratuit pour la Communauté · Hébergé en France
           </p>
         </section>
       </HexBackdrop>
@@ -185,10 +190,10 @@ export default function MaitriseIAPage() {
           Pourquoi se former maintenant ?
         </h2>
         <p className="text-base text-gray-700 dark:text-gray-200 leading-relaxed text-center max-w-2xl mx-auto mb-10">
-          18 mois après l&apos;explosion grand public de ChatGPT, les
-          entreprises françaises ont massivement adopté l&apos;IA - sans
-          formation. Les premières études objectives commencent à mesurer les
-          effets. Voici ce qu&apos;elles montrent :
+          L&apos;IA générative est entrée dans le travail quotidien, souvent
+          avant toute formation. Les premières études commencent à en décrire
+          les effets, avec leurs limites, et le règlement européen demande aux
+          organisations de s&apos;en occuper. Voici ce qu&apos;ils disent :
         </p>
         <div className="grid md:grid-cols-3 gap-4">
           {STUDIES.map((s) => (
@@ -214,7 +219,7 @@ export default function MaitriseIAPage() {
       <section className="bg-humanix-soft/40 dark:bg-slate-950/50 py-12 sm:py-16">
         <div className="max-w-5xl mx-auto px-4">
           <p className="text-xs uppercase tracking-[0.25em] font-bold text-accent-500 mb-2 text-center">
-            🎬 12 mini-épisodes · 5 min chacun
+            🎬 12 mini-épisodes · 5 à 8 min chacun
           </p>
           <h2 className="font-display text-2xl sm:text-3xl font-extrabold text-primary-500 dark:text-accent-300 mb-3 text-center">
             Ce que tu apprends
@@ -251,45 +256,41 @@ export default function MaitriseIAPage() {
       {/* ==================== POUR LES DIRIGEANTS ==================== */}
       <section className="max-w-3xl mx-auto px-4 py-12 sm:py-16">
         <p className="text-xs uppercase tracking-[0.25em] font-bold text-accent-500 mb-2 text-center">
-          👔 Pour les dirigeants
+          🏢 Pour la direction
         </p>
         <h2 className="font-display text-2xl sm:text-3xl font-extrabold text-primary-500 dark:text-accent-300 mb-4 text-center">
-          Mesurer l&apos;adoption sans surveiller les gens
+          Faire le point sans surveiller les gens
         </h2>
         <p className="text-base text-gray-700 dark:text-gray-200 leading-relaxed mb-6">
-          Le dashboard <strong>Maturité IA</strong> de ton espace admin te donne
-          des indicateurs concrets sans installer de mouchards :
+          L&apos;auto-évaluation <strong>Maturité IA</strong> de ton espace
+          admin te donne un point de départ en huit questions, sans installer de
+          mouchards. Elle ne mesure pas l&apos;usage réel de l&apos;IA dans tes
+          équipes et ne te compare à aucune autre organisation.
         </p>
         <ul className="space-y-3 text-sm sm:text-base text-gray-700 dark:text-gray-200">
           <li className="flex gap-3">
             <span aria-hidden="true">📊</span>
             <span>
-              <strong>Score de maturité IA</strong> de ton organisation (0-100),
-              calculé sur la complétion de la saison + un questionnaire
-              trimestriel à la place d&apos;un audit.
-            </span>
-          </li>
-          <li className="flex gap-3">
-            <span aria-hidden="true">🌑</span>
-            <span>
-              <strong>Indicateur Shadow AI</strong> - pourcentage du personnel
-              déclarant utiliser des outils IA hors politique IT. Indispensable
-              avant l&apos;AI Act.
-            </span>
-          </li>
-          <li className="flex gap-3">
-            <span aria-hidden="true">📈</span>
-            <span>
-              <strong>Comparaison sectorielle anonymisée</strong> - où en es-tu
-              vs d&apos;autres PME de ton secteur (k-anonymity garantie, aucun
-              tenant identifiable).
+              <strong>Un score sur 100</strong>, calculé à partir de tes huit
+              réponses : charte, formation, outils utilisés, données sensibles,
+              décision humaine, voix clonées, systèmes à haut risque,
+              traçabilité.
             </span>
           </li>
           <li className="flex gap-3">
             <span aria-hidden="true">🧭</span>
             <span>
-              <strong>Plan d&apos;action</strong> suggéré - formations
-              prioritaires + template de charte IA à valider en CODIR.
+              <strong>Un plan d&apos;action</strong> tiré de tes réponses : les
+              points à traiter et, quand il y en a un, l&apos;épisode de la
+              saison qui s&apos;y rapporte.
+            </span>
+          </li>
+          <li className="flex gap-3">
+            <span aria-hidden="true">🔒</span>
+            <span>
+              <strong>Des réponses qui restent chez toi</strong> : elles sont
+              enregistrées dans ton navigateur, pas sur nos serveurs. Tu peux
+              les exporter.
             </span>
           </li>
         </ul>
@@ -347,7 +348,7 @@ export default function MaitriseIAPage() {
           </Link>
         </div>
         <p className="text-xs text-gray-500 dark:text-gray-400 mt-4 italic">
-          Sans carte bancaire · Données hébergées en France · Conforme AI Act
+          Sans carte bancaire · Données hébergées en France
         </p>
       </section>
     </main>

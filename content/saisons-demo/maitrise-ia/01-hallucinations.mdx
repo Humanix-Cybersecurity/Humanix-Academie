@@ -1,105 +1,115 @@
 ---
-title: "Quand ChatGPT invente : la mecanique des hallucinations"
+title: "Quand ChatGPT invente : la mécanique des hallucinations"
 durationMinutes: 6
 persona: "tous"
-objective: "Comprendre pourquoi un LLM produit des reponses fausses avec aplomb, et apprendre les 3 reflexes de verification"
+objective: "Comprendre pourquoi un modèle de langage produit des réponses fausses avec aplomb, et apprendre les trois réflexes de vérification"
 xpReward: 40
 scenario: |
-  Marc, chef d'atelier dans une PME de 35 salaries, prepare une note d'information sur un nouveau produit chimique recu en livraison. Pour gagner du temps, il copie le nom du produit dans ChatGPT et demande : "Donne-moi les regles de stockage et les precautions de manipulation pour ce produit".
+  Marc dirige l'atelier d'une PME de 35 personnes. Il prépare une note d'information sur un nouveau produit chimique reçu en livraison. Pour gagner du temps, il copie le nom du produit dans ChatGPT et demande : « Donne-moi les règles de stockage et les précautions de manipulation pour ce produit ».
 
-  ChatGPT lui repond en 4 paragraphes bien rediges, avec des temperatures de stockage precises, des EPI recommandes, et meme une reference a un arrete ministeriel "du 14 juin 2018".
+  La réponse tient en quatre paragraphes bien rédigés : des températures de stockage précises, des équipements de protection recommandés, et même la référence d'un arrêté ministériel « du 14 juin 2018 ».
 
-  Marc est rassure, copie-colle la reponse dans sa note d'information et l'affiche en atelier. Trois jours plus tard, un controle DREAL passe. L'inspecteur remarque que l'arrete cite n'existe pas et que les precautions affichees sont incorrectes pour ce produit specifique. Sanction.
+  Marc est rassuré. Il colle le texte dans sa note et l'affiche dans l'atelier. Trois jours plus tard, lors d'une visite d'inspection, on lui fait remarquer que l'arrêté cité n'existe pas et que les précautions affichées ne correspondent pas à ce produit. La note est retirée : tout est à reprendre à partir de la fiche de données de sécurité remise par le fournisseur.
 
-  Quel etait le piege que Marc n'a pas vu ?
+  Quel piège Marc n'a-t-il pas vu ?
 choices:
   - id: "a"
-    label: "ChatGPT a fait une simple faute de frappe sur la date - 14 juin 2018 au lieu de 2019"
+    label: "ChatGPT a fait une simple faute de frappe sur la date : 14 juin 2018 au lieu de 2019"
     outcome: "bad"
-    feedback: "Non. Ce n'est pas une faute de frappe, c'est une **hallucination** : ChatGPT a INVENTE l'arrete de toutes pieces parce qu'il ne voulait pas dire 'je ne connais pas la reglementation specifique de ce produit'. C'est un comportement systematique, pas un bug."
+    feedback: "Non. Ce n'est pas une faute de frappe, c'est une **hallucination** : l'arrêté a été fabriqué de toutes pièces. Un modèle de langage produit la suite de mots la plus plausible, et rien ne garantit qu'il dise « je ne sais pas » quand l'information lui manque."
     points: -10
   - id: "b"
-    label: "ChatGPT a halluciné les details : il invente quand il n'a pas l'info, sans jamais dire 'je ne sais pas'"
+    label: "ChatGPT a inventé les détails : quand l'information lui manque, il produit quand même une réponse plausible"
     outcome: "good"
-    feedback: "Exactement. Les LLMs sont entraines pour produire une reponse FLUIDE, pas une reponse VRAIE. Quand l'info manque dans leurs donnees d'entrainement, ils comblent en inventant avec aplomb. Et ils le font sans signe avant-coureur dans le ton."
+    feedback: "Exactement. Un modèle de langage est construit pour produire une réponse fluide et plausible, pas une réponse vérifiée. Quand l'information lui manque, il comble, avec le même aplomb que lorsqu'il a raison."
     points: 30
   - id: "c"
-    label: "Marc aurait du verifier le numero de version de ChatGPT - GPT-5 ne ferait pas cette erreur"
+    label: "Marc aurait dû vérifier la version de ChatGPT : le dernier modèle ne ferait pas cette erreur"
     outcome: "bad"
-    feedback: "Faux. Tous les modeles (GPT-5, Claude 4, Gemini 2, Mistral Large) hallucinent encore en 2026. C'est une propriete intrinseque des LLMs probabilistes. Stanford HAI 2025 mesure 12-27% de taux d'hallucination selon le domaine."
+    feedback: "Faux. Les modèles progressent, mais aucun n'a supprimé le problème. Sur un banc d'essai cité par le rapport AI Index 2026 de l'université Stanford, quand un modèle n'a pas la bonne réponse, il en donne quand même une fausse, au lieu de s'abstenir, dans 22 % à 94 % des cas selon le modèle."
     points: -10
   - id: "d"
-    label: "ChatGPT s'est trompe parce que Marc n'a pas paye l'abonnement Plus"
+    label: "ChatGPT s'est trompé parce que Marc n'a pas payé l'abonnement"
     outcome: "bad"
-    feedback: "Non. Le taux d'hallucination est legerement plus bas sur les versions payantes, mais il reste significatif (5-15%). Le payant ameliore la qualite globale, pas la fiabilite factuelle. Aucun LLM grand public ne garantit zero invention."
+    feedback: "Non. Payer n'achète pas l'exactitude. Des chercheurs de Stanford et de Yale ont testé des outils juridiques professionnels, présentés par leurs éditeurs comme fiables : ils donnaient encore une réponse fausse ou mal sourcée dans 17 % à 33 % des cas."
     points: -10
+licence: "CC BY-SA 4.0 - Humanix Académie Community Edition"
 debrief: |
-  L'**hallucination** est le piege #1 de l'IA generative.
+  L'**hallucination** est le premier piège de l'IA générative : une réponse fausse, écrite avec la même assurance qu'une réponse juste.
 
-  ## Pourquoi ca arrive
+  ## Pourquoi ça arrive
 
-  Un LLM ne consulte pas une base de connaissances quand tu lui poses une question. Il **predit le mot le plus probable** apres ta question, en se basant sur des milliards de textes qu'il a vus pendant son entrainement. C'est de la statistique, pas de la verite.
+  Un modèle de langage ne consulte pas une base de connaissances. Il **prédit la suite de mots la plus probable** après ta question, à partir des textes vus pendant son entraînement. La CNIL le dit ainsi : ces modèles « ne sont pas des bases de connaissance », ils obéissent à une logique probabiliste.
 
-  Resultat : quand ta question porte sur un sujet rare ou recent, le modele genere une reponse qui **ressemble** a ce que la verite serait... mais qui peut etre completement inventee.
+  Sur un sujet rare, pointu ou récent, la réponse **ressemble** donc à une bonne réponse, mais elle peut être inventée. Et rien dans le ton ne te prévient : des chercheurs ont montré qu'un modèle ne sait pas toujours prévoir quand il invente.
 
-  ## La methode des 3 verifications
+  ## Ce que disent les mesures
 
-  Avant de croire un LLM sur n'importe quel sujet important :
+  Tout dépend de ce qu'on mesure, mais le problème apparaît partout où on l'a cherché :
 
-  1. **Verifier les chiffres** : tout nombre, date, pourcentage, statut juridique cite par l'IA doit etre re-verifie sur une source primaire (site officiel, publication scientifique, document de reference).
-  2. **Verifier les noms propres** : citations d'articles, noms d'auteurs, references d'arrets ministeriels, etudes scientifiques - tres haut taux d'hallucination. Toujours cliquer sur le lien (s'il existe) ou rechercher manuellement.
-  3. **Verifier les sources** : si l'IA dit "selon l'ANSSI" ou "d'apres une etude du MIT", recherche cette source. Dans 30 a 50% des cas (selon les domaines), elle n'existe pas.
+  - **Droit.** Des chercheurs de Yale et de Stanford ont interrogé des modèles généralistes sur des décisions de justice américaines : 58 % à 88 % de réponses fausses selon le modèle. La même équipe a ensuite testé des outils juridiques professionnels : 17 % à 33 %.
+  - **Santé.** Une étude parue en 2025 a examiné les réponses de sept modèles à des questions médicales : 50 % à 90 % d'entre elles n'étaient pas entièrement soutenues par les sources qu'elles citaient.
 
-  ## Les 3 cas reels documentes en 2025
+  Aucun de ces chiffres n'est « le taux d'erreur de l'IA » : chacun vaut pour une tâche et une date données.
 
-  | Cas | Domaine | Consequence |
+  ## La méthode des 3 vérifications
+
+  Avant de reprendre une réponse sur un sujet qui compte :
+
+  1. **Les chiffres et les dates.** Tout nombre, tout délai, tout seuil se vérifie sur une source d'origine : site officiel, texte de loi, document de référence.
+  2. **Les noms propres et les références.** Articles de loi, arrêtés, décisions de justice, études, auteurs : c'est là que l'invention est la plus convaincante.
+  3. **Les sources citées.** Si la réponse dit « selon l'ANSSI » ou « d'après une étude », ouvre la source et lis ce qu'elle dit vraiment.
+
+  ## Trois affaires réelles
+
+  | Affaire | Domaine | Ce qui s'est passé |
   |---|---|---|
-  | Mata v. Avianca (2023, sanction 2024) | Juridique | 6 jugements inventes deposes en cour. Sanction disciplinaire avocat. |
-  | Etude Stanford 2025 sur pharmacovigilance | Sante | 27% des dosages medicamenteux suggeres par ChatGPT etaient dangereux ou inexistants |
-  | Audit DREAL chez une PME (cas type Marc) | Industriel | Reglementation chimique fausse affichee, sanction administrative |
+  | Mata v. Avianca, New York, 2023 | Justice | Un mémoire préparé avec ChatGPT cite six décisions de justice qui n'existent pas. Amende de 5 000 dollars pour les deux avocats et leur cabinet. |
+  | Moffatt v. Air Canada, Canada, 2024 | Relation client | L'agent conversationnel du site affirme à un client une règle tarifaire inexacte. Le tribunal juge la compagnie responsable de ce que son agent a écrit. |
+  | Rapport de Deloitte, Australie, 2025 | Conseil | Un rapport remis au gouvernement contient des références inexistantes. Le cabinet, qui reconnaît l'usage d'un outil d'IA générative, rembourse une partie du prix. |
 
-  ## La regle d'or operationnelle
+  ## La règle d'or
 
-  **Pour tout ce qui engage** (legal, financier, sanitaire, securite, reglementaire), l'IA est un **point de depart**, pas un point d'arrivee. Tu utilises sa reponse comme **liste de pistes a verifier**, jamais comme verite a publier.
+  **Pour tout ce qui engage** (juridique, financier, santé, sécurité, réglementaire), la réponse d'une IA est un **point de départ**, pas un point d'arrivée : une liste de pistes à vérifier, jamais un texte à afficher tel quel. Dans le cas de Marc, la source d'origine existait : la fiche de données de sécurité que le fournisseur doit remettre avec tout produit dangereux.
 
-  Pour ce qui est purement creatif ou exploratoire (brainstorming, reformulation, traduction approximative), le risque d'hallucination est OK car tu vas relire et corriger toi-meme.
+  Pour un usage créatif ou exploratoire (chercher des idées, reformuler, dégrossir une traduction), le risque est acceptable : tu relis et tu corriges toi-même.
 
-  > **Source** : Stanford HAI 2025 "Hallucination Rates in Consumer LLMs" (n=4 200 prompts factuels). Mata v. Avianca, U.S. District Court Southern District of New York, June 2023.
+  > **Sources** : CNIL, questions-réponses sur l'utilisation d'un système d'IA générative, 18 juillet 2024. Dahl et al., « Large Legal Fictions », Journal of Legal Analysis, 2024. Magesh et al., « Hallucination-Free? », Journal of Empirical Legal Studies, 2025. Wu et al., Nature Communications, 2025. Stanford HAI, AI Index Report 2026. Mata v. Avianca, tribunal fédéral du district sud de New York, décision du 22 juin 2023. Moffatt v. Air Canada, 2024 BCCRT 149. The Guardian, 6 octobre 2025, au sujet de Deloitte. Code du travail, article R4411-73.
 quiz:
-  - question: "Pourquoi un modele invente-t-il des references ?"
+  - question: "Pourquoi un modèle de langage invente-t-il des références ?"
     choices:
       - id: "a"
-        label: "Parce que sa base de donnees est incomplete"
+        label: "Parce que sa base de données est incomplète"
         correct: false
       - id: "b"
-        label: "Parce qu'il produit la suite la plus plausible, sans savoir qu'il ne sait pas"
+        label: "Parce qu'il produit la suite la plus plausible, sans toujours savoir qu'il ne sait pas"
         correct: true
       - id: "c"
-        label: "Parce qu'il a ete mal configure"
+        label: "Parce qu'il a été mal configuré"
         correct: false
-    explanation: "Il n'interroge pas une base : il genere. Quand l'information manque, rien dans le mecanisme ne declenche un « je ne sais pas »."
-  - question: "Qu'est-ce qui est le plus souvent invente ?"
+    explanation: "Il n'interroge pas une base : il génère. Quand l'information manque, rien ne garantit qu'il le dise."
+  - question: "Que faut-il vérifier en priorité dans une réponse ?"
     choices:
       - id: "a"
-        label: "Les explications generales"
-        correct: false
-      - id: "b"
-        label: "Les references precises : numeros d'articles, dates, noms"
+        label: "Les références précises : numéros d'articles, dates, noms, chiffres"
         correct: true
-      - id: "c"
-        label: "Le style de la reponse"
+      - id: "b"
+        label: "Le style de la réponse"
         correct: false
-    explanation: "Et c'est le piege : leur precision inspire confiance, donc on ne pense pas a les verifier."
-  - question: "Quand le risque est-il le plus eleve ?"
+      - id: "c"
+        label: "La longueur de la réponse"
+        correct: false
+    explanation: "Leur précision inspire confiance, donc on ne pense pas à les vérifier. C'est pourtant ce qui se contrôle le plus facilement à la source."
+  - question: "Quand faut-il redoubler de vigilance ?"
     choices:
       - id: "a"
-        label: "Sur les sujets larges et courants"
+        label: "Quand la réponse est courte"
         correct: false
       - id: "b"
-        label: "Sur les questions pointues et rares"
-        correct: true
-      - id: "c"
-        label: "Quand la question est mal formulee"
+        label: "Quand l'outil met du temps à répondre"
         correct: false
-    explanation: "Sur un sujet large, le modele a beaucoup vu. Sur un detail rare, il comble -- et c'est la que la verification compte le plus."
+      - id: "c"
+        label: "Quand la question est pointue et que la réponse engage"
+        correct: true
+    explanation: "Sur un sujet pointu, tu as moins de repères pour repérer l'erreur. Et c'est quand la réponse engage qu'elle coûte cher."
 ---
