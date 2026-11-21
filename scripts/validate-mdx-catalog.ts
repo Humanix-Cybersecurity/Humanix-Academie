@@ -24,6 +24,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
+import { NON_SAISON_SUBDIRS } from "../lib/content-availability";
 
 const ROOT = process.cwd();
 const CATALOG = path.join(ROOT, "prisma", "catalog-saisons.ts");
@@ -152,9 +153,10 @@ function parseCatalogSource(src: string): CatalogEntry[] {
 // du MDX qui ne suit pas la convention "catalogue Saison/Episode" et est
 // charge par d'autres loaders dedies. Les y inclure produirait des
 // faux-positifs "orphelins" alors que le contenu est tres bien charge.
-const IGNORED_SUBDIRS = new Set([
-  "enquetes", // Mode Enqueteur - loader lib/investigations/loader.ts
-]);
+//
+// La liste vit dans lib/content-availability.ts : le compteur de modules
+// rediges de /comparatif doit sauter exactement les memes dossiers.
+const IGNORED_SUBDIRS = NON_SAISON_SUBDIRS;
 
 function listMdxFiles(): CatalogEntry[] {
   const out: CatalogEntry[] = [];

@@ -42,6 +42,8 @@ import { Fragment } from "react";
 import Link from "next/link";
 import { countExpertEpisodes } from "@/lib/content-availability";
 import { CATALOGUE_CHIFFRES } from "@/lib/catalogue-chiffres";
+import { compterModulesDemo } from "@/lib/catalogue/modules-demo";
+import ModulesTransparencyNote from "@/components/comparatif/ModulesTransparencyNote";
 import HexBackdrop from "@/components/HexBackdrop";
 import { BreadcrumbJsonLd } from "@/lib/seo/jsonld";
 
@@ -143,7 +145,7 @@ const ROWS: Row[] = [
     category: "Catalogue & contenu",
     feature: "Nombre de modules disponibles (catalogue)",
     humanix: win(
-      `${CATALOGUE_CHIFFRES.modules} modules (${CATALOGUE_CHIFFRES.saisons} saisons, dont ${CATALOGUE_CHIFFRES.enquetes} enquêtes interactives) + ${CATALOGUE_CHIFFRES.articles} articles librairie`,
+      `${CATALOGUE_CHIFFRES.modules} modules (${CATALOGUE_CHIFFRES.saisons} saisons) + ${CATALOGUE_CHIFFRES.enquetes} enquêtes interactives + ${CATALOGUE_CHIFFRES.articles} articles librairie`,
     ),
     knowbe4: win("1 000+ modules"),
     cyberGuru: eq("300+ modules"),
@@ -926,9 +928,11 @@ export default function ComparatifPage() {
   const lossesHumanix = ROWS.filter((r) => r.humanix.status === "loss").length;
   const equalHumanix = totalRows - winsHumanix - lossesHumanix;
 
-  // Stat dynamique : nombre de modules MDX rediges (transparence sur le
-  // contenu pedagogique reel, vs catalogue marketing).
+  // Stats dynamiques de la note de transparence : modules du catalogue qui
+  // ont un MDX (les enquetes n'en sont pas), et modules des saisons de
+  // demonstration que le lecteur sert rediges.
   const expertCount = countExpertEpisodes();
+  const modulesDemo = compterModulesDemo();
 
   return (
     <main id="main-content" className="overflow-x-hidden animate-fadeIn">
@@ -1044,22 +1048,13 @@ export default function ComparatifPage() {
               <span aria-hidden="true">🪟</span>
               <span>Note transparence : modules pédagogiques</span>
             </h2>
-            <p className="text-sm text-gray-700 dark:text-gray-200 leading-relaxed">
-              Notre catalogue affiche {CATALOGUE_CHIFFRES.modules} modules. À ce
-              jour,{" "}
-              <strong>
-                {expertCount} épisode{expertCount > 1 ? "s ont" : " a"} un
-                scénario détaillé rédigé par un expert
-              </strong>{" "}
-              (badge 📝 sur{" "}
-              <Link href="/apprendre" className="text-accent-500 underline">
-                /apprendre
-              </Link>
-              ).
-              {expertCount < CATALOGUE_CHIFFRES.modules
-                ? " Les autres utilisent un fallback structuré (questions, quiz, débrief générique), la même mécanique que chez la plupart des concurrents listés, qui ne le disent pas."
-                : " Aucun module ne repose sur un fallback générique."}
-            </p>
+            <ModulesTransparencyNote
+              catalogueModules={CATALOGUE_CHIFFRES.modules}
+              catalogueWritten={expertCount}
+              demoSaisons={CATALOGUE_CHIFFRES.saisonsDemo}
+              demoModules={modulesDemo.modules}
+              demoWritten={modulesDemo.rediges}
+            />
           </div>
         </section>
 

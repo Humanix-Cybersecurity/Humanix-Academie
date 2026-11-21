@@ -18,11 +18,30 @@ function contentRoot(): string {
   return path.join(process.cwd(), "content", "saisons");
 }
 
+/**
+ * Sous-dossiers de content/saisons qui ne sont PAS des saisons.
+ *
+ * content/saisons est un lien vers content-pro/content, qui porte aussi le
+ * dossier des enquetes (Mode Enqueteur, charge par
+ * lib/investigations/loader.ts). Ses MDX ne sont pas des modules du
+ * catalogue. Les compter gonflait la note de transparence de /comparatif :
+ * jusqu'au 2026-11-20 elle annoncait "503 episodes" rediges pour un
+ * catalogue de 476 modules, soit les 476 modules et les 27 enquetes.
+ *
+ * UNE SEULE LISTE : scripts/validate-mdx-catalog.ts lit la meme. Un nouveau
+ * dossier hors saisons doit y entrer pour que le validateur ne prenne pas
+ * ses MDX pour des orphelins ; le compteur le saute alors du meme coup.
+ */
+export const NON_SAISON_SUBDIRS: ReadonlySet<string> = new Set([
+  "enquetes", // Mode Enqueteur - loader lib/investigations/loader.ts
+]);
+
 export function hasExpertContent(
   saisonSlug: string,
   episodeSlug: string,
 ): boolean {
   if (!isSafeSlug(saisonSlug) || !isSafeSlug(episodeSlug)) return false;
+  if (NON_SAISON_SUBDIRS.has(saisonSlug)) return false;
   const file = path.join(contentRoot(), saisonSlug, `${episodeSlug}.mdx`);
   try {
     return fs.statSync(file).isFile();
@@ -40,6 +59,7 @@ export function listExpertEpisodes(): Array<{
   const result: Array<{ saisonSlug: string; episodeSlug: string }> = [];
   for (const saison of fs.readdirSync(root, { withFileTypes: true })) {
     if (!saison.isDirectory()) continue;
+    if (NON_SAISON_SUBDIRS.has(saison.name)) continue;
     const dir = path.join(root, saison.name);
     for (const f of fs.readdirSync(dir)) {
       if (!f.endsWith(".mdx")) continue;
@@ -56,6 +76,10 @@ export function listExpertEpisodes(): Array<{
   );
 }
 
+/**
+ * Nombre de modules du catalogue commercial qui ont un MDX. C'est le chiffre
+ * que /comparatif met en face du nombre de modules annonces.
+ */
 export function countExpertEpisodes(): number {
   return listExpertEpisodes().length;
 }
