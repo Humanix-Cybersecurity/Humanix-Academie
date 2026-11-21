@@ -18,6 +18,7 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { loadEpisode } from "@/lib/episodes";
 import { buildFallbackContent } from "@/lib/episodes-fallback";
+import { resolveResume } from "@/lib/episode-resume";
 import { seededShuffle } from "@/lib/shuffle";
 import EpisodePlayer from "@/components/EpisodePlayer";
 
@@ -64,7 +65,8 @@ export default async function EpisodePage({
 
   // Etat de reprise mid-episode : si l'user a quitte l'episode au
   // milieu (telephone, urgence, fatigue), on lui propose de reprendre
-  // exactement la ou il etait. resumeStep null = nouvelle session.
+  // exactement la ou il etait. null = nouvelle session, ou reprise qui ne
+  // correspond plus au contenu servi (cf. lib/episode-resume.ts).
   const dbProgress = await db.progress.findUnique({
     where: { userId_episodeId: { userId, episodeId: dbEpisode.id } },
     select: {
@@ -74,19 +76,7 @@ export default async function EpisodePage({
       resumeChoiceId: true,
     },
   });
-  const resume =
-    dbProgress &&
-    dbProgress.status !== "COMPLETED" &&
-    dbProgress.resumeStep &&
-    (dbProgress.resumeStep === "scenario" ||
-      dbProgress.resumeStep === "debrief" ||
-      dbProgress.resumeStep === "quiz")
-      ? {
-          step: dbProgress.resumeStep as "scenario" | "debrief" | "quiz",
-          quizIndex: dbProgress.resumeQuizIndex,
-          choiceId: dbProgress.resumeChoiceId,
-        }
-      : null;
+  const resume = resolveResume(dbProgress, content.meta);
 
   // Mélange déterministe de l'ordre des réponses, seedé par (user + épisode).
   // Évite que la bonne réponse soit toujours à la même position (ex. position

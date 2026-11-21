@@ -183,21 +183,23 @@ function listMdxFiles(): CatalogEntry[] {
 /**
  * Episodes dont le frontmatter est incomplet, DANS LES DEUX RACINES.
  *
- * POURQUOI LES DEUX, ET PAS CELLE QUE RESOUT LE CHARGEUR
+ * POURQUOI LES DEUX, ET PAS CE QUE RESOUT LE CHARGEUR
  *
- *   lib/episodes.ts ne sert QU'UNE racine a la fois : content/saisons si le
- *   catalogue commercial est present, content/saisons-demo sinon -- et
- *   toujours la demo quand DEMO_MODE est actif.
+ *   Ce que lib/episodes.ts sert depend de l'environnement : la demo seule
+ *   quand DEMO_MODE est actif ; sinon le catalogue commercial et, pour les
+ *   modules qu'il n'a pas, les saisons de demo.
  *
  *   Or LES DEUX tournent en production : humanix-academie.fr sert le
- *   commercial, demo.humanix-academie.fr sert la demo. Ne valider que la
- *   racine resolue par l'environnement courant rend la couverture
- *   accidentelle : un poste de dev ne verrait jamais la demo, et un runner
+ *   commercial (et les saisons de demo que sa base porte aussi),
+ *   demo.humanix-academie.fr sert la demo. Ne valider que ce que resout
+ *   l'environnement courant rend la couverture accidentelle : un runner
  *   sans sous-module ne verrait jamais le commercial.
  *
- *   C'est exactement ce qui s'est produit le 2026-08-20 : l'audit local
- *   declarait la demo « non servie » alors que ses 19 episodes etaient tous
- *   casses sur le site public. La CI l'a vu, pas moi.
+ *   C'est ce qui s'est produit le 2026-08-20, quand le chargeur ne servait
+ *   encore qu'une racine a la fois et qu'un poste de dev ne voyait donc
+ *   jamais la demo : l'audit local declarait la demo « non servie » alors
+ *   que ses 19 episodes etaient tous casses sur le site public. La CI l'a
+ *   vu, pas moi.
  *
  * CE QUI EST CONTROLE
  *

@@ -31,7 +31,7 @@ import type { ReactNode } from "react";
 import CyberEventBanner from "@/components/CyberEventBanner";
 import { getLevel, computeTotalXP } from "@/lib/levels";
 import { getActiveChallenge } from "@/lib/challenge";
-import { listExpertEpisodes } from "@/lib/content-availability";
+import { listEpisodes } from "@/lib/episodes";
 import { getUserPersona } from "@/lib/ai/persona";
 import {
   classifySaisonForUser,
@@ -228,12 +228,6 @@ export default async function ApprendrePage() {
   const totalEpisodes = saisons.reduce((s, sa) => s + sa.episodes.length, 0);
   const currentLevel = getLevel(totalXP);
 
-  // Episodes avec contenu MDX redige (vs fallback generique). Sert a
-  // afficher un compteur "Expert" subtil sur chaque saison.
-  const expertEpisodes = new Set(
-    listExpertEpisodes().map((e) => `${e.saisonSlug}/${e.episodeSlug}`),
-  );
-
   // Streak
   const completedDates = progress
     .filter((p) => p.completedAt)
@@ -290,9 +284,13 @@ export default async function ApprendrePage() {
       (e) => progressByEp.get(e.id)?.status !== "COMPLETED",
     );
     const isLocked = total === 0;
-    const expertCount = s.episodes.filter((e) =>
-      expertEpisodes.has(`${s.slug}/${e.slug}`),
-    ).length;
+    // Modules rediges (vs contenu generique) : compteur "Expert" de la
+    // carte. On pose la question au chargeur lui-meme, pour que la carte
+    // annonce ce que le lecteur servira. Lire une racine de son cote
+    // annoncait "bientot enrichi" sur des saisons servies redigees : les
+    // saisons de demo, en mode demo comme a cote du catalogue commercial.
+    const written = new Set(listEpisodes(s.slug));
+    const expertCount = s.episodes.filter((e) => written.has(e.slug)).length;
     const targetedCount = s.episodes.filter((e) => e.targetedForUser).length;
     const avgMinutes =
       total === 0

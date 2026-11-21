@@ -153,16 +153,13 @@ Solution : **2 repos distincts** + auto-bascule au runtime.
 Le code détecte la présence du contenu privé et bascule sans config :
 
 ```ts
-// lib/episodes.ts - résolution du content root
-function resolveContentRoot(): string | null {
-  if (fs.existsSync(CONTENT_ROOT_PRO)) {
-    const entries = fs
-      .readdirSync(CONTENT_ROOT_PRO, { withFileTypes: true })
-      .filter((d) => d.isDirectory());
-    if (entries.length > 0) return CONTENT_ROOT_PRO; // catalogue commercial
-  }
-  if (fs.existsSync(CONTENT_ROOT_DEMO)) return CONTENT_ROOT_DEMO; // fallback OSS
-  return null;
+// lib/episodes.ts - racines de contenu, par ordre de priorité.
+// Chaque module est cherché dans la première, puis dans la suivante.
+function resolveContentRoots(): string[] {
+  const candidates = isDemoMode()
+    ? [demoRoot()] // démo publique : jamais de MDX commercial
+    : [commercialRoot(), demoRoot()]; // commercial, puis démo pour le reste
+  return candidates.filter(isDirectory);
 }
 
 // prisma/seed-data-loader.ts - résolution du catalog au seeding
@@ -174,6 +171,8 @@ export function loadCatalogSaisons() {
   return { saisons: CATALOG_SAISONS_DEMO, source: "demo" };
 }
 ```
+
+Une base peut porter les saisons de démo à côté du catalogue commercial (le semis est additif, il ne retire jamais une saison). Leurs modules sont alors servis depuis `content/saisons-demo/`, et non en contenu générique.
 
 Au seeding, le log indique la source :
 
@@ -282,7 +281,7 @@ Alternatives au submodule :
 | `prisma/catalog-saisons-demo.ts`   | **Nouveau** : catalogue des saisons démo (2 entries)                                                      |
 | `prisma/catalog-saisons-shared.ts` | **Nouveau** : types `CatalogSaison` + helpers `rewardsFor` + `validateCatalog(saisons)`                   |
 | `prisma/seed-data-loader.ts`       | **Nouveau** : loaders avec fallback gracieux (catalog, library, marketplace, anecdotes)                   |
-| `lib/episodes.ts`                  | **Modifié** : `resolveContentRoot()` qui bascule auto entre `content/saisons/` et `content/saisons-demo/` |
+| `lib/episodes.ts`                  | **Modifié** : `resolveContentRoots()` : pour tout module, `content/saisons/` puis `content/saisons-demo/` |
 | `prisma/seed.ts`                   | **Modifié** : utilise les loaders au lieu d'imports statiques                                             |
 | `.gitignore`                       | **Modifié** : bloc Open Core (commenté par défaut, à activer avant passage public)                        |
 
