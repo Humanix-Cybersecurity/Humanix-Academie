@@ -154,7 +154,7 @@ de réponse ?]
 ### 5.3. AI Act (si applicable)
 - [ ] Hors champ AI Act
 - [ ] Risque limité (transparence)
-- [ ] Risque élevé (annexe III) - marquage CE requis
+- [ ] Haut risque (annexe III) - obligations du déployeur (article 26), à partir du 2 décembre 2027
 
 ---
 

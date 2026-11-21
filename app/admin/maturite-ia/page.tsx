@@ -5,8 +5,12 @@
 //   - Questionnaire 8 questions cles (politique IA, formation, shadow AI,
 //     supervision, AI Act, deepfakes, donnees sensibles, charte)
 //   - Score 0-100 calcule live
-//   - Comparaison hardcodee "Mediane PME francaise" pour reference
 //   - Plan d'action genere selon le score
+//
+// PAS DE COMPARAISON EXTERNE : la V1 affichait une "mediane PME francaise"
+// de 42/100, codee en dur et attribuee a une enquete du CESIN. Ce score est
+// propre a ce questionnaire : aucune enquete ne le mesure. Ne rien afficher
+// tant qu'il n'y a pas de donnees reelles, et citer leur source ce jour-la.
 //
 // PERSISTENCE V1 : aucune (state client localStorage). Pas de migration BDD
 // requise pour le launch. V2 ajoutera une table TenantAIMaturity avec
@@ -54,11 +58,11 @@ export default async function MaturiteIAPage() {
 
       <footer className="mt-12 pt-6 border-t border-gray-200 dark:border-slate-800 text-xs text-gray-500 dark:text-gray-400 space-y-1">
         <p>
-          <strong>Méthodologie</strong> - chaque question vaut 12.5 points (8
-          axes × 12.5 = 100). Le score moyen PME française médiane est calculé à
-          partir d&apos;une enquête CESIN 2025 (n = 320 PME 10-250 salariés). V2
-          (Q3 2026) ajoutera une comparaison anonymisée vs autres tenants
-          Humanix de votre secteur (k-anonymity ≥ 5).
+          <strong>Méthodologie</strong> - chaque question vaut 12,5 points (8
+          questions × 12,5 = 100) : « Oui » et « Non applicable » donnent 12,5
+          points, « Partiellement » 6,25 et « Non » 0. C&apos;est une
+          auto-évaluation : le score ne se compare à aucune enquête ni à
+          d&apos;autres organisations.
         </p>
         <p>
           <strong>Confidentialité</strong> - vos réponses ne quittent pas votre
