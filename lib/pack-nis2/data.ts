@@ -170,9 +170,9 @@ export function incidentDocument(v: PackNis2Variables): Document {
         heading: "Annexe - Coordonnées utiles",
         paragraphs: [],
         bullets: [
-          "ANSSI / CERT-FR : cert-fr.cossi.defense.gouv.fr - 01 71 75 84 50",
+          "ANSSI / CERT-FR : cert.cyber.gouv.fr - 3218 ou 09 70 83 32 18 (7j/7, 24h/24)",
           "CNIL : notifications.cnil.fr",
-          "Cybermalveillance.gouv.fr - 0 805 805 817",
+          "Cybermalveillance.gouv.fr : assistance en ligne sur 17cyber.gouv.fr (24h/24, 7j/7)",
           "Police judiciaire : 17 ou pre-plainte-en-ligne.gouv.fr",
         ],
       },

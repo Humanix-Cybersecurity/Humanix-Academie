@@ -498,7 +498,7 @@ export default function UrgenceCyberPage() {
 
               <div className="grid sm:grid-cols-2 gap-4">
                 <a
-                  href="tel:+33000000000"
+                  href="tel:+33661026153"
                   className="inline-flex items-center justify-center gap-2 bg-white text-primary-500 font-bold px-6 py-4 rounded-2xl shadow-md hover:scale-105 transition-transform"
                 >
                   <span aria-hidden="true">📞</span> Appeler maintenant
@@ -511,10 +511,8 @@ export default function UrgenceCyberPage() {
                 </a>
               </div>
 
-              <p className="text-xs opacity-80 italic mt-6 text-center">
-                Remplace le numéro `+33 0 00 00 00 00` par le numéro pro réel
-                avant publication. Cf. action manuelle A19 du dossier
-                pré-launch.
+              <p className="text-sm opacity-90 mt-6 text-center">
+                Téléphone : 06 61 02 61 53
               </p>
             </div>
           </div>
@@ -552,8 +550,8 @@ export default function UrgenceCyberPage() {
               />
               <OfficialPortal
                 emoji="📞"
-                name="ANSSI hotline 17 ou 3018"
-                url="https://www.cybermalveillance.gouv.fr/tous-nos-contenus/articles/contacter-la-police-ou-la-gendarmerie-nationale-en-cas-de-cybermalveillance"
+                name="Urgence : 17 ou 3018"
+                url="https://17cyber.gouv.fr/"
                 detail="Pour signaler en urgence : 17 (police), 3018 (mineurs harcelés/cyberviolence)."
               />
             </div>

@@ -188,7 +188,7 @@ export default function CybermalveillanceIntegrationPage() {
           </li>
           <li>
             <a
-              href="https://www.cybermalveillance.gouv.fr/expertcyber"
+              href="https://www.cybermalveillance.gouv.fr/label-expertcyber"
               target="_blank"
               rel="noopener noreferrer"
               className="font-bold text-accent-500 hover:underline"
