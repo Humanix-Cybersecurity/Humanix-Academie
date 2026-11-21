@@ -27,43 +27,43 @@ const QUESTIONS: Question[] = [
     id: "charte",
     axis: "Gouvernance",
     text: "Votre organisation a-t-elle une charte écrite encadrant l'usage de l'IA générative ?",
-    why: "Sans charte, chaque collaborateur arbitre seul ses propres règles. AI Act + RGPD article 32 imposent une politique formalisée.",
+    why: "Sans charte, chaque personne fixe ses propres règles. La CNIL recommande d'encadrer l'usage de l'IA générative par une politique ou une charte interne qui dit ce qui est autorisé et ce qui ne l'est pas.",
   },
   {
     id: "formation",
     axis: "Compétences",
     text: "Vos équipes ont-elles été formées à l'IA générative (hallucinations, biais, prompt design) dans les 12 derniers mois ?",
-    why: "Sans formation, vos utilisateurs subissent les biais des LLMs sans les voir. Étude MIT 2025 : -23 % de capacité de rappel sans IA après 6 mois d'usage sans formation.",
+    why: "Sans formation, les erreurs et les biais des outils passent inaperçus. Le règlement européen sur l'IA (article 4) demande aux organisations qui utilisent l'IA de prendre des mesures pour favoriser la maîtrise de l'IA par leur personnel.",
   },
   {
     id: "shadow-ai",
     axis: "Visibilité",
-    text: "Connaissez-vous précisément quels outils IA sont utilisés par vos collaborateurs (y compris en personnel) ?",
+    text: "Connaissez-vous précisément quels outils IA sont utilisés par vos équipes (y compris en personnel) ?",
     why: "Le shadow AI fait fuiter des données vers ChatGPT, Claude, Copilot personnels. Visibilité = pré-requis du contrôle.",
   },
   {
     id: "donnees-sensibles",
     axis: "Sécurité",
     text: "Avez-vous une politique claire interdisant l'envoi de données sensibles (clients, financières, RH) aux IAs publiques ?",
-    why: "Une fois envoyé dans ChatGPT, c'est dans les serveurs OpenAI (et potentiellement dans l'entraînement). Récupération impossible.",
+    why: "Sur un compte personnel, gratuit ou payant, ce qui est saisi peut servir à entraîner les modèles, selon l'éditeur et les réglages. Le texte reste chez l'éditeur tant que la conversation figure dans l'historique, parfois plus longtemps.",
   },
   {
     id: "supervision",
     axis: "Supervision",
     text: "Vos workflows utilisant l'IA garantissent-ils une décision humaine finale sur les actes engageants (recrutement, scoring, sanctions) ?",
-    why: "AI Act EU article 14 : supervision humaine effective obligatoire sur les systèmes IA à haut risque. Sans elle, vous êtes hors-la-loi 2026.",
+    why: "Le RGPD (article 22) encadre déjà les décisions entièrement automatisées qui ont un effet juridique ou significatif sur une personne. Le règlement européen sur l'IA y ajoutera, à partir du 2 décembre 2027, un contrôle humain des systèmes à haut risque (articles 14 et 26).",
   },
   {
     id: "deepfake",
     axis: "Sécurité",
     text: "Vos procédures de paiement et d'autorisation interne résistent-elles à un appel téléphonique avec voix clonée IA ?",
-    why: "L'arnaque au président par deepfake vocal est en explosion (+340 % CESIN 2025). Un mot de passe interne + rappel sur ligne habituelle = défense efficace.",
+    why: "La DGSI a rapporté fin 2025 une tentative contre un groupe français : en visioconférence, le visage et la voix du dirigeant, pour obtenir un transfert de fonds. La parade : rappeler au numéro habituel et faire valider tout virement inhabituel par une seconde personne.",
   },
   {
     id: "ai-act",
     axis: "Conformité",
-    text: "Avez-vous identifié si votre organisation utilise des systèmes IA classés &laquo; haut risque &raquo; selon l'AI Act EU ?",
-    why: "RH, scoring crédit, gestion infrastructure critique, biométrie → haut risque. Obligations légales 2026-2027 selon le calendrier AI Act.",
+    text: "Avez-vous identifié si votre organisation utilise des systèmes d'IA classés « haut risque » par le règlement européen sur l'IA ?",
+    why: "Recrutement et gestion du personnel, évaluation de la solvabilité, infrastructures critiques, identification biométrique à distance : ces usages relèvent en principe du haut risque (annexe III). Leurs obligations s'appliquent à partir du 2 décembre 2027, et du 2 août 2028 pour l'IA intégrée à des produits déjà réglementés.",
   },
   {
     id: "audit",
@@ -74,7 +74,6 @@ const QUESTIONS: Question[] = [
 ];
 
 const STORAGE_KEY = "humanix:maturite-ia:answers";
-const BENCHMARK_PME = 42; // Mediane PME francaise (hardcoded V1, cf. page.tsx footer)
 
 function scoreFor(answer: Answer): number {
   switch (answer) {
@@ -97,12 +96,12 @@ function planActionFor(
   const actions: string[] = [];
   if (answers.charte === "no") {
     actions.push(
-      "📜 Rédiger une charte IA d'entreprise (template fourni dans la saison Maîtrise IA, épisode 12).",
+      "📜 Rédiger une charte IA (la saison Maîtrise IA y consacre son épisode 12).",
     );
   }
   if (answers.formation === "no" || answers.formation === "partial") {
     actions.push(
-      "🎓 Déployer la saison &laquo; Maîtrise IA &raquo; (12 épisodes, 5 min chacun) à toutes vos équipes.",
+      "🎓 Déployer la saison « Maîtrise IA » (12 épisodes de 5 à 8 minutes) auprès de toutes vos équipes.",
     );
   }
   if (answers["shadow-ai"] === "no") {
@@ -125,17 +124,17 @@ function planActionFor(
   }
   if (answers.deepfake === "no") {
     actions.push(
-      "🎭 Mettre en place un mot de passe interne pour valider les ordres de paiement par téléphone (épisode 06).",
+      "🎭 Imposer le rappel au numéro habituel et une seconde validation pour tout virement inhabituel ; un mot de code convenu à l'avance peut compléter (épisode 06).",
     );
   }
   if (answers["ai-act"] === "no") {
     actions.push(
-      "⚖️ Cartographier vos systèmes IA selon les 4 niveaux de risque AI Act (épisode 11).",
+      "⚖️ Cartographier vos systèmes d'IA selon les quatre niveaux de risque du règlement européen sur l'IA (épisode 11).",
     );
   }
   if (answers.audit === "no") {
     actions.push(
-      "📜 Activer un audit log centralisé sur les usages IA (Humanix le fait nativement pour l'usage Hex Chat interne).",
+      "📜 Tenir un journal des usages de l'IA dans les outils que vous déployez (qui, quel outil, quand, pour quel résultat), après en avoir informé le personnel et, s'il y en a un, consulté le CSE.",
     );
   }
   if (actions.length === 0) {
@@ -214,7 +213,6 @@ export default function MaturiteIAClient() {
       score,
       level: level.label,
       answers,
-      benchmark: { medianePMEFrancaise: BENCHMARK_PME },
     };
     const blob = new Blob([JSON.stringify(data, null, 2)], {
       type: "application/json",
@@ -233,11 +231,11 @@ export default function MaturiteIAClient() {
 
   return (
     <div className="space-y-8">
-      {/* === Score live + comparaison === */}
+      {/* === Score live === */}
       <section
         className={`rounded-2xl border-2 border-${level.color}-300 dark:border-${level.color}-700 bg-${level.color}-50/40 dark:bg-${level.color}-900/20 p-6`}
       >
-        <div className="grid sm:grid-cols-3 gap-4 items-center">
+        <div className="grid sm:grid-cols-2 gap-4 items-center">
           <div className="text-center sm:text-left">
             <p className="text-xs uppercase tracking-widest font-bold text-gray-500 dark:text-gray-400 mb-1">
               Votre score
@@ -248,26 +246,6 @@ export default function MaturiteIAClient() {
             </p>
             <p className="mt-2 text-sm font-bold">
               <span aria-hidden="true">{level.emoji}</span> {level.label}
-            </p>
-          </div>
-          <div className="text-center text-sm">
-            <p className="text-gray-500 dark:text-gray-400 mb-1">
-              vs PME française médiane
-            </p>
-            <p className="text-3xl font-extrabold tabular-nums text-gray-600 dark:text-gray-300">
-              {BENCHMARK_PME}
-              <span className="text-base text-gray-400">/100</span>
-            </p>
-            <p
-              className={`text-xs font-bold mt-1 ${
-                score >= BENCHMARK_PME
-                  ? "text-emerald-700 dark:text-emerald-300"
-                  : "text-amber-700 dark:text-amber-300"
-              }`}
-            >
-              {score >= BENCHMARK_PME
-                ? `+${(score - BENCHMARK_PME).toFixed(0)} pts au-dessus`
-                : `${(score - BENCHMARK_PME).toFixed(0)} pts en dessous`}
             </p>
           </div>
           <div className="text-center sm:text-right text-sm">

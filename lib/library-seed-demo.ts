@@ -266,41 +266,41 @@ Vérifier ses emails 1 fois. S'abonner aux alertes. Changer les mots de passe co
 
 Quand Mamie tape une question dans Google, elle obtient une liste de sites. Elle clique, elle lit, elle compare. C'est lent mais elle a appris : on vérifie sur 2-3 sources avant de croire.
 
-Quand Mamie tape la même question dans ChatGPT, elle obtient **une seule réponse**, rédigée comme si c'était évident, sans aucun lien. Le ton est confiant. Le texte est bien écrit. **Pourtant, ChatGPT peut tout simplement inventer** - un médicament, une date, une procédure, une loi.
+Quand Mamie tape la même question dans ChatGPT, elle obtient **une seule réponse**, rédigée comme si c'était évident. Le ton est confiant. Le texte est bien écrit. **Pourtant, ChatGPT peut tout simplement inventer** - un médicament, une date, une procédure, une loi.
 
-C'est ce qu'on appelle une **hallucination**. Et c'est très différent d'une erreur Google : sur Google, l'info fausse est sur UN site qu'on peut identifier. Avec ChatGPT, l'info fausse arrive sans source, mélangée à des infos vraies, impossible à distinguer.
+C'est ce qu'on appelle une **hallucination**. Et c'est très différent d'une erreur trouvée sur Google : là, l'info fausse est sur UN site qu'on peut identifier. Avec ChatGPT, elle arrive mélangée à des infos vraies, sur le même ton. Et quand la réponse cite des sources, elles ne disent pas toujours ce qu'on leur fait dire.
 
-# Les 3 cas réels documentés en 2025
+# Deux affaires réelles, et une mesure
 
-- **Faux médicaments** : une étude américaine a montré que ChatGPT recommandait, dans 27 % des cas testés, des dosages dangereux ou des interactions médicamenteuses inexistantes - toujours formulés avec aplomb.
-- **Faux articles juridiques** : un avocat new-yorkais a déposé en cour des références à 6 jugements... qui n'existaient pas. ChatGPT les avait fabriqués. Sanction disciplinaire à la clé.
-- **Faux historique de famille** : des utilisateurs demandent à ChatGPT "qui était mon grand-père" et reçoivent des biographies inventées de toutes pièces, parce que ChatGPT "complète" l'absence de données.
+- **De fausses décisions de justice (New York, 2023)** : un mémoire préparé avec ChatGPT cite six décisions de justice... qui n'existent pas. Le tribunal inflige une amende de 5 000 dollars aux deux avocats et à leur cabinet.
+- **Une règle inexacte (Canada, 2024)** : ce n'est pas propre à ChatGPT. Après le décès de sa grand-mère, une personne interroge l'agent conversationnel du site d'Air Canada sur le tarif réduit prévu en cas de deuil. La réponse décrit une démarche que la compagnie refuse ensuite. Le tribunal juge la compagnie responsable de ce que son agent a écrit et la condamne à payer la différence de prix. La décision ne dit pas quelle technologie faisait fonctionner cet agent.
+- **La santé, mesurée (2025)** : une étude a examiné les réponses de sept modèles d'IA à des questions médicales. Entre 50 % et 90 % de ces réponses n'étaient pas entièrement soutenues par les sources qu'elles citaient.
 
 # Comment expliquer ça à Mamie sans la décourager
 
 Pas la peine de dire "ChatGPT ment" - elle ne l'utilisera plus du tout, et c'est dommage parce que ça reste un bon outil pour reformuler une lettre, traduire, ou expliquer un mot. La bonne formule est :
 
-> *"ChatGPT, c'est comme un voisin très bavard qui a lu beaucoup de livres. Il te répond toujours avec assurance, mais parfois il invente parce qu'il ne veut pas dire 'je ne sais pas'. Pour tout ce qui est important - santé, banque, juridique, identité - il faut toujours vérifier sur un vrai site officiel."*
+> *"ChatGPT, c'est comme un voisin très bavard qui a lu beaucoup de livres. Il te répond toujours avec assurance, mais parfois il invente au lieu de dire 'je ne sais pas'. Pour tout ce qui est important - santé, banque, juridique, identité - il faut toujours vérifier sur un vrai site officiel."*
 
 # La règle "3 cas où on ne fait JAMAIS confiance"
 
 1. **Santé** : symptômes, médicaments, dosages → toujours médecin ou pharmacien.
 2. **Argent** : virements, impôts, succession → toujours sa banque, son notaire, le site impots.gouv.fr.
-3. **Démarches administratives** : papiers, droits sociaux → toujours service-public.fr ou la mairie.
+3. **Démarches administratives** : papiers, droits sociaux → toujours service-public.gouv.fr ou la mairie.
 
 Pour tout le reste - recettes, idées de cadeau, reformuler une lettre, comprendre un mot - ChatGPT est OK, à condition de garder son bon sens.
 
 # À retenir
 
-ChatGPT n'est pas un moteur de recherche : c'est un assistant qui peut inventer avec assurance. La règle simple à transmettre : **santé, argent, papiers → JAMAIS ChatGPT seul, toujours vérifier sur une source officielle**.
+ChatGPT n'est pas un moteur de recherche : c'est un assistant qui peut inventer avec assurance. La règle simple à transmettre : **santé, argent, papiers → JAMAIS ChatGPT seul, toujours vérifier sur une source officielle**. C'est aussi le conseil de Cybermalveillance.gouv.fr : vérifier soi-même les réponses de l'IA dès que le sujet a un enjeu.
 
-> Source : Stanford HAI 2025 "Hallucination Rates in Consumer LLMs", étude Mata vs Avianca (cas réel 2023, sanction 2024).`,
+> Sources : Mata v. Avianca, tribunal fédéral du district sud de New York, décision du 22 juin 2023. Moffatt v. Air Canada, 2024 BCCRT 149. Wu et al., Nature Communications, 2025. Cybermalveillance.gouv.fr, « Utiliser l'IA, conseils pour les particuliers et les professionnels », 2026.`,
   },
   {
     slug: "demo-ado-chatgpt-devoirs",
     title: "Quand ton ado utilise ChatGPT pour ses devoirs",
     description:
-      "Interdire est inutile et contre-productif. Encadrer pour qu'il apprenne à utiliser l'IA sans déléguer son cerveau.",
+      "Ce que dit l'école, ce que montre vraiment l'étude du MIT, et une méthode pour apprendre avec l'IA sans lui confier le travail.",
     emoji: "🎓",
     category: "ia",
     audience: "famille",
@@ -308,15 +308,30 @@ ChatGPT n'est pas un moteur de recherche : c'est un assistant qui peut inventer 
     authorName: "Humanix Académie · CC BY-SA",
     body: `# La mauvaise question : "Comment l'empêcher ?"
 
-D'abord, c'est impossible. Tous les ados (et la plupart des collégiens) utilisent déjà ChatGPT, Claude ou Gemini pour leurs devoirs. C'est aussi inutile à interdire que la calculatrice en 1990.
+À la maison, c'est très difficile à tenir. Le ministère de l'Éducation nationale le constate lui-même : les IA grand public sont « déjà largement utilisées » par les élèves, « notamment lycéens voire collégiens ». Certains s'en servent pour faire faire leurs devoirs, d'autres pour réviser, s'entraîner ou approfondir.
 
-La bonne question est : **comment lui apprendre à s'en servir comme un assistant, pas comme une béquille** ? Parce que l'enjeu n'est pas la note du contrôle, c'est de continuer à muscler son cerveau.
+La bonne question est : **comment apprendre à ton ado à s'en servir comme d'un assistant, pas comme d'une béquille** ? Parce que l'enjeu n'est pas la note du contrôle, c'est de continuer à muscler son cerveau.
 
-# Le vrai risque : l'atrophie cognitive
+# Ce que dit l'école
 
-Une étude du MIT Media Lab (2025, *"Your Brain on ChatGPT"*) a mesuré l'activité cérébrale de jeunes utilisateurs pendant une rédaction. Résultat : **chez ceux qui utilisent ChatGPT pour rédiger, l'activité dans les zones du raisonnement diminue mesurablement**. Plus inquiétant : cette baisse **persiste** plusieurs jours après l'arrêt de l'outil.
+Le ministère a publié en juin 2025 un cadre d'usage de l'IA en éducation. Trois points utiles aux parents :
 
-En clair : si ton ado fait rédiger tous ses devoirs par ChatGPT, **il perd progressivement la capacité à structurer une pensée par lui-même**. C'est l'équivalent intellectuel de ne plus jamais marcher parce qu'on a une voiture.
+- **Faire faire son devoir par une IA, c'est une fraude.** Le cadre demande d'expliquer aux élèves que l'utilisation d'une IA générative pour réaliser un devoir scolaire, « sans autorisation explicite et sans travail personnel d'appropriation », constitue une fraude.
+- **En classe, c'est progressif.** À l'école primaire, une sensibilisation, sans manipuler d'IA générative. En classe, l'usage par les élèves n'est autorisé qu'à partir de la 4e, limité et encadré par les profs. Au lycée, un usage autonome, dans le cadre que les profs définissent.
+- **Un détecteur n'est pas une preuve.** Le même cadre déconseille les logiciels de détection de contenus générés par l'IA : peu fiables, ils pourraient conduire à pénaliser un élève à tort.
+
+La première règle est donc simple : **ce sont les profs qui disent si l'IA est autorisée pour ce devoir.**
+
+# Ce que montre l'étude du MIT, et ce qu'elle ne montre pas
+
+En juin 2025, une équipe du MIT Media Lab a mis en ligne *"Your Brain on ChatGPT"*. 54 personnes de 18 à 39 ans, étudiantes pour la plupart, y rédigent des dissertations en trois groupes : avec ChatGPT, avec un moteur de recherche, sans aucun outil.
+
+- La connectivité cérébrale, mesurée par électroencéphalogramme pendant la rédaction, est la plus forte sans outil et la plus faible avec ChatGPT.
+- À la première séance, 15 personnes sur 18 du groupe ChatGPT ne parviennent pas à citer correctement une phrase du texte qu'elles viennent d'écrire, contre 2 sur 18 dans chacun des deux autres groupes.
+
+Avant d'en tirer des conclusions pour ton ado : c'est une **prépublication** ; aucune version parue dans une revue à comité de lecture n'était connue en novembre 2026. Elle porte sur des adultes, pas sur des élèves de collège ou de lycée. Rien n'y est mesuré après la fin de l'expérience : elle ne dit pas si l'effet dure. Et l'équipe demande elle-même de ne pas écrire que l'IA rend « bête » ou « abîme » le cerveau.
+
+Ce qu'on peut en retenir sans exagérer : dans cette expérience, les personnes qui rédigeaient avec ChatGPT retenaient mal leur propre texte. Pour un devoir, dont le but est justement d'apprendre, c'est tout le problème.
 
 # La méthode "3 niveaux d'usage" à proposer
 
@@ -325,36 +340,38 @@ En clair : si ton ado fait rédiger tous ses devoirs par ChatGPT, **il perd prog
 - ChatGPT à ce niveau = ne plus marcher quand on apprend à marcher.
 
 **Niveau 1 - Devoir long (rédaction, dissertation)** : ChatGPT comme correcteur, pas comme rédacteur.
-- Ton ado écrit son brouillon SEUL. Puis demande à ChatGPT : *"Cite-moi 3 fautes de structure dans ce texte sans réécrire"*.
-- ChatGPT pointe les problèmes, ton ado les corrige LUI.
-- Il apprend la méta-cognition : *"je me rends compte que ma structure est faible"*.
+- Ton ado écrit son brouillon sans aide. Puis demande à ChatGPT : *"Cite-moi 3 fautes de structure dans ce texte sans réécrire"*.
+- ChatGPT pointe les problèmes, ton ado les corrige.
+- C'est un exercice de métacognition : *"je me rends compte que ma structure est faible"*.
 
 **Niveau 2 - Recherche complexe** : ChatGPT comme starter, pas comme conclusion.
 - "ChatGPT, donne-moi 5 angles pour traiter ce sujet de philo."
-- Ton ado choisit 1 angle, fait ses propres recherches (Wikipédia, manuels, prof), construit son argumentation.
-- ChatGPT a juste été un brainstorming.
+- Ton ado choisit 1 angle, fait ses propres recherches (Wikipédia, manuels, profs), construit son argumentation.
+- ChatGPT a juste servi au brainstorming.
+
+Aux niveaux 1 et 2, la règle de l'école passe avant : si l'IA n'est pas autorisée pour ce devoir, on s'en passe.
 
 # Les 3 phrases magiques à apprendre
 
-À chaque fois que ton ado utilise ChatGPT, il doit pouvoir répondre OUI à ces 3 questions :
+À chaque fois que ton ado utilise ChatGPT, la réponse à ces 3 questions doit être OUI :
 
-1. **"Est-ce que j'ai compris ce que je viens de produire ?"** Si non, c'est ChatGPT qui a fait le devoir, pas lui.
+1. **"Est-ce que j'ai compris ce que je viens de produire ?"** Si non, c'est ChatGPT qui a fait le devoir.
 2. **"Est-ce que je pourrais le réexpliquer sans ChatGPT, dans 1 semaine ?"** C'est le vrai test d'apprentissage.
-3. **"Si le prof me pose une question orale, je sais répondre ?"** C'est l'épreuve de vérité au lycée et en supérieur.
+3. **"Si on me pose une question à l'oral, je sais répondre ?"** C'est l'épreuve de vérité au lycée et dans le supérieur.
 
 # L'angle parent (sans devenir le flic)
 
-Au lieu de surveiller ses sessions ChatGPT (impossible et destructeur de confiance), demande-lui simplement :
+Au lieu de surveiller ses sessions ChatGPT (impossible et destructeur de confiance), pose simplement la question :
 
 > *"Tu as utilisé ChatGPT pour ce devoir ? OK. Tu peux m'expliquer en 30 secondes ce que tu as appris avec ?"*
 
-S'il bafouille, le devoir est creux. S'il explique clairement, il a vraiment appris - peu importe qu'il ait utilisé ChatGPT ou pas.
+Si ça bafouille, le devoir est creux. Si l'explication est claire, l'apprentissage est là - avec ou sans ChatGPT.
 
 # À retenir
 
-ChatGPT est là pour rester. Interdire = perdre. La méthode qui marche : **3 niveaux d'usage (jamais, correcteur, starter)** + **3 questions de contrôle** que ton ado apprend à se poser tout seul. L'objectif n'est pas la note, c'est de garder un cerveau qui fonctionne sans l'outil.
+ChatGPT est là pour rester, et l'interdire à la maison ne suffit pas. Ce qui marche : **la règle de l'école d'abord**, puis **3 niveaux d'usage (jamais, correcteur, starter)** et **3 questions de contrôle** que ton ado apprend à se poser. L'objectif n'est pas la note, c'est de garder un cerveau qui fonctionne sans l'outil.
 
-> Source : MIT Media Lab "Your Brain on ChatGPT" (2025), Stanford HAI "Cognitive Offloading at Scale" (2025).`,
+> Sources : ministère de l'Éducation nationale, « Cadre d'usage de l'IA en éducation », juin 2025. Kosmyna et al. (MIT Media Lab), « Your Brain on ChatGPT », prépublication arXiv 2506.08872, juin 2025.`,
   },
   {
     slug: "demo-proche-victime-deepfake",
@@ -368,52 +385,54 @@ ChatGPT est là pour rester. Interdire = perdre. La méthode qui marche : **3 ni
     authorName: "Humanix Académie · CC BY-SA",
     body: `# Le nouveau visage des arnaques
 
-Avant, l'arnaque au "neveu en détresse" passait par un appel anonyme avec une voix étouffée. C'était grossier, beaucoup raccrochaient.
+Avant, l'arnaque au "neveu en détresse" passait par un appel anonyme avec une voix étouffée, qu'on pouvait trouver suspecte.
 
-Aujourd'hui, **3 secondes d'audio suffisent** à un outil d'IA grand public pour cloner la voix de n'importe qui. Un escroc qui récupère un message vocal Facebook ou Instagram de ton fils peut, dans la même journée, t'appeler en imitant parfaitement sa voix, avec ses tics de langage, son ton, son rythme. La détection à l'oreille est devenue presque impossible.
+Aujourd'hui, **un court extrait de voix peut suffire** à l'imiter. En 2023, une équipe de recherche de Microsoft a présenté un modèle capable de reproduire une voix à partir de 3 secondes d'enregistrement : c'est un résultat de laboratoire. Le ministère de l'Économie décrit le scénario : à partir d'une vidéo ou d'une note vocale publiée sur un réseau social, un escroc imite la voix d'un proche, appelle en évoquant un accident ou un besoin urgent d'argent, et demande un virement immédiat. On ne peut plus compter sur son oreille.
 
-Idem pour la vidéo : un appel WhatsApp de 30 secondes avec l'image de quelqu'un, et un attaquant peut générer une vidéo crédible où cette personne "demande" un virement urgent.
+Idem pour la vidéo. À Hong Kong, en 2024, une personne du groupe d'ingénierie Arup rejoint une visioconférence où apparaissent la direction financière et des collègues : selon les autorités de Hong Kong, la séquence était préenregistrée, fabriquée à partir de vidéos et de voix publiques. Environ 25 millions de dollars américains sont virés.
 
 # Si c'est arrivé : les 3 priorités, dans cet ordre
 
 **Priorité 1 - Ne pas culpabiliser le proche**
 
-C'est le plus important. Une victime de deepfake se sent souvent "ridicule" alors qu'elle ne l'est pas du tout : ces outils trompent même des experts en cybersécurité. Si tu lui dis *"tu aurais dû te méfier"*, tu casses la confiance et tu l'isoles. Au contraire :
+C'est le plus important. Une victime de deepfake se sent souvent "ridicule" alors qu'elle ne l'est pas du tout : ces montages ont trompé des professionnels dans de grandes entreprises. Si tu lui dis *"tu aurais dû te méfier"*, tu casses la confiance et tu l'isoles. Au contraire :
 
-> *"Ce qui t'est arrivé arrive à des centaines de personnes par mois, y compris des PDG et des banquiers. Les outils sont devenus indétectables. Tu n'es pas naïf - tu es la première vague d'une nouvelle escroquerie."*
+> *"Ces arnaques sont préparées pour tromper, et elles jouent sur l'émotion et l'urgence. Ce n'est pas de la naïveté : c'est une escroquerie, et on va s'en occuper ensemble."*
 
-**Priorité 2 - Geler l'argent si virement parti**
+**Priorité 2 - Agir vite si de l'argent est parti**
 
-Si un virement bancaire a été effectué dans les **dernières 24-72h** :
-1. Appeler immédiatement la banque (numéro au dos de la carte) pour demander un **rappel de virement** (procédure SEPA recall). Plus tu agis vite, plus tu as de chances.
-2. Déposer plainte en gendarmerie ou commissariat - c'est obligatoire pour la suite (assurance, fiscalité, démarches bancaires).
-3. Signaler sur [cybermalveillance.gouv.fr](https://www.cybermalveillance.gouv.fr) - service public gratuit, ils orientent et accompagnent.
+1. **Appeler sa banque sans attendre**, au numéro habituel, signaler la fraude et demander le retour des fonds.
+2. **Garder les preuves** : numéros de téléphone, messages reçus, ordre de virement, relevés bancaires.
+3. **Déposer plainte** au commissariat ou à la gendarmerie, au plus vite. Cybermalveillance.gouv.fr l'écrit dans sa fiche sur la fraude au virement : la plainte sera nécessaire auprès de la banque et augmente les chances de récupérer les fonds.
+4. **Se faire aider** sur [17cyber.gouv.fr](https://17cyber.gouv.fr), le service en ligne de la police, de la gendarmerie et de Cybermalveillance.gouv.fr, ouvert 24 h sur 24 : diagnostic et conseils.
 
 **Priorité 3 - Sécuriser pour la suite**
 
-L'escroc a utilisé un échantillon de voix/vidéo qui existe quelque part. Aide ton proche à :
-- Passer ses comptes Facebook, Instagram, TikTok en privé (ses messages vocaux ne doivent plus être accessibles aux inconnus).
+L'escroc a utilisé un extrait de voix ou de vidéo qui existe quelque part. Aide ton proche à :
+- Passer ses comptes Facebook, Instagram, TikTok en privé, et limiter les notes vocales et les vidéos visibles de tout le monde.
 - Activer la double authentification sur tous ses comptes.
-- Convenir d'un **mot de passe familial** (un mot anodin que seuls les proches connaissent) à demander en cas d'appel suspect. *"Maman, c'est moi, le code c'est quoi ?"* - si l'appelant ne sait pas, c'est un deepfake.
+- Convenir d'un **mot de sécurité familial** : un code connu de vous seuls, à demander en cas de doute lors d'un appel urgent. Si la personne au bout du fil ne le connaît pas, on raccroche et on rappelle.
 
 # Comment reconnaître un deepfake AVANT de tomber
 
-C'est de plus en plus difficile, mais voici les signaux d'alarme actuels (qui disparaîtront dans 2-3 ans) :
+C'est de plus en plus difficile. Les signaux que citent le ministère de l'Économie et le ministère de l'Intérieur :
 
-- **Vocal** : voix légèrement "trop fluide", rythme régulier sans pause naturelle, intonations un peu mécaniques sur les fins de phrase. Si la personne parle vite et sans respirer, demande-lui de chuchoter ou de répéter une phrase précise - les deepfakes basiques ratent souvent ces variations.
-- **Vidéo** : clignements d'yeux anormaux (trop rares ou trop réguliers), peau du cou qui ne bouge pas en cohérence avec la mâchoire, éclairage incohérent entre visage et arrière-plan.
-- **Comportemental** : urgence extrême + demande financière + interdiction de raccrocher = combo classique. Une vraie urgence familiale n'empêche jamais de raccrocher pour rappeler depuis le numéro habituel.
+- **Vocal** : une voix qui semble artificielle, métallique, sans les hésitations ni les variations naturelles du ton.
+- **Vidéo** : clignements d'yeux ou regard peu naturels, lèvres mal synchronisées avec les paroles, lumière et ombres anormales sur le visage, gestes figés ou saccadés.
+- **Le contexte** : une demande urgente, de l'argent tout de suite, par virement, carte prépayée ou cryptomonnaie. Ce signal-là ne dépend pas de la qualité du trucage.
+
+Aucun de ces indices n'est une preuve, et leur absence ne prouve rien non plus : il ne faut pas se fier uniquement à ce qu'on voit ou à ce qu'on entend.
 
 # La règle d'or à transmettre
 
-> **Si on te demande de l'argent par téléphone, même de ton fils, même de ton patron, même de ta banque : raccroche et rappelle depuis le numéro habituel.** Toujours. Sans exception. Pas négociable.
+> **Si on te demande de l'argent par téléphone, même avec la voix d'un proche, de ta hiérarchie ou de ta banque : raccroche et rappelle au numéro habituel.** Toujours. Sans exception.
 
-C'est le seul réflexe qui marche à 100 % contre les deepfakes vocaux et vidéo.
+C'est le réflexe que recommandent le ministère de l'Économie et le FBI : raccrocher, puis rappeler au numéro habituel. Le ministère de l'Intérieur conseille lui aussi de vérifier par un autre moyen, à un numéro officiel.
 
 # À retenir
 
-Le deepfake est une arnaque industrielle, pas une faille personnelle. Ne pas culpabiliser. Geler l'argent vite. Sécuriser les comptes. Apprendre le réflexe "raccrocher et rappeler". Ces 4 réactions sauvent.
+Un deepfake réussi est une escroquerie préparée, pas une faute de la victime. Ne pas culpabiliser. Prévenir la banque sans attendre. Garder les preuves et déposer plainte. Sécuriser les comptes. Apprendre le réflexe "raccrocher et rappeler".
 
-> Source : ANSSI alerte mars 2025 "Augmentation des fraudes par clonage vocal IA", Cybermalveillance.gouv.fr rapport annuel 2025.`,
+> Sources : ministère de l'Économie, « Deepfakes (hypertrucage) et arnaques à l'intelligence artificielle : comment les repérer et vous en protéger ? », novembre 2026. Ministère de l'Intérieur, Ma Sécurité, « Les arnaques utilisant l'intelligence artificielle (IA) », novembre 2026. Cybermalveillance.gouv.fr, fiche « La fraude au virement bancaire (FOVI) ou au faux ordre de virement ». FBI, alerte I-120324-PSA du 3 décembre 2024. Microsoft Research, VALL-E, janvier 2023. Gouvernement de Hong Kong, réponse au Conseil législatif du 26 juin 2024, et CNN, 16 mai 2024, au sujet d'Arup.`,
   },
 ];
