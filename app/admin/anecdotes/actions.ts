@@ -147,7 +147,7 @@ export async function seedAnecdotesIfEmpty() {
     return {
       ok: false,
       reason:
-        "Module commercial content-pro absent. Cette fonctionnalite n'est disponible que sur les instances avec un contrat commercial Humanix.",
+        "Module commercial content-pro absent. Cette fonctionnalité n'est disponible que sur les instances avec un contrat commercial Humanix.",
     };
   }
   if (!Array.isArray(ANECDOTES_SEED) || ANECDOTES_SEED.length === 0) {

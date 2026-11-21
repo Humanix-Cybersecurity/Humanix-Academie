@@ -390,7 +390,7 @@ export default function CertificatPage() {
                 <p className="font-bold mb-2">🧠 Format pédagogique éprouvé</p>
                 <p>
                   {CATALOGUE_CHIFFRES.modules} modules MDX experts, format 5-10
-                  minutes par semaine, scénarii français terrain, debriefs avec
+                  minutes par semaine, scénarii français terrain, débriefs avec
                   sources ANSSI/CNIL, quiz contre-intuitifs. Pas du e-learning
                   vidéo générique.
                 </p>

@@ -196,7 +196,7 @@ export default async function AdminDpoPage() {
 
       <AdminSection
         title="Vue d'ensemble · 90 derniers jours"
-        description="Activite RGPD globale du tenant. Source : AuditLog."
+        description="Activité RGPD globale du tenant. Source : AuditLog."
       >
         <ComplianceCounters counts={countsByAction} />
       </AdminSection>
@@ -221,8 +221,8 @@ export default async function AdminDpoPage() {
       </AdminSection>
 
       <AdminSection
-        title="Activite RGPD recente"
-        description={`${recent.length} derniere${recent.length > 1 ? "s" : ""} action${recent.length > 1 ? "s" : ""} sur les données personnelles`}
+        title="Activité RGPD récente"
+        description={`${recent.length} dernière${recent.length > 1 ? "s" : ""} action${recent.length > 1 ? "s" : ""} sur les données personnelles`}
         action={
           <Link
             href="/admin/audit"

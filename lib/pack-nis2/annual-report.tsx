@@ -197,7 +197,7 @@ function verdictLabel(score: number): string {
   if (score >= 80) return "Posture conforme NIS2 (robuste)";
   if (score >= 60) return "Posture en marche (plan a 6 mois)";
   if (score >= 40) return "Posture fragile (plan urgent)";
-  return "Posture insuffisante (action immediate requise)";
+  return "Posture insuffisante (action immédiate requise)";
 }
 
 export function AnnualReportPdf({ data }: { data: AnnualReportData }) {

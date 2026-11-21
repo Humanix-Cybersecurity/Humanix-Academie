@@ -127,7 +127,7 @@ export async function launchCampaign(
         ok: false,
         error: "list_not_found",
         message:
-          "Liste introuvable ou supprimee. Verifie sur /admin/phishing/lists.",
+          "Liste introuvable ou supprimée. Vérifie sur /admin/phishing/lists.",
       };
     }
 

@@ -97,12 +97,12 @@ export async function notifierFactureEmise(params: {
         `Date    : ${jour(params.emiseLe)}`,
         `Montant : ${montant} TTC`,
         ``,
-        `Elle se telecharge depuis votre console, au format PDF et au format`,
+        `Elle se télécharge depuis votre console, au format PDF et au format`,
         `Factur-X (XML) pour votre plateforme de facturation :`,
         lien,
         ``,
-        `Nous n'attachons pas la facture a ce message : elle reste derriere`,
-        `votre acces administrateur.`,
+        `Nous n'attachons pas la facture à ce message : elle reste derrière`,
+        `votre accès administrateur.`,
       ].join("\n"),
       // Transactionnel : ce mail n'est pas de la prospection, on ne peut pas
       // s'en desinscrire -- mais les en-tetes attendus par Gmail et Outlook

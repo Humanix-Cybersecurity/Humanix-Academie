@@ -635,7 +635,7 @@ function ArticleCard({
           <AudioPreviewButton
             text={`${article.title}. ${article.description}`}
             voice="fr_marie_neutral"
-            ariaLabel={`Apercu audio : ${article.title}`}
+            ariaLabel={`Aperçu audio : ${article.title}`}
             hoverLabel="Apercu"
           />
           <span

@@ -8,10 +8,10 @@ export default function LearnerEmptyState() {
         🌿
       </p>
       <h2 className="font-display text-xl font-bold text-primary-500 dark:text-accent-300 mb-2">
-        Ton voyage commencera bientot
+        Ton voyage commencera bientôt
       </h2>
       <p className="text-sm text-gray-600 dark:text-gray-300 max-w-md mx-auto">
-        Aucune saison n'est encore active pour ton entreprise. Demande a ta
+        Aucune saison n'est encore active pour ton entreprise. Demande à ta
         direction d'activer un module - c'est rapide.
       </p>
     </section>

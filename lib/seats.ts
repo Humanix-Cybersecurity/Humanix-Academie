@@ -114,7 +114,7 @@ export async function enforceSeatQuota(
  */
 export function formatSeatUsage(usage: SeatUsage): string {
   if (!Number.isFinite(usage.max)) {
-    return `${usage.used} sieges utilises (illimite)`;
+    return `${usage.used} sièges utilisés (illimité)`;
   }
-  return `${usage.used} / ${usage.max} sieges utilises (${usage.percent}%)`;
+  return `${usage.used} / ${usage.max} sièges utilisés (${usage.percent}%)`;
 }

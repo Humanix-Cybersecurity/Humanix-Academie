@@ -55,7 +55,7 @@ export default function WebhookTable({
     <div className="overflow-x-auto -mx-4 px-4">
       <table className="w-full border-collapse min-w-[800px]">
         <caption className="sr-only">
-          Webhooks configures pour ce tenant
+          Webhooks configurés pour ce tenant
         </caption>
         <thead>
           <tr className="text-left text-xs uppercase tracking-wide text-gray-600 dark:text-gray-300 border-b border-gray-200 dark:border-slate-700">

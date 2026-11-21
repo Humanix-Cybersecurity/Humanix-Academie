@@ -95,7 +95,7 @@ async function runScript(
   if (!cmd) {
     throw new Error(
       `${scriptRelPath} introuvable : ni dist-scripts/*.mjs (production), ` +
-        `ni tsx (developpement). Le script a-t-il ete ajoute a la liste ` +
+        `ni tsx (développement). Le script a-t-il été ajouté à la liste ` +
         `esbuild du Dockerfile ?`,
     );
   }

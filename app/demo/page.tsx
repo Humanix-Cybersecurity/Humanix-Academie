@@ -56,7 +56,7 @@ const ROLES: {
     id: "admin",
     emoji: "👔",
     title: "Dirigeant",
-    who: "Sophie · CEO PME Demo",
+    who: "Sophie · CEO PME Démo",
     description:
       "Console : tableau de bord, modules, utilisateurs, score de risque, rapport de conformité PDF.",
     email: "sophie@demo-pme.fr",

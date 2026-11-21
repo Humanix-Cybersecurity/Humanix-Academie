@@ -134,7 +134,7 @@ christine@masociete.fr,Christine Dubois,Compta,LEARNER,compta;direction`}
           <div className="overflow-x-auto bg-white border rounded-xl">
             <table className="w-full text-xs">
               <caption className="sr-only">
-                Apercu des donnees a importer depuis le CSV
+                Aperçu des données à importer depuis le CSV
               </caption>
               <thead className="bg-gray-50 text-gray-600">
                 <tr>

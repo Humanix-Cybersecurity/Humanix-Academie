@@ -153,7 +153,7 @@ export default function LuccaIntegrationPage() {
               <Row
                 lucca="department.name"
                 humanix="service (extension Humanix)"
-                notes="Mappe automatiquement sur Group SCIM"
+                notes="Mappé automatiquement sur Group SCIM"
               />
               <Row
                 lucca="isActive"

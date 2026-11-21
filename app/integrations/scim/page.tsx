@@ -241,12 +241,12 @@ export default function ScimDocPage() {
               <Row
                 scim={"urn:humanix:scim:schemas:extension:User:1.0:role"}
                 humanix="role"
-                notes="LEARNER (defaut) | MANAGER | ADMIN | SUPERADMIN"
+                notes="LEARNER (défaut) | MANAGER | ADMIN | SUPERADMIN"
               />
               <Row
                 scim={"urn:humanix:scim:schemas:extension:User:1.0:service"}
                 humanix="service"
-                notes="Libre (Compta, Direction, IT…) - mappe sur Group SCIM"
+                notes="Libre (Compta, Direction, IT…) - mappé sur Group SCIM"
               />
               <Row
                 scim="meta.created / meta.lastModified"
@@ -318,7 +318,7 @@ export default function ScimDocPage() {
             </span>
             <code>/scim/v2/Users/{"{id}"}</code>
             <span className="text-xs text-gray-500 ml-2">
-              (soft-delete par defaut, ?hard=true pour RGPD)
+              (soft-delete par défaut, ?hard=true pour RGPD)
             </span>
           </li>
           <li>

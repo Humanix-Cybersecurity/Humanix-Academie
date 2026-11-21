@@ -68,7 +68,7 @@ export async function getCommunityTenantOrThrow() {
   if (!tenant) {
     throw new Error(
       `[tenant-community] Tenant '${COMMUNITY_TENANT_SLUG}' absent en BDD. ` +
-        "Exécute `npm run db:seed` (le seed gère ce tenant en mode prod ET demo).",
+        "Exécute `npm run db:seed` (le seed gère ce tenant en mode prod ET démo).",
     );
   }
   return tenant;

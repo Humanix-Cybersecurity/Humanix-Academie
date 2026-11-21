@@ -15,7 +15,7 @@ const FEATURE_PITCH: Record<
     benefits: [
       "Récupère les données de progression dans ton SIEM, ton RSSI dashboard, ton MSP.",
       "Endpoints temps réel pour l'audit de conformité (NIS2, ANSSI).",
-      "Authentification par clés API hashées (SHA-256), revocation 1-clic.",
+      "Authentification par clés API hashées (SHA-256), révocation 1-clic.",
     ],
   },
   phishing: {

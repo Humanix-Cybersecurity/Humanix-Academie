@@ -502,7 +502,7 @@ export default function SecuritePage() {
           <div className="overflow-x-auto -mx-2 px-2 mt-3">
             <table className="w-full text-sm border-collapse">
               <caption className="sr-only">
-                Mesures de securite techniques de la plateforme
+                Mesures de sécurité techniques de la plateforme
               </caption>
               <thead>
                 <tr>

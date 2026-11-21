@@ -209,7 +209,7 @@ export default async function TenantDetailPage({
         </h2>
         <div className="overflow-x-auto bg-white dark:bg-slate-900 rounded-xl border border-gray-200 dark:border-slate-800">
           <table className="w-full text-sm">
-            <caption className="sr-only">Details du tenant selectionne</caption>
+            <caption className="sr-only">Détails du tenant sélectionné</caption>
             <thead className="text-left text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-slate-800">
               <tr>
                 <th className="px-4 py-2 text-xs">Email / Nom</th>
@@ -384,14 +384,14 @@ export default async function TenantDetailPage({
         </h2>
         <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
           Inviter de nouveaux admins natifs, accorder des memberships externes
-          (acces admin cross-tenant pour des SUPERADMIN), ou retirer des droits
-          existants. Chaque action est tracee dans le journal d&apos;audit.
+          (accès admin cross-tenant pour des SUPERADMIN), ou retirer des droits
+          existants. Chaque action est tracée dans le journal d&apos;audit.
         </p>
         <Link
           href={`/superadmin/tenants/${id}/admins`}
           className="btn-primary text-sm"
         >
-          Gerer les admins →
+          Gérer les admins →
         </Link>
       </section>
 

@@ -84,8 +84,8 @@ export default function ConsentControl() {
           Mesure d&apos;audience
         </p>
         <p className="text-sm text-gray-700 dark:text-gray-200 leading-relaxed">
-          🔒 Cette instance n&apos;active aucun traceur soumis a consentement.
-          Aucun cookie analytics, aucun appel reseau vers un tiers - rien a
+          🔒 Cette instance n&apos;active aucun traceur soumis à consentement.
+          Aucun cookie analytics, aucun appel réseau vers un tiers - rien à
           accepter ou refuser.
         </p>
       </div>

@@ -40,7 +40,7 @@ export function WebSiteJsonLd(): ReactElement {
     "@context": "https://schema.org",
     "@type": "WebSite",
     name: "Humanix Académie",
-    alternateName: ["Humanix Cybersecurity", "Humanix Academie"],
+    alternateName: ["Humanix Cybersecurity", "Humanix Académie"],
     url: SITE_URL,
     inLanguage: "fr-FR",
     publisher: {

@@ -10,7 +10,7 @@ import { auditLog, AuditActions, readIpFromHeaders } from "@/lib/audit";
 export async function GET() {
   const session = await auth();
   if (!session?.user) {
-    return NextResponse.json({ error: "Non authentifie." }, { status: 401 });
+    return NextResponse.json({ error: "Non authentifié." }, { status: 401 });
   }
   const userId = session.user.id as string;
 
@@ -118,7 +118,7 @@ export async function GET() {
     schemaVersion: 1,
     exportedAt: new Date().toISOString(),
     notice:
-      "Export RGPD article 20 (portabilite). Données personnelles stockees par Humanix Academie a propos de vous.",
+      "Export RGPD article 20 (portabilité). Données personnelles stockées par Humanix Académie à propos de vous.",
     profile: {
       id: user.id,
       email: user.email,

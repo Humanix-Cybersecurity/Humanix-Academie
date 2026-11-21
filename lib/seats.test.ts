@@ -171,7 +171,7 @@ describe("formatSeatUsage", () => {
         approaching: false,
         atLimit: false,
       }),
-    ).toBe("5 / 10 sieges utilises (50%)");
+    ).toBe("5 / 10 sièges utilisés (50%)");
   });
 
   it("format illimite pour Premium", () => {
@@ -186,6 +186,6 @@ describe("formatSeatUsage", () => {
         approaching: false,
         atLimit: false,
       }),
-    ).toBe("1000 sieges utilises (illimite)");
+    ).toBe("1000 sièges utilisés (illimité)");
   });
 });

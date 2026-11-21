@@ -37,7 +37,7 @@ type Props = {
 export default function AudioPreviewButton({
   text,
   voice,
-  ariaLabel = "Apercu audio",
+  ariaLabel = "Aperçu audio",
   hoverLabel = "Apercu",
   className = "",
   stopPropagation = true,

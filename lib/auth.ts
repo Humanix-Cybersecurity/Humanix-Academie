@@ -115,7 +115,7 @@ if (isDemoMode) {
   providers.push(
     Credentials({
       id: "demo",
-      name: "Demo",
+      name: "Démo",
       credentials: { email: { label: "Email", type: "email" } },
       async authorize(credentials: any) {
         const email = credentials?.email as string | undefined;
@@ -331,7 +331,7 @@ if (!isDemoMode) {
   providers.push(
     Credentials({
       id: "webauthn",
-      name: "Cle de securite",
+      name: "Clé de sécurité",
       credentials: {
         email: { label: "Email", type: "email" },
         // Le token "fresh-auth" recu via cookie HTTPOnly est lu cote
