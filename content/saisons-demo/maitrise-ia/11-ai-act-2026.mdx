@@ -1,0 +1,124 @@
+---
+title: "AI Act 2026 : ce qui change pour ton équipe"
+durationMinutes: 8
+persona: "tous"
+objective: "Savoir ce que le règlement européen sur l'IA demande réellement à une équipe qui utilise des outils d'IA, et à quelles dates"
+xpReward: 90
+scenario: |
+  Lundi matin, réunion d'équipe dans une PME de services. Trois idées sont sur la table :
+
+  - Karim, au support, voudrait un outil qui analyse la voix des personnes au téléphone pour « mesurer leur stress et leur motivation » ;
+  - les ressources humaines regardent un logiciel qui trie automatiquement les candidatures ;
+  - le marketing veut un agent conversationnel sur le site, présenté comme « Léa, conseillère », sans dire qu'il s'agit d'une IA.
+
+  Quelqu'un tranche : « De toute façon, l'AI Act, c'est pour les géants américains, et ça ne commence qu'en 2027. »
+
+  Quelle réponse est juste ?
+choices:
+  - id: "a"
+    label: "C'est vrai : le règlement ne vise que ceux qui fabriquent les modèles"
+    outcome: "bad"
+    feedback: "Non. Le règlement vise aussi les « déployeurs » : toute organisation qui utilise un système d'IA dans un cadre professionnel. Une PME qui installe un outil de tri de candidatures est concernée."
+    points: -10
+  - id: "b"
+    label: "Les trois projets sont possibles, à condition de prévenir le personnel"
+    outcome: "bad"
+    feedback: "Pas le premier. Déduire les émotions d'une personne sur son lieu de travail est interdit depuis le 2 février 2025, sauf raisons médicales ou de sécurité. Prévenir ne suffit pas."
+    points: -10
+  - id: "c"
+    label: "Le premier est interdit, le deuxième est « à haut risque », le troisième doit dire qu'il est une IA"
+    outcome: "good"
+    feedback: "Exactement. Trois projets, trois régimes : une pratique interdite, un système à haut risque dont les obligations arrivent le 2 décembre 2027, et une règle de transparence qui s'applique déjà."
+    points: 30
+  - id: "d"
+    label: "Les trois sont interdits : l'Europe interdit l'IA au travail"
+    outcome: "bad"
+    feedback: "Non. Le règlement n'interdit que quelques pratiques précises. La plupart des usages restent libres, et certains sont encadrés."
+    points: -10
+licence: "CC BY-SA 4.0 - Humanix Académie Community Edition"
+debrief: |
+  Le règlement européen sur l'IA (règlement (UE) 2024/1689, souvent appelé « AI Act ») ne raisonne pas par taille d'entreprise. Il raisonne par **rôle** et par **niveau de risque**.
+
+  ## Ton organisation est sans doute « déployeur »
+
+  Le **fournisseur** met un système d'IA sur le marché. Le **déployeur** l'utilise sous sa propre autorité, dans un cadre professionnel. Installer un outil suffit : pas besoin de fabriquer un modèle pour être concerné.
+
+  ## Quatre niveaux de risque
+
+  | Niveau | Exemples | Ce que dit le règlement |
+  |---|---|---|
+  | Interdit | Déduire les émotions au travail, notation sociale | Interdit depuis le 2 février 2025 |
+  | Haut risque | Tri de candidatures, évaluation du personnel | Obligations à partir du 2 décembre 2027 |
+  | Transparence | Agent conversationnel, hypertrucage | Informer les personnes, depuis le 2 août 2026 |
+  | Risque minimal | Correcteur, traduction, résumé | Pas d'obligation propre à l'outil |
+
+  ## Le calendrier réel
+
+  Il a changé en juillet 2026 : un règlement modificatif (règlement (UE) 2026/1744) a repoussé les règles du haut risque.
+
+  - **2 février 2025** : pratiques interdites, et maîtrise de l'IA (article 4).
+  - **2 août 2025** : règles pour les modèles d'IA à usage général, celles qui pèsent sur les fournisseurs des grands modèles.
+  - **2 août 2026** : application générale, dont les règles de transparence (article 50).
+  - **2 décembre 2026** : nouvelles interdictions, dont la génération d'images sexuelles d'une personne identifiable sans son consentement.
+  - **2 décembre 2027** : systèmes à haut risque de l'annexe III (emploi, éducation, accès au crédit…). La date d'origine était le 2 août 2026.
+  - **2 août 2028** : IA intégrée à des produits déjà réglementés (machines, dispositifs médicaux…).
+
+  ## Ce que ça demande à ton équipe
+
+  1. **Savoir quels outils d'IA vous utilisez**, et pour quoi faire. Sans cette liste, impossible de dire dans quelle case on se trouve.
+  2. **Se former.** Fournisseurs et déployeurs doivent prendre des mesures pour développer la maîtrise de l'IA de leur personnel. Depuis juillet 2026, le texte précise qu'il s'agit de favoriser cette maîtrise, sans garantir un niveau donné pour chaque personne.
+  3. **Écarter les pratiques interdites**, comme déduire les émotions d'une personne sur son lieu de travail.
+  4. **Dire quand c'est une IA.** Un agent conversationnel doit faire savoir aux personnes qu'elles parlent à une IA, sauf si c'est évident : c'est une obligation de conception pour son fournisseur. Et qui produit un hypertrucage (image, son ou vidéo) avec un outil d'IA doit indiquer qu'il a été généré ou manipulé par une IA.
+  5. **Haut risque : se préparer sans attendre.** À partir du 2 décembre 2027, le déployeur d'un système de tri de candidatures ou d'évaluation du personnel devra suivre la notice, confier le contrôle humain à des personnes compétentes qui ont l'autorité pour agir, conserver les journaux au moins six mois, et informer les représentants du personnel et les personnes concernées avant la mise en service. Un système déjà en service à cette date n'y est soumis que s'il est ensuite modifié de façon importante.
+
+  ## Les sanctions
+
+  Le règlement prévoit jusqu'à 35 millions d'euros ou 7 % du chiffre d'affaires mondial pour une pratique interdite, et jusqu'à 15 millions ou 3 % pour les obligations des déployeurs et les règles de transparence. Pour une PME, le plafond est le plus faible des deux montants, et non le plus élevé.
+
+  En France, la loi qui doit désigner les autorités de contrôle était encore en discussion au Parlement en novembre 2026.
+
+  ## Trois idées reçues
+
+  - **« C'est pour les géants. »** Non : les organisations qui utilisent l'IA sont visées aussi.
+  - **« Ça ne commence qu'en 2027. »** Non : les interdictions s'appliquent depuis 2025, la transparence depuis août 2026.
+  - **« Les obligations dépendent de la taille. »** Non : elles dépendent du rôle et du risque. Les PME ont des amendes plafonnées plus bas et un accompagnement prévu par le texte.
+
+  > **Sources** : règlement (UE) 2024/1689 du 13 juin 2024, articles 3, 4, 5, 26, 50, 99 et 113, et annexe III. Règlement (UE) 2026/1744 du 8 juillet 2026, Journal officiel de l'Union européenne du 24 juillet 2026. Textes lus le 20 novembre 2026.
+quiz:
+  - question: "Qui est « déployeur » au sens du règlement ?"
+    choices:
+      - id: "a"
+        label: "L'entreprise qui fabrique un modèle d'IA"
+        correct: false
+      - id: "b"
+        label: "Toute organisation qui utilise un système d'IA dans un cadre professionnel"
+        correct: true
+      - id: "c"
+        label: "Seulement les entreprises de plus de 250 personnes"
+        correct: false
+    explanation: "Le règlement ne fixe pas de seuil de taille. Utiliser un système d'IA sous sa propre autorité, dans un cadre professionnel, suffit."
+  - question: "Depuis quand est-il interdit de déduire les émotions d'une personne sur son lieu de travail ?"
+    choices:
+      - id: "a"
+        label: "Depuis le 2 février 2025"
+        correct: true
+      - id: "b"
+        label: "Depuis le 2 août 2026"
+        correct: false
+      - id: "c"
+        label: "À partir du 2 décembre 2027"
+        correct: false
+    explanation: "Les pratiques interdites sont la première partie du règlement à s'être appliquée. Seules des raisons médicales ou de sécurité font exception."
+  - question: "Quand s'appliquent les obligations du haut risque pour un outil de tri de candidatures ?"
+    choices:
+      - id: "a"
+        label: "Depuis le 2 août 2026"
+        correct: false
+      - id: "b"
+        label: "Jamais pour une PME"
+        correct: false
+      - id: "c"
+        label: "À partir du 2 décembre 2027"
+        correct: true
+    explanation: "La date d'origine était le 2 août 2026. Le règlement modificatif de juillet 2026 l'a repoussée au 2 décembre 2027, pour toutes les tailles d'organisation."
+---

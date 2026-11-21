@@ -1,0 +1,100 @@
+---
+title: "Le piège de l'autorité textuelle"
+durationMinutes: 5
+persona: "tous"
+objective: "Comprendre pourquoi un texte fluide et sûr de lui paraît vrai, et quels réflexes lui opposer"
+xpReward: 40
+scenario: |
+  Inès tient le service client d'un magasin de literie. Un client lui demande par courriel s'il peut encore renvoyer un matelas acheté en ligne il y a trois semaines. Inès pose la question à l'assistant IA qui l'aide à rédiger ses réponses.
+
+  La réponse arrive en dix secondes : trois paragraphes impeccables, un ton posé, un délai annoncé au jour près et même un numéro d'article de loi. Rien n'hésite, rien ne dépasse.
+
+  Inès connaît mal le sujet, mais elle se dit que « ça a l'air carré ». Elle s'apprête à coller le texte dans sa réponse au client.
+
+  Que fait-elle ?
+choices:
+  - id: "a"
+    label: "Elle envoie : une réponse aussi précise et aussi bien écrite ne s'invente pas"
+    outcome: "bad"
+    feedback: "C'est exactement le piège. L'aisance et la précision d'un texte ne disent rien de son exactitude : un modèle de langage écrit avec la même assurance quand il a raison et quand il se trompe."
+    points: -10
+  - id: "b"
+    label: "Elle demande à l'assistant « Tu es sûr ? » et envoie s'il confirme"
+    outcome: "bad"
+    feedback: "Sa confirmation ne prouve rien. Il peut maintenir une erreur avec le même aplomb, ou renier une bonne réponse. On ne vérifie pas une source en lui reposant la question."
+    points: -10
+  - id: "c"
+    label: "Elle vérifie le délai et l'article sur une source officielle avant d'écrire au client"
+    outcome: "good"
+    feedback: "C'est le bon réflexe. Ce qui se vérifie (un délai, une référence) se vérifie à la source. Deux minutes suffisent, et c'est elle qui signe la réponse."
+    points: 30
+  - id: "d"
+    label: "Elle adoucit le texte (« il me semble que… ») et envoie"
+    outcome: "bad"
+    feedback: "Retirer de l'assurance à une phrase ne la rend pas plus exacte. Le client lira quand même un délai, et s'y fiera."
+    points: -5
+licence: "CC BY-SA 4.0 - Humanix Académie Community Edition"
+debrief: |
+  Un texte peut être **faux et très bien écrit**. Avec l'IA générative, c'est même le cas habituel quand elle se trompe : la forme reste impeccable.
+
+  ## Pourquoi on y croit
+
+  Trois mécanismes se cumulent :
+
+  - **La fluidité.** Ce qui se lit facilement nous paraît plus vrai. L'effet est connu depuis longtemps en psychologie : dans une expérience classique, la même affirmation était plus souvent jugée vraie quand elle était simplement plus lisible.
+  - **La précision apparente.** Un chiffre, une date, un numéro d'article ressemblent à des preuves. Pour un modèle de langage, ce sont des mots comme les autres : il les produit aussi facilement que le reste.
+  - **La confiance dans la machine.** On a tendance à suivre ce que propose un système automatique au lieu de chercher par soi-même. Les chercheurs appellent cela le **biais d'automatisation**.
+
+  ## Ce que le ton ne dit pas
+
+  Un modèle de langage n'exprime pas ses doutes par son ton. Il écrit avec la **même assurance** quand il a raison et quand il se trompe. L'aplomb n'est donc pas un indice.
+
+  Une enquête publiée en 2025 auprès de 319 personnes qui utilisent l'IA générative au travail va dans ce sens : une plus grande confiance dans l'outil va de pair avec moins d'esprit critique, et une plus grande confiance dans ses propres compétences avec davantage d'esprit critique. Ce sont des déclarations, et l'enquête montre une association, pas une cause.
+
+  ## Trois réflexes
+
+  1. **Sépare la forme du fond.** Demande-toi : « Si c'était écrit maladroitement, est-ce que j'y croirais ? »
+  2. **Repère ce qui se vérifie** (chiffres, dates, références, noms) et vérifie-le à la source, pas auprès de l'outil.
+  3. **Méfie-toi surtout quand tu connais mal le sujet.** C'est là que le texte te convainc le plus, et là que tu peux le moins repérer l'erreur.
+
+  **À retenir :** « Tu es sûr ? » n'est pas une vérification. L'outil peut confirmer une erreur ou renier une bonne réponse, sur le même ton.
+
+  > **Sources** : Reber et Schwarz, « Effects of Perceptual Fluency on Judgments of Truth », Consciousness and Cognition, 1999. Goddard, Roudsari et Wyatt, « Automation bias: a systematic review of frequency, effect mediators, and mitigators », Journal of the American Medical Informatics Association, 2012. Lee et al. (Microsoft Research et Carnegie Mellon), « The Impact of Generative AI on Critical Thinking », CHI 2025.
+quiz:
+  - question: "Pourquoi un texte fluide paraît-il plus vrai ?"
+    choices:
+      - id: "a"
+        label: "Parce qu'il a forcément été relu par quelqu'un"
+        correct: false
+      - id: "b"
+        label: "Parce que ce qui se lit facilement est plus souvent jugé vrai, sans rapport avec son exactitude"
+        correct: true
+      - id: "c"
+        label: "Parce qu'une IA signale ses doutes par des hésitations dans le texte"
+        correct: false
+    explanation: "La facilité de lecture joue sur notre jugement, pas sur les faits. Et un modèle de langage n'hésite pas à l'écrit quand il se trompe."
+  - question: "Que prouve la réponse de l'assistant à « Tu es sûr ? » ?"
+    choices:
+      - id: "a"
+        label: "Rien : il peut confirmer une erreur avec le même aplomb"
+        correct: true
+      - id: "b"
+        label: "Qu'il a vérifié sa réponse"
+        correct: false
+      - id: "c"
+        label: "Qu'il a consulté une source officielle"
+        correct: false
+    explanation: "Reposer la question à la même source n'est pas une vérification. Il faut une source indépendante, et de préférence l'original."
+  - question: "Quand le risque de se laisser convaincre est-il le plus grand ?"
+    choices:
+      - id: "a"
+        label: "Sur un sujet qu'on maîtrise"
+        correct: false
+      - id: "b"
+        label: "Quand la réponse est très courte"
+        correct: false
+      - id: "c"
+        label: "Sur un sujet qu'on connaît mal"
+        correct: true
+    explanation: "Sans repères, on juge le texte sur sa forme. C'est précisément là qu'il faut vérifier ce qui peut l'être."
+---

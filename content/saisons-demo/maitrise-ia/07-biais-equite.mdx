@@ -1,0 +1,103 @@
+---
+title: "Biais & équité : quand un LLM exclut sans le voir"
+durationMinutes: 6
+persona: "tous"
+objective: "Comprendre d'où viennent les biais d'un modèle de langage et comment éviter qu'un tri automatique écarte des personnes à tort"
+xpReward: 60
+scenario: |
+  Samir dirige une agence de douze personnes et recrute quelqu'un pour l'accueil. Quatre-vingts candidatures sont arrivées en une semaine, et il a deux heures devant lui. Son idée : coller les CV dans un assistant IA et lui demander « les dix meilleurs profils ».
+
+  La réponse tombe en une minute : dix noms, chacun suivi de trois lignes de justification très raisonnables.
+
+  Aurélie, qui travaille avec lui, parcourt la liste : « C'est curieux, ils se ressemblent presque tous. »
+
+  Que devrait faire Samir ?
+choices:
+  - id: "a"
+    label: "Garder la liste : une IA n'a pas de préjugés, elle est plus neutre qu'une personne"
+    outcome: "bad"
+    feedback: "Un modèle apprend sur des textes et des décisions du passé, avec leurs déséquilibres. Il peut les reproduire sous une apparence de neutralité, et c'est ce qui rend le biais difficile à voir."
+    points: -10
+  - id: "b"
+    label: "Demander à l'assistant d'expliquer son classement, pour s'assurer qu'il n'est pas biaisé"
+    outcome: "bad"
+    feedback: "Les justifications sont écrites après coup et paraîtront toujours raisonnables. Elles ne disent pas ce qui a réellement pesé dans le classement."
+    points: -10
+  - id: "c"
+    label: "Repartir des critères du poste, écrits avant de lire les CV, appliquer la même grille à toutes les candidatures et décider lui-même"
+    outcome: "good"
+    feedback: "C'est la méthode qui tient : des critères liés au poste, les mêmes pour tout le monde, et une décision prise et assumée par une personne. L'IA peut aider à rédiger la grille, pas à écarter quelqu'un."
+    points: 30
+  - id: "d"
+    label: "Retirer les noms et les photos, puis redemander le classement"
+    outcome: "neutral"
+    feedback: "La précaution est utile, mais elle ne suffit pas : l'adresse, l'école ou le parcours peuvent porter la même information. Et quatre-vingts CV dans un outil grand public, ce sont des données personnelles qui sortent."
+    points: 10
+licence: "CC BY-SA 4.0 - Humanix Académie Community Edition"
+debrief: |
+  Un modèle de langage n'a pas d'intention. Mais il a appris sur des textes et des décisions du passé, et il en reproduit les déséquilibres.
+
+  ## Deux exemples documentés
+
+  - **Amazon, 2018.** L'agence Reuters révèle qu'Amazon a abandonné un outil de tri de CV développé depuis 2014. Entraîné sur dix ans de candidatures, en majorité masculines, il pénalisait les CV contenant le mot « women's ».
+  - **Université de Washington, 2024.** Deux chercheuses font classer plus de 550 CV réels par trois modèles de langage, en ne faisant varier que les prénoms. Les prénoms associés à des personnes blanches sont préférés dans 85 % des cas, ceux associés à des personnes noires dans 9 %. Les prénoms masculins sont préférés dans 52 % des cas, les prénoms féminins dans 11 %.
+
+  ## Pourquoi on ne le voit pas
+
+  - Chaque classement, pris seul, paraît raisonnable. Le biais n'apparaît que sur un grand nombre de cas.
+  - Les explications fournies par l'outil sont écrites après coup. Elles sont plausibles, pas probantes.
+  - Retirer le nom ne suffit pas : d'autres éléments du CV portent la même information.
+
+  ## Ce que dit le cadre
+
+  - **La discrimination à l'embauche est interdite par la loi**, que la décision passe ou non par un outil. En 2020, le Défenseur des droits et la CNIL rappelaient que les organisations qui utilisent des algorithmes ne peuvent pas s'abriter derrière l'opacité des systèmes.
+  - **Le RGPD** donne à chaque personne le droit de ne pas faire l'objet d'une décision fondée exclusivement sur un traitement automatisé, lorsque cette décision l'affecte de manière significative.
+  - **Le règlement européen sur l'IA** classe à haut risque les systèmes destinés à analyser et à filtrer les candidatures. Les obligations correspondantes s'appliquent à partir du 2 décembre 2027 (épisode 11).
+
+  ## Les bons réflexes
+
+  1. **Écris les critères avant de lire les candidatures**, à partir du poste et de rien d'autre.
+  2. **Applique la même grille à tout le monde**, et garde une trace de ce qui a motivé chaque choix.
+  3. **L'IA n'écarte personne.** Elle peut aider à rédiger une offre ou une grille. La décision se prend et s'assume par une personne.
+  4. **Fais le test du prénom** quand un outil t'aide à comparer : change le prénom, garde le reste. Si le résultat bouge, tu as ta réponse.
+  5. **Pas de CV dans un outil grand public** : ce sont des données personnelles (épisode 04).
+
+  > **Sources** : Reuters, 10 octobre 2018, au sujet d'Amazon. Université de Washington, communiqué du 31 octobre 2024 (Wilson et Caliskan). Défenseur des droits et CNIL, « Algorithmes : prévenir l'automatisation des discriminations », 2020. RGPD, article 22. Règlement (UE) 2024/1689, annexe III, point 4.
+quiz:
+  - question: "D'où vient le biais d'un modèle de langage ?"
+    choices:
+      - id: "a"
+        label: "D'une intention de ses concepteurs"
+        correct: false
+      - id: "b"
+        label: "Des données du passé sur lesquelles il a appris"
+        correct: true
+      - id: "c"
+        label: "D'un mauvais réglage de l'ordinateur"
+        correct: false
+    explanation: "Le modèle reproduit les régularités de ses données d'entraînement, déséquilibres compris. Personne n'a besoin de l'avoir voulu."
+  - question: "Que prouve une justification raisonnable fournie par l'outil ?"
+    choices:
+      - id: "a"
+        label: "Que le classement est équitable"
+        correct: false
+      - id: "b"
+        label: "Qu'une personne a relu le résultat"
+        correct: false
+      - id: "c"
+        label: "Rien : elle est écrite après coup"
+        correct: true
+    explanation: "Une explication plausible n'est pas une preuve. Le biais se mesure sur un grand nombre de cas, pas dans le commentaire d'un seul."
+  - question: "Quelle pratique protège le mieux d'un tri biaisé ?"
+    choices:
+      - id: "a"
+        label: "Des critères écrits à l'avance, la même grille pour tout le monde et une décision humaine"
+        correct: true
+      - id: "b"
+        label: "Demander deux fois le classement à l'outil"
+        correct: false
+      - id: "c"
+        label: "Utiliser un outil plus récent"
+        correct: false
+    explanation: "Les critères fixés avant la lecture et appliqués à tout le monde limitent les biais, ceux de l'outil comme les nôtres."
+---

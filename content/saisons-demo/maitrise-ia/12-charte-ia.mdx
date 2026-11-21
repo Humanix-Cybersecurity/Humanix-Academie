@@ -1,0 +1,104 @@
+---
+title: "Bâtir une charte IA pour ton entreprise"
+durationMinutes: 7
+persona: "tous"
+objective: "Savoir ce qu'une charte d'usage de l'IA doit contenir, et par quelle démarche l'écrire pour qu'elle soit réellement suivie"
+xpReward: 60
+scenario: |
+  Deux alertes en un mois : un contrat client collé dans un assistant grand public, puis un chiffre inventé parti dans un devis. La direction d'une entreprise de soixante personnes demande à Julien, responsable administratif, de « faire une charte IA pour la fin du mois ».
+
+  Julien a quatre idées sur son bureau.
+
+  Laquelle retenir ?
+choices:
+  - id: "a"
+    label: "Télécharger un modèle de douze pages, remplacer le nom de l'entreprise et le diffuser"
+    outcome: "bad"
+    feedback: "Une charte que personne ici n'a écrite ne parlera à personne. Elle ne répond pas aux usages réels de l'équipe, et un texte ignoré protège mal."
+    points: -10
+  - id: "b"
+    label: "Interdire tout usage de l'IA jusqu'à nouvel ordre"
+    outcome: "bad"
+    feedback: "Une interdiction sans solution de rechange ne supprime pas l'usage, elle le rend invisible (épisode 05). Et l'entreprise se prive de ce que l'outil apporte quand il est bien employé."
+    points: -10
+  - id: "c"
+    label: "Recenser d'abord les usages réels avec les équipes, puis écrire une page de règles claires et la présenter aux représentants du personnel"
+    outcome: "good"
+    feedback: "C'est la bonne démarche : partir de ce qui se fait vraiment, fixer peu de règles mais nettes, associer les personnes concernées. Une page lue vaut mieux que douze pages ignorées."
+    points: 30
+  - id: "d"
+    label: "Demander à un assistant IA de rédiger la charte, et la diffuser telle quelle"
+    outcome: "bad"
+    feedback: "L'outil peut aider à mettre en forme, pas à décider ce qui est permis chez vous. Diffuser sans le relire un texte qui demande de tout relire, c'est mal commencer."
+    points: -5
+licence: "CC BY-SA 4.0 - Humanix Académie Community Edition"
+debrief: |
+  Une charte IA n'est pas un règlement de plus. C'est la réponse écrite à trois questions que tout le monde se pose : **quels outils, avec quelles données, et qui vérifie ?**
+
+  ## Ce que disent les sources publiques
+
+  - La **CNIL** recommande d'encadrer l'usage de l'IA générative par des politiques ou des chartes internes qui définissent clairement les usages autorisés et les usages interdits, et de former les personnes concernées.
+  - **France Num** rappelle qu'une charte informatique n'est pas obligatoire, et conseille d'y intégrer les règles sur l'IA plutôt que de créer un document à part.
+  - Le **règlement européen sur l'IA** demande aux organisations de prendre des mesures pour développer la maîtrise de l'IA de leur personnel (épisode 11). Une charte expliquée y contribue.
+
+  ## Les cinq rubriques
+
+  1. **Les outils autorisés.** Lesquels, avec quels comptes, et comment en demander un nouveau.
+  2. **Les données.** Ce qui peut être saisi, et ce qui ne l'est jamais sans autorisation : données personnelles, données de clients, informations confidentielles, mots de passe.
+  3. **La vérification.** Tout résultat est relu. Ce qui engage (faits, chiffres, promesses) est validé par une personne avant toute décision ou communication importante.
+  4. **La transparence.** Dans quels cas on signale qu'un contenu a été produit avec l'IA.
+  5. **Les responsabilités.** Qui valide, à qui s'adresser, que faire en cas d'erreur ou de fuite.
+
+  Pour la rubrique des données, le guide de l'État pour ses agents propose un test simple : « Pourrais-je publier cette information sur un site ouvert à tout le monde ? » Si la réponse est non, elle n'entre pas dans un outil grand public.
+
+  ## La démarche
+
+  1. **Recenser les usages réels**, sans chercher de coupable. On n'encadre que ce qu'on connaît.
+  2. **Écrire court.** Une page, avec des exemples tirés du quotidien de l'équipe.
+  3. **Associer les personnes concernées**, et les représentants du personnel quand il y en a.
+  4. **Expliquer et former.** Une charte envoyée par courriel ne change rien toute seule.
+  5. **Réviser.** Les outils changent vite : une relecture régulière, par exemple deux fois par an.
+
+  ## Pour qu'elle s'impose vraiment
+
+  Une charte peut rester un guide de bonnes pratiques. Si elle doit pouvoir fonder une sanction, elle suit la procédure du règlement intérieur : avis du comité social et économique, publicité, transmission à l'inspection du travail. L'annexer au règlement intérieur est la voie que citent la CNIL et l'ANSSI ; l'ANSSI décrit aussi l'acceptation de la charte par chaque personne. C'est un point à voir avec qui suit le droit du travail dans l'entreprise.
+
+  > **Sources** : CNIL, « Comment déployer une IA générative ? » et questions-réponses, 18 juillet 2024. France Num, « Charte informatique : un outil indispensable pour encadrer les usages numériques dans une TPE PME », 2026. DINUM, « Guide d'usage de l'IA pour les agents publics de l'État », juin 2026. ANSSI, « Charte d'utilisation des moyens informatiques et des outils numériques », 2017. Code du travail, articles L. 1321-4 et L. 1321-5. Règlement (UE) 2024/1689, article 4.
+quiz:
+  - question: "Par quoi commencer pour écrire une charte IA ?"
+    choices:
+      - id: "a"
+        label: "Par un modèle trouvé en ligne"
+        correct: false
+      - id: "b"
+        label: "Par le recensement des usages réels"
+        correct: true
+      - id: "c"
+        label: "Par la liste des sanctions"
+        correct: false
+    explanation: "On n'encadre que ce qu'on connaît. Les règles utiles sortent de ce que l'équipe fait vraiment avec ces outils."
+  - question: "Quelle question aide à savoir si une information peut entrer dans un outil grand public ?"
+    choices:
+      - id: "a"
+        label: "« Le document est-il long ? »"
+        correct: false
+      - id: "b"
+        label: "« L'outil répond-il vite ? »"
+        correct: false
+      - id: "c"
+        label: "« Pourrais-je la publier sur un site ouvert à tout le monde ? »"
+        correct: true
+    explanation: "Si l'information ne peut pas être rendue publique, elle n'a rien à faire dans un service que l'entreprise ne maîtrise pas."
+  - question: "Une charte IA est-elle obligatoire ?"
+    choices:
+      - id: "a"
+        label: "Non, mais elle est recommandée pour fixer les usages autorisés et interdits"
+        correct: true
+      - id: "b"
+        label: "Oui, depuis le règlement européen sur l'IA"
+        correct: false
+      - id: "c"
+        label: "Oui, à partir de dix personnes"
+        correct: false
+    explanation: "Aucun texte n'impose une charte. La CNIL la recommande, et c'est un moyen simple de dire à chaque personne ce qu'elle peut faire."
+---

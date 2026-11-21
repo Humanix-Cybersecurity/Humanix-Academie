@@ -1,0 +1,112 @@
+---
+title: "Deepfakes vocaux : 3 secondes d'audio suffisent"
+durationMinutes: 7
+persona: "tous"
+objective: "Comprendre qu'une voix connue ne prouve plus une identité, et appliquer la parade qui tient : changer de canal et suivre la procédure"
+xpReward: 60
+scenario: |
+  Jeudi, 17 h 40. Hugo tient la comptabilité d'une entreprise de transport de quarante personnes. Son téléphone sonne : numéro masqué. Il reconnaît tout de suite la voix de Claire, la dirigeante, en déplacement à l'étranger.
+
+  « Hugo, j'ai besoin de toi. On signe un rachat ce soir, c'est confidentiel. Il faut virer 38 000 euros d'acompte avant 18 h, je t'envoie le RIB par message. Je compte sur toi, n'en parle à personne. »
+
+  La voix est bien la sienne : le timbre, le débit, jusqu'à sa façon de dire « je compte sur toi ». Le message avec le RIB arrive dans la minute.
+
+  Que fait Hugo ?
+choices:
+  - id: "a"
+    label: "Il fait le virement : il a reconnu la voix, il n'y a pas de doute"
+    outcome: "bad"
+    feedback: "Reconnaître une voix ne prouve plus rien. Quelques secondes d'enregistrement peuvent suffire à l'imiter, et une personne qui dirige une entreprise en laisse partout : messagerie vocale, vidéos, interventions publiques."
+    points: -10
+  - id: "b"
+    label: "Il pose une question personnelle pour s'assurer que c'est bien elle"
+    outcome: "neutral"
+    feedback: "L'idée est saine, mais fragile : beaucoup de réponses se trouvent en ligne, et sous pression on accepte une réponse approximative. Mieux vaut sortir de l'appel."
+    points: 10
+  - id: "c"
+    label: "Il raccroche, rappelle Claire au numéro qu'il connaît, et applique la double validation prévue pour tout virement"
+    outcome: "good"
+    feedback: "C'est la bonne parade : changer de canal et suivre la procédure, même quand la demande vient d'en haut. Une vraie demande supporte dix minutes de vérification ; un escroc insiste."
+    points: 30
+  - id: "d"
+    label: "Il demande une confirmation écrite au numéro qui vient d'envoyer le RIB"
+    outcome: "bad"
+    feedback: "Ce numéro appartient à la personne qui appelle. Lui demander de confirmer, c'est demander à l'escroc de se valider lui-même."
+    points: -10
+licence: "CC BY-SA 4.0 - Humanix Académie Community Edition"
+debrief: |
+  Une voix connue n'est plus une preuve d'identité.
+
+  ## D'où vient « 3 secondes »
+
+  - En janvier 2023, une équipe de recherche de Microsoft présente VALL-E, un modèle capable d'imiter une voix à partir d'un enregistrement de **3 secondes**.
+  - La même année, l'éditeur McAfee rapporte avoir obtenu, dans l'un de ses essais et selon sa propre évaluation, un clone ressemblant à 85 % à l'original avec 3 secondes d'audio.
+
+  Ce sont des résultats d'essais : la ressemblance dépend de la qualité de l'enregistrement et s'améliore avec sa durée. Mais l'ordre de grandeur est là. Un message vocal, une vidéo ou un webinaire peuvent servir de matière première.
+
+  ## Trois affaires documentées
+
+  - **2019, Royaume-Uni.** Le directeur d'une société d'énergie croit entendre au téléphone son supérieur, à la tête de la maison mère allemande, et vire 220 000 euros vers un compte en Hongrie. Selon l'assureur de la société, qui a rapporté l'affaire, la voix était imitée par un logiciel ; l'appel n'a pas été enregistré.
+  - **2024, Hong Kong.** Après un courriel d'hameçonnage, une personne du groupe d'ingénierie Arup rejoint une visioconférence où apparaissent la direction financière et des collègues. Selon les autorités de Hong Kong, la séquence était préenregistrée, fabriquée à partir de vidéos et de voix publiques. Quinze virements suivent, pour quelque 200 millions de dollars de Hong Kong, soit environ 25 millions de dollars américains. Arup a confirmé en mai 2024 être l'entreprise visée.
+  - **2025, France.** La DGSI rapporte une tentative contre un groupe français : en visioconférence, une personne qui a le visage et la voix du dirigeant demande rapidement un transfert de fonds, pour un prétendu projet d'acquisition. Surprise par cette demande inhabituelle, la personne responsable du site coupe l'échange et alerte sa direction par les canaux habituels. La tentative échoue.
+
+  ## Ce qui ne change pas : le scénario
+
+  La technique est nouvelle, le scénario est celui de la fraude au président. Les mêmes signaux reviennent :
+
+  - **l'urgence** (« avant 18 h ») ;
+  - **le secret** (« n'en parle à personne ») ;
+  - **un bénéficiaire inconnu** ou un changement de coordonnées bancaires ;
+  - **un canal inhabituel** (numéro masqué, messagerie personnelle).
+
+  ## La parade : une procédure, pas une oreille
+
+  Personne ne peut garantir de reconnaître une voix truquée. Ce qui protège, c'est une règle appliquée à tout le monde, tout le temps :
+
+  1. **Le contre-appel.** On raccroche et on rappelle la personne à son numéro habituel, jamais à celui qui vient d'appeler.
+  2. **La double validation.** Aucun virement inhabituel ne part sur la décision d'une seule personne. Cybermalveillance.gouv.fr recommande une procédure de vérification et de validation hiérarchique « non dérogeable ».
+  3. **Le mot de code.** Le ministère de l'Économie conseille de convenir d'un « mot de sécurité » connu de vous seuls, à demander en cas de doute lors d'un appel urgent. Le FBI donne le même conseil aux familles. L'idée vaut aussi dans une petite équipe.
+
+  ## Si le virement est parti
+
+  Préviens ta banque tout de suite et demande le retour des fonds. Garde les preuves (numéros, messages, ordre de virement) et dépose plainte.
+
+  > **Sources** : Microsoft Research, VALL-E, janvier 2023. McAfee, « The Artificial Imposter », mai 2023. The Washington Post, 4 septembre 2019, d'après l'assureur Euler Hermes. Gouvernement de Hong Kong, réponse au Conseil législatif du 26 juin 2024, et CNN, 16 mai 2024, au sujet d'Arup. DGSI, Flash ingérence économique n° 117, décembre 2025. Ministère de l'Économie, « Deepfakes (hypertrucage) et arnaques à l'intelligence artificielle », novembre 2026. FBI, alerte I-120324-PSA du 3 décembre 2024. Cybermalveillance.gouv.fr, fiche « La fraude au virement bancaire (FOVI) ».
+quiz:
+  - question: "Pourquoi reconnaître une voix ne suffit-il plus ?"
+    choices:
+      - id: "a"
+        label: "Parce que le téléphone déforme toujours les voix"
+        correct: false
+      - id: "b"
+        label: "Parce que quelques secondes d'enregistrement permettent de l'imiter"
+        correct: true
+      - id: "c"
+        label: "Parce que les numéros masqués sont interdits"
+        correct: false
+    explanation: "Un message vocal ou une vidéo publique peuvent servir de matière première. La voix n'est plus une preuve d'identité."
+  - question: "Quelle est la parade la plus fiable ?"
+    choices:
+      - id: "a"
+        label: "Écouter attentivement pour repérer les défauts de la voix"
+        correct: false
+      - id: "b"
+        label: "Demander à la personne de confirmer par message"
+        correct: false
+      - id: "c"
+        label: "Raccrocher et rappeler la personne à son numéro habituel"
+        correct: true
+    explanation: "On ne peut pas compter sur son oreille. Rappeler à un numéro qu'on connaissait avant l'appel sort l'escroc de la conversation."
+  - question: "Quels signaux doivent alerter, quelle que soit la voix ?"
+    choices:
+      - id: "a"
+        label: "L'urgence et le secret"
+        correct: true
+      - id: "b"
+        label: "Un ton aimable"
+        correct: false
+      - id: "c"
+        label: "Un appel pendant les heures de bureau"
+        correct: false
+    explanation: "« Vite » et « n'en parle à personne » servent à empêcher la vérification. C'est le scénario de la fraude au président, avec ou sans voix truquée."
+---
