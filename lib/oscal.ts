@@ -109,7 +109,7 @@ export function buildOscalAssessmentResults(args: {
     title: `${e.control_ref} - ${e.control_name}`,
     description:
       e.scope_note ??
-      `Evaluation automatique Humanix Academie pour le controle ${e.control_ref}.`,
+      `Évaluation automatique Humanix Académie pour le contrôle ${e.control_ref}.`,
     target: {
       type: "objective-id",
       "target-id": e.control_ref,
@@ -131,7 +131,7 @@ export function buildOscalAssessmentResults(args: {
     "assessment-results": {
       uuid: arUuid,
       metadata: {
-        title: `Humanix Academie - Assessment Results - ${framework.title}`,
+        title: `Humanix Académie - Assessment Results - ${framework.title}`,
         "last-modified": generatedAt.toISOString(),
         version: "1.0.0",
         "oscal-version": OSCAL_VERSION,
@@ -161,14 +161,14 @@ export function buildOscalAssessmentResults(args: {
       results: [
         {
           uuid: resultUuid,
-          title: `Resultats d'evaluation - ${tenant.name}`,
-          description: `Resultats automatises generes par Humanix Academie pour le tenant ${tenant.name} sur le referentiel ${framework.ref}.`,
+          title: `Résultats d'évaluation - ${tenant.name}`,
+          description: `Résultats automatisés générés par Humanix Académie pour le tenant ${tenant.name} sur le référentiel ${framework.ref}.`,
           start: generatedAt.toISOString(),
           end: generatedAt.toISOString(),
           "reviewed-controls": {
             "control-selections": [
               {
-                description: `Controles couverts par le mapping Humanix pour ${framework.ref}`,
+                description: `Contrôles couverts par le mapping Humanix pour ${framework.ref}`,
                 "include-controls": framework.controls.map((c) => ({
                   "control-id": c.ref,
                 })),
@@ -181,7 +181,7 @@ export function buildOscalAssessmentResults(args: {
             "assessment-subjects": [
               {
                 type: "party",
-                description: `Tenant Humanix Academie : ${tenant.name}`,
+                description: `Tenant Humanix Académie : ${tenant.name}`,
                 "include-subjects": [
                   { "subject-uuid": HUMANIX_PARTY_UUID, type: "party" },
                 ],
